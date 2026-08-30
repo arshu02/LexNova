@@ -7,7 +7,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Loader2, Mail, Lock, AlertCircle, CheckCircle2, Scale,
-  User, Briefcase, ShieldCheck, Sparkles, ArrowRight, Gavel
+  User, Briefcase, ShieldCheck, ArrowRight
 } from 'lucide-react';
 import { supabase } from '@/lib/supabaseClient';
 
@@ -53,22 +53,11 @@ function LoginForm() {
     }
   };
 
-  const handleDemoFill = (targetRole: 'USER' | 'ADVOCATE') => {
-    setRole(targetRole);
-    if (targetRole === 'USER') {
-      setEmail('hailragnar01@gmail.com');
-      setPassword('password123');
-    } else {
-      setEmail('rajesh.sharma@lexnova.in');
-      setPassword('lawyer123');
-    }
-  };
-
   const handleGoogleSignIn = async () => {
     setLoading(true);
     setError(null);
     try {
-      const { data, error } = await supabase.auth.signInWithOAuth({
+      const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
           redirectTo: `${window.location.origin}/auth/callback`,
@@ -79,160 +68,120 @@ function LoginForm() {
       });
 
       if (error) {
-        console.warn("Supabase Google OAuth fallback:", error.message);
-        const demoRes = await fetch("/api/auth/google-demo", { method: "POST" });
-        if (demoRes.ok) {
-          const demoData = await demoRes.json();
-          const res = await signIn("credentials", {
-            email: demoData.email,
-            password: demoData.password,
-            redirect: false,
-          });
-          if (res?.error) {
-            setError("Failed to sign in with Google.");
-            setLoading(false);
-          } else {
-            window.location.href = role === "ADVOCATE" ? "/dashboard/advocate" : "/dashboard/user";
-          }
-        } else {
-          setError("Failed to initialize Google sign in.");
-          setLoading(false);
-        }
-      } else if (data?.url) {
-        window.location.href = data.url;
+        setError(error.message || "Failed to sign in with Google.");
+        setLoading(false);
       }
     } catch (err: any) {
-      console.error("Google sign in error:", err);
-      setError(err?.message || "An error occurred during Google sign in.");
+      setError(err?.message || "An unexpected error occurred with Google Sign-in.");
       setLoading(false);
     }
   };
 
-  const successMessage = searchParams.get("success");
-
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-[#050508] text-[#F0F2F5] p-6 font-sans relative selection:bg-blue-500/30">
-      
-      {/* Ambient background glow */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className={`absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full blur-[180px] transition-colors duration-700 ${
-          role === 'USER' ? 'bg-blue-600/[0.06]' : 'bg-emerald-600/[0.06]'
-        }`} />
+    <div className="min-h-screen bg-[#050508] flex flex-col justify-center items-center px-4 py-12 relative overflow-hidden">
+      {/* Background glow */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-blue-600/[0.06] rounded-full blur-[140px]" />
       </div>
 
       {/* Brand Header */}
-      <div className="text-center mb-6 relative z-10 space-y-2">
-        <Link href="/" className="inline-flex items-center gap-2.5 text-2xl font-bold tracking-tight text-white hover:opacity-90 transition-opacity">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center text-white shadow-lg shadow-blue-600/30">
+      <div className="text-center mb-8 relative z-10">
+        <Link href="/" className="inline-flex items-center gap-2.5 text-white font-bold text-[22px] tracking-tight mb-2">
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-blue-500/20">
             <Scale size={18} />
           </div>
           <span>LexNova</span>
-          <span className="text-[10px] font-bold text-blue-400 bg-blue-500/10 border border-blue-500/20 px-1.5 py-0.5 rounded-md tracking-wider">
-            OS
-          </span>
         </Link>
-        <h1 className="text-[28px] md:text-[34px] font-display text-white tracking-tight mt-2">
-          {role === 'USER' ? 'Sign in to Client Portal' : 'Sign in to Advocate Console'}
-        </h1>
-        <p className="text-[14.5px] text-[#9AA8BC] max-w-sm mx-auto">
-          {role === 'USER'
-            ? 'Access your active case matters, AI intake briefs, and document studio.'
-            : 'Access your practice briefs, consultation calendar, and client case dockets.'}
+        <p className="text-[13.5px] text-[#7A8A9E] mt-1">
+          India&apos;s AI Legal Operating System · Enterprise Workspace
         </p>
       </div>
 
-      {/* ── ROLE SELECTOR PORTAL TOGGLE ───────────────────────────── */}
-      <div className="w-full max-w-[440px] bg-[#0A0C12] p-1.5 rounded-2xl border border-white/[0.1] flex gap-1.5 mb-5 relative z-10 shadow-lg">
+      {/* Role Selector */}
+      <div className="w-full max-w-[420px] mb-4 bg-[#0A0C12] p-1 rounded-2xl border border-white/[0.08] flex relative z-10">
         <button
           type="button"
-          onClick={() => setRole("USER")}
-          className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-[13.5px] font-semibold transition-all ${
-            role === "USER"
-              ? "bg-white text-black shadow-md"
-              : "text-[#8C9BB4] hover:text-white hover:bg-white/[0.04]"
+          onClick={() => setRole('USER')}
+          className={`flex-1 py-2.5 rounded-xl text-[13px] font-semibold flex items-center justify-center gap-2 transition-all ${
+            role === 'USER'
+              ? 'bg-white text-black shadow-md'
+              : 'text-[#8D9CB0] hover:text-white'
           }`}
         >
-          <User size={15} className={role === "USER" ? "text-blue-600" : "text-[#55667E]"} />
-          <span>Citizen & Business</span>
+          <User size={15} /> Citizen & Business
         </button>
-
         <button
           type="button"
-          onClick={() => setRole("ADVOCATE")}
-          className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-[13.5px] font-semibold transition-all ${
-            role === "ADVOCATE"
-              ? "bg-white text-black shadow-md"
-              : "text-[#8C9BB4] hover:text-white hover:bg-white/[0.04]"
+          onClick={() => setRole('ADVOCATE')}
+          className={`flex-1 py-2.5 rounded-xl text-[13px] font-semibold flex items-center justify-center gap-2 transition-all ${
+            role === 'ADVOCATE'
+              ? 'bg-white text-black shadow-md'
+              : 'text-[#8D9CB0] hover:text-white'
           }`}
         >
-          <ShieldCheck size={15} className={role === "ADVOCATE" ? "text-emerald-600" : "text-[#55667E]"} />
-          <span>Legal Advocate</span>
+          <ShieldCheck size={15} /> Legal Advocate
         </button>
       </div>
 
-      {/* Main Login Card */}
+      {/* Main Card */}
       <motion.div
-        layout
-        initial={{ opacity: 0, y: 12 }}
+        initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-        className="w-full max-w-[440px] bg-[#0A0C12] border border-white/[0.1] rounded-3xl p-8 sm:p-9 shadow-2xl relative z-10 space-y-6"
+        className="w-full max-w-[420px] bg-[#0A0C12] border border-white/[0.08] rounded-3xl p-7 shadow-2xl relative z-10 space-y-6"
       >
-        {/* Role Identity Chip */}
-        <div className="flex items-center justify-between pb-3 border-b border-white/[0.06]">
-          <span className="text-[11.5px] font-bold uppercase tracking-wider text-[#6B7B94]">
+        <div className="flex items-center justify-between">
+          <span className="text-[11px] font-bold tracking-[0.1em] uppercase text-[#6B7B94]">
             Authentication Workspace
           </span>
-          <span className={`text-[11px] font-bold uppercase px-2.5 py-0.5 rounded-full border ${
-            role === 'USER'
-              ? 'bg-blue-500/10 text-blue-400 border-blue-500/25'
-              : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/25'
-          }`}>
-            {role === 'USER' ? '● Client Portal' : '● Lawyer Console'}
+          <span className="text-[11px] font-semibold text-blue-400 bg-blue-500/10 border border-blue-500/20 px-2.5 py-0.5 rounded-full">
+            {role === 'USER' ? 'Client Portal' : 'Advocate Console'}
           </span>
         </div>
 
-        {successMessage && (
-          <div className="p-3.5 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[13.5px] rounded-xl flex items-center gap-2.5">
-            <CheckCircle2 size={16} className="shrink-0" />
-            <span>{successMessage}</span>
-          </div>
-        )}
-
-        {error && (
-          <div className="p-3.5 bg-rose-500/10 border border-rose-500/20 text-rose-400 text-[13.5px] rounded-xl flex items-center gap-2.5">
-            <AlertCircle size={16} className="shrink-0" />
-            <span>{error}</span>
-          </div>
-        )}
+        {/* Error Alert */}
+        <AnimatePresence>
+          {error && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="p-3.5 rounded-xl bg-red-500/10 border border-red-500/30 text-red-300 text-[13px] flex items-center gap-2.5"
+            >
+              <AlertCircle size={16} className="shrink-0" />
+              <span>{error}</span>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-1.5">
-            <label className="text-[13px] font-medium text-[#C8D0DC] block">
-              {role === 'USER' ? 'Account Email' : 'Advocate Registered Email'}
+          <div>
+            <label className="text-[12px] font-semibold text-[#8D9CB0] block mb-1.5">
+              Account Email
             </label>
             <div className="relative">
-              <Mail size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#5B6B7C]" />
+              <Mail size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#4E5D70]" />
               <input
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder={role === 'USER' ? 'you@example.com' : 'advocate@lexnova.in'}
+                placeholder="advocate@lawfirm.in or client@gmail.com"
                 className="w-full bg-[#07090E] border border-white/[0.1] rounded-xl pl-10 pr-3.5 py-2.5 text-[14px] text-white placeholder-[#4E5D70] focus:border-blue-500 focus:outline-none transition-colors"
               />
             </div>
           </div>
 
-          <div className="space-y-1.5">
-            <div className="flex items-center justify-between">
-              <label className="text-[13px] font-medium text-[#C8D0DC] block">Password</label>
-              <Link href="/auth/forgot-password" className="text-[12px] text-blue-400 hover:underline">
+          <div>
+            <div className="flex items-center justify-between mb-1.5">
+              <label className="text-[12px] font-semibold text-[#8D9CB0]">
+                Password
+              </label>
+              <Link href="/auth/forgot-password" className="text-[11.5px] text-blue-400 hover:underline font-medium">
                 Forgot?
               </Link>
             </div>
             <div className="relative">
-              <Lock size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#5B6B7C]" />
+              <Lock size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#4E5D70]" />
               <input
                 type="password"
                 required
@@ -260,31 +209,8 @@ function LoginForm() {
           </button>
         </form>
 
-        {/* Demo Fast Fill Buttons */}
-        <div className="pt-2 border-t border-white/[0.06] space-y-2">
-          <span className="text-[11px] text-[#6B7B94] uppercase font-bold block text-center">
-            One-Click Demo Credentials
-          </span>
-          <div className="grid grid-cols-2 gap-2 text-[12px]">
-            <button
-              type="button"
-              onClick={() => handleDemoFill('USER')}
-              className="bg-[#07090E] hover:bg-[#121828] border border-white/[0.08] hover:border-blue-500/40 text-[#9AA8BC] hover:text-white p-2 rounded-xl text-center transition-all"
-            >
-              👤 Fill Client Demo
-            </button>
-            <button
-              type="button"
-              onClick={() => handleDemoFill('ADVOCATE')}
-              className="bg-[#07090E] hover:bg-[#121828] border border-white/[0.08] hover:border-emerald-500/40 text-[#9AA8BC] hover:text-white p-2 rounded-xl text-center transition-all"
-            >
-              ⚖️ Fill Lawyer Demo
-            </button>
-          </div>
-        </div>
-
         {/* Google OAuth */}
-        <div className="space-y-3">
+        <div className="space-y-3 pt-2">
           <div className="flex items-center gap-3">
             <div className="flex-1 h-px bg-white/[0.08]" />
             <span className="text-[11.5px] text-[#55667E] uppercase tracking-wider font-semibold">Or continue with</span>

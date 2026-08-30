@@ -47,24 +47,7 @@ const createEmptySession = (): ChatSession => ({
 });
 
 export const useLegalStore = create<LegalStore>((set, get) => ({
-    sessions: [
-        {
-            id: "demo-1",
-            title: "Property dispute in Patna",
-            messages: [],
-            createdAt: new Date(Date.now() - 86400000 * 2),
-            category: "Property Dispute",
-            city: "Patna",
-        },
-        {
-            id: "demo-2",
-            title: "Cyber fraud case",
-            messages: [],
-            createdAt: new Date(Date.now() - 86400000),
-            category: "Cyber Crime",
-            city: "Delhi",
-        },
-    ],
+    sessions: [],
     activeSessionId: null,
     isTyping: false,
     detectedCategory: "General",

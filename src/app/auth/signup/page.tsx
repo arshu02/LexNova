@@ -103,25 +103,8 @@ export default function SignupPage() {
       });
 
       if (error) {
-        console.warn("Supabase Google OAuth fallback:", error.message);
-        const demoRes = await fetch("/api/auth/google-demo", { method: "POST" });
-        if (demoRes.ok) {
-          const demoData = await demoRes.json();
-          const res = await signIn("credentials", {
-            email: demoData.email,
-            password: demoData.password,
-            redirect: false,
-          });
-          if (res?.error) {
-            setError("Failed to sign in with Google.");
-            setLoading(false);
-          } else {
-            window.location.href = role === "ADVOCATE" ? "/dashboard/advocate" : "/dashboard/user";
-          }
-        } else {
-          setError("Failed to initialize Google sign in.");
-          setLoading(false);
-        }
+        setError(error.message || "Failed to sign in with Google.");
+        setLoading(false);
       } else if (data?.url) {
         window.location.href = data.url;
       }

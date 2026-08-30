@@ -449,11 +449,6 @@ export default function AdvocatesDirectoryPage() {
                   }}>
                     <Check size={12} strokeWidth={3} /> Verified
                   </span>
-                  {adv.isDemo && (
-                    <div style={{ fontSize: "10.5px", color: "#9AA5B5", marginTop: "3px" }}>
-                      Demo profile
-                    </div>
-                  )}
                 </div>
               </div>
 
