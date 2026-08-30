@@ -58,7 +58,14 @@ export async function uploadFile(
     throw new Error("Supabase Storage is not configured.");
   }
 
-  const body = file instanceof Buffer ? file : new Blob([file], { type: mimeType });
+  let body: BodyInit;
+  if (file instanceof Blob) {
+    body = file;
+  } else if (file instanceof Buffer) {
+    body = new Uint8Array(file) as unknown as BodyInit;
+  } else {
+    body = new Uint8Array(file) as unknown as BodyInit;
+  }
 
   const res = await supabaseStorageRequest(
     "POST",

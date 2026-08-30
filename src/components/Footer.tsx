@@ -1,5 +1,8 @@
+'use client';
+
+import React, { useState } from 'react';
 import Link from 'next/link';
-import { Scale, Twitter, Linkedin, Github, Mail } from 'lucide-react';
+import { Scale, Twitter, Linkedin, Github, Mail, CheckCircle2 } from 'lucide-react';
 
 const FOOTER_LINKS = {
   Product: [
@@ -12,84 +15,82 @@ const FOOTER_LINKS = {
   ],
   Platform: [
     { label: 'How It Works', href: '/how-it-works' },
+    { label: 'Security Deposit Recovery', href: '/security-deposit-recovery' },
     { label: 'Bar Council Verification', href: '/how-it-works' },
     { label: 'Limitation Engine', href: '/how-it-works' },
-    { label: 'Precedent Database', href: '/how-it-works' },
     { label: 'Security & Encryption', href: '/how-it-works' },
-    { label: 'API Docs', href: '/how-it-works' },
   ],
   Company: [
     { label: 'About LexNova', href: '/' },
     { label: 'Careers', href: '/' },
     { label: 'Press Kit', href: '/' },
     { label: 'Blog', href: '/' },
-    { label: 'Contact Us', href: '/' },
-    { label: 'Partner Programme', href: '/' },
+    { label: 'Contact Us', href: 'mailto:legal@lexnova.in' },
   ],
   Legal: [
-    { label: 'Privacy Policy', href: '/' },
-    { label: 'Terms of Service', href: '/' },
-    { label: 'Cookie Policy', href: '/' },
-    { label: 'Disclaimer', href: '/' },
-    { label: 'Refund Policy', href: '/' },
-    { label: 'BCI Compliance', href: '/' },
+    { label: 'Privacy Policy', href: '/privacy-policy' },
+    { label: 'Terms of Service', href: '/terms-of-service' },
+    { label: 'Cookie Policy', href: '/privacy-policy' },
+    { label: 'Disclaimer', href: '/terms-of-service' },
+    { label: 'DPDPA 2023', href: '/privacy-policy' },
   ],
 };
 
 export function Footer() {
+  const [email, setEmail] = useState('');
+  const [subscribed, setSubscribed] = useState(false);
+
+  const handleSubscribe = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (email) {
+      setSubscribed(true);
+      setEmail('');
+    }
+  };
+
   return (
-    <footer className="bg-[#050508] border-t border-white/[0.06]">
-      <div className="max-w-7xl mx-auto px-6">
-
-        {/* Main footer grid */}
-        <div className="py-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-10 lg:gap-8">
-
-          {/* Brand column */}
+    <footer className="border-t border-white/[0.08] bg-[#050508] text-[#8D9CB0] relative overflow-hidden">
+      <div className="max-w-7xl mx-auto px-6 pt-16 pb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-12 mb-16">
+          {/* Brand block */}
           <div className="lg:col-span-2 space-y-5">
-            <Link href="/" className="flex items-center gap-2.5 group w-fit">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center text-white shadow-lg shadow-blue-600/30">
-                <Scale size={17} />
+            <Link href="/" className="inline-flex items-center gap-2.5 text-white font-bold text-[19px]">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white">
+                <Scale size={16} />
               </div>
-              <span className="text-[18px] font-bold tracking-tight text-white">LexNova</span>
-              <span className="text-[10px] font-bold text-blue-400 bg-blue-500/10 border border-blue-500/20 px-1.5 py-0.5 rounded-md tracking-wider">OS</span>
+              <span>LexNova</span>
             </Link>
-            <p className="text-[14px] text-[#5B6B7C] leading-relaxed max-w-[260px]">
-              India&apos;s AI-powered legal operating system. Making justice accessible, affordable, and intelligent.
+            <p className="text-[13.5px] text-[#6B7B94] leading-relaxed max-w-sm">
+              India&apos;s AI Legal Operating System. Instant case analysis, statutory limitation tracking, court-ready notice generation, and verified advocate matching.
             </p>
-            <div className="flex items-center gap-3">
-              {[
-                { icon: Twitter, href: '/', label: 'Twitter' },
-                { icon: Linkedin, href: '/', label: 'LinkedIn' },
-                { icon: Github, href: '/', label: 'GitHub' },
-                { icon: Mail, href: '/', label: 'Email' },
-              ].map(({ icon: Icon, href, label }) => (
-                <Link
-                  key={label}
-                  href={href}
-                  aria-label={label}
-                  className="w-8 h-8 rounded-lg bg-white/[0.04] border border-white/[0.07] flex items-center justify-center text-[#5B6B7C] hover:text-white hover:bg-white/[0.08] hover:border-white/[0.15] transition-all"
-                >
-                  <Icon size={14} />
-                </Link>
-              ))}
-            </div>
 
             {/* Newsletter */}
-            <div className="pt-1">
-              <p className="text-[12.5px] font-semibold text-[#7A8899] uppercase tracking-wider mb-2.5">Legal Insights Newsletter</p>
-              <form className="flex gap-2" onSubmit={(e) => e.preventDefault()}>
-                <input
-                  type="email"
-                  placeholder="your@email.com"
-                  className="flex-1 bg-[#0A0C10] border border-white/[0.08] rounded-lg px-3 py-2 text-[13.5px] text-white placeholder-[#3D4E5E] focus:border-blue-500/50 focus:outline-none transition-colors min-w-0"
-                />
-                <button
-                  type="submit"
-                  className="bg-white text-black text-[13px] font-semibold px-3.5 py-2 rounded-lg hover:bg-white/90 transition-colors whitespace-nowrap flex-shrink-0"
-                >
-                  Subscribe
-                </button>
-              </form>
+            <div className="space-y-2 pt-2">
+              <p className="text-[12px] font-semibold text-[#8D9CB0] uppercase tracking-wider">
+                Legal updates & precedents
+              </p>
+              {subscribed ? (
+                <div className="flex items-center gap-2 text-[13px] text-emerald-400 font-medium py-1">
+                  <CheckCircle2 size={16} /> Subscribed to LexNova Briefing!
+                </div>
+              ) : (
+                <form className="flex gap-2" onSubmit={handleSubscribe}>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="your@email.com"
+                    required
+                    className="flex-1 bg-[#0A0C10] border border-white/[0.08] rounded-lg px-3 py-2 text-[13.5px] text-white placeholder-[#3D4E5E] focus:border-blue-500/50 focus:outline-none transition-colors min-w-0"
+                  />
+                  <button
+                    type="submit"
+                    className="bg-white text-black text-[13px] font-semibold px-3.5 py-2 rounded-lg hover:bg-white/90 transition-colors whitespace-nowrap flex-shrink-0"
+                  >
+                    Subscribe
+                  </button>
+                </form>
+              )}
             </div>
           </div>
 

@@ -11,6 +11,7 @@ import {
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { differenceInDays, differenceInMinutes } from "date-fns";
+import { PaymentButton } from "@/components/PaymentModal";
 
 interface Booking {
   id: string;
@@ -412,31 +413,43 @@ export default function BookingsPage() {
                 {/* Bottom Row */}
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingTop: "12px", borderTop: "1px solid var(--border-subtle)", flexWrap: "wrap", gap: "10px" }}>
                   
-                  {/* Left: Join or Time status */}
+                  {/* Left: Join or Time status or Pay Now */}
                   {activeTab === "UPCOMING" && (
                     <>
-                      {booking.meetLink ? (
-                        <a
-                          href={booking.meetLink}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          style={{
-                            display: "inline-flex", alignItems: "center", gap: "6px",
-                            padding: "8px 16px", borderRadius: "var(--radius-md)",
-                            fontSize: "12px", fontWeight: "600",
-                            textDecoration: "none",
-                            background: joinable ? "var(--success)" : "var(--bg-tertiary)",
-                            color: joinable ? "white" : "var(--text-muted)",
-                            border: joinable ? "none" : "1px solid var(--border-subtle)",
-                            cursor: joinable ? "pointer" : "default",
-                          }}
-                        >
-                          <Video size={14} />
-                          {joinable ? "Join Video Call" : `Starts at ${booking.time}`}
-                        </a>
-                      ) : (
-                        <span style={{ fontSize: "12px", color: "var(--text-muted)" }}>Meet link generating...</span>
-                      )}
+                      <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
+                        {booking.paymentStatus === "PENDING" && (
+                          <PaymentButton
+                            bookingId={booking.id}
+                            amount={booking.consultationFee || 999}
+                            advocateName={booking.advocate?.name || "Advocate"}
+                            onSuccess={() => fetchBookings()}
+                            label={`Pay ₹${booking.consultationFee || 999}`}
+                          />
+                        )}
+
+                        {booking.meetLink ? (
+                          <a
+                            href={booking.meetLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{
+                              display: "inline-flex", alignItems: "center", gap: "6px",
+                              padding: "8px 16px", borderRadius: "var(--radius-md)",
+                              fontSize: "12px", fontWeight: "600",
+                              textDecoration: "none",
+                              background: joinable ? "var(--success)" : "var(--bg-tertiary)",
+                              color: joinable ? "white" : "var(--text-muted)",
+                              border: joinable ? "none" : "1px solid var(--border-subtle)",
+                              cursor: joinable ? "pointer" : "default",
+                            }}
+                          >
+                            <Video size={14} />
+                            {joinable ? "Join Video Call" : `Starts at ${booking.time}`}
+                          </a>
+                        ) : (
+                          <span style={{ fontSize: "12px", color: "var(--text-muted)" }}>Meet link generating...</span>
+                        )}
+                      </div>
 
                       {/* Right: Cancel button */}
                       {cancellingId === booking.id ? (

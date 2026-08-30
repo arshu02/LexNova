@@ -6,6 +6,7 @@ import {
   X, Calendar, Clock, Video, CheckCircle2, 
   Loader2, AlertCircle, Mail, Copy, ExternalLink, ShieldCheck, User 
 } from 'lucide-react';
+import { PaymentButton } from '@/components/PaymentModal';
 
 interface Advocate {
   id: string | number;
@@ -546,10 +547,24 @@ export default function BookingModal({
               </div>
             </div>
 
+            {/* Pay with Razorpay Button */}
+            {booking && booking.id && (
+              <div style={{ marginTop: '4px' }}>
+                <PaymentButton
+                  bookingId={booking.id}
+                  amount={booking.consultationFee || fee}
+                  advocateName={booking.advocateName || advocate.name}
+                  userName={clientName || session?.user?.name || 'Client'}
+                  userEmail={clientEmail || session?.user?.email || ''}
+                  label={`Pay ₹${booking.consultationFee || fee} with Razorpay`}
+                />
+              </div>
+            )}
+
             <button 
               onClick={onClose}
               className="btn-primary"
-              style={{ width: '100%', padding: '11px', fontSize: '13px' }}
+              style={{ width: '100%', padding: '11px', fontSize: '13px', marginTop: '6px' }}
             >
               Done
             </button>
