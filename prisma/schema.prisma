@@ -3,19 +3,29 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:./dev.db"
+  provider          = "postgresql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
-// ─── Models ──────────────────────────────────────────────
+// ─── Core Models ──────────────────────────────────────────
 
 model User {
   id            String             @id @default(cuid())
   name          String?
   email         String             @unique
+  emailVerified DateTime?
   passwordHash  String?
   role          String             @default("USER")
   city          String?
+  phone         String?
+  avatarUrl     String?
+  isActive      Boolean            @default(true)
+  loginAttempts Int                @default(0)
+  lockedUntil   DateTime?
+  orgId         String?
+  org           Organization?      @relation(fields: [orgId], references: [id])
+  subscription  Subscription?
   matters       Matter[]
   bookings      Booking[]
   documents     Document[]
@@ -24,6 +34,10 @@ model User {
   caseParties   CaseParty[]
   notifications CaseNotification[]
   createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+
+  @@index([email])
+  @@index([orgId])
 }
 
 model Advocate {
@@ -39,6 +53,7 @@ model Advocate {
   pricing         String
   availability    String      @default("Available")
   rating          Float       @default(0.0)
+  reviewCount     Int         @default(0)
   verified        Boolean     @default(false)
   email           String?
   phone           String?
@@ -48,10 +63,19 @@ model Advocate {
   availableTo     String      @default("18:00")
   consultationFee Float       @default(999)
   isAvailable     Boolean     @default(true)
+  bio             String?
+  photoUrl        String?
+  courts          String?
+  wins            Int         @default(0)
   bookings        Booking[]
   matters         Matter[]
   caseParties     CaseParty[]
   createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  @@index([city])
+  @@index([specialization])
+  @@index([verified])
 }
 
 model Matter {
@@ -70,16 +94,18 @@ model Matter {
   user                User              @relation(fields: [userId], references: [id])
   advocateId          String?
   advocate            Advocate?         @relation(fields: [advocateId], references: [id])
-  // ── New court-tracking fields ──────────────────────────
-  caseNumber          String?           @unique  // e.g. "CASE-2026-BLR-0041"
+  orgId               String?
+  org                 Organization?     @relation(fields: [orgId], references: [id])
+  // ── Court tracking ─────────────────────────────
+  caseNumber          String?           @unique
   courtName           String?
-  courtCaseNum        String?           // official court case number
+  courtCaseNum        String?
   filingDate          DateTime?
   nextHearingDate     DateTime?
   opposingPartyName   String?
   opposingPartyEmail  String?
-  caseInviteToken     String?           @unique  // for defendant to join
-  // ── Relations ─────────────────────────────────────────
+  caseInviteToken     String?           @unique
+  // ── Relations ──────────────────────────────────
   documents           Document[]
   timeline            TimelineEvent[]
   bookings            Booking[]
@@ -93,6 +119,12 @@ model Matter {
   judgment            Judgment?
   createdAt           DateTime          @default(now())
   updatedAt           DateTime          @updatedAt
+
+  @@index([userId])
+  @@index([advocateId])
+  @@index([status])
+  @@index([category])
+  @@index([orgId])
 }
 
 model Document {
@@ -101,12 +133,19 @@ model Document {
   type        String
   content     String?
   fileUrl     String?
+  storagePath String?
+  storageBucket String?
+  mimeType    String?
+  sizeBytes   Int?
   matterId    String
   matter      Matter    @relation(fields: [matterId], references: [id])
   uploaderId  String
   uploader    User      @relation(fields: [uploaderId], references: [id])
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+
+  @@index([matterId])
+  @@index([uploaderId])
 }
 
 model TimelineEvent {
@@ -117,6 +156,8 @@ model TimelineEvent {
   matterId    String
   matter      Matter    @relation(fields: [matterId], references: [id])
   createdAt   DateTime  @default(now())
+
+  @@index([matterId])
 }
 
 model Booking {
@@ -128,31 +169,28 @@ model Booking {
   matterId          String?
   matter            Matter?   @relation(fields: [matterId], references: [id])
 
-  date              String    // "2026-08-10"
-  time              String    // "11:00 AM"
-  duration          Int       @default(60) // minutes
+  date              String
+  time              String
+  duration          Int       @default(60)
   timezone          String    @default("Asia/Kolkata")
 
   status            String    @default("CONFIRMED")
-  // "PENDING" | "CONFIRMED" | "CANCELLED" | "COMPLETED" | "RESCHEDULED"
-
   consultationType  String    @default("VIDEO")
-  // "VIDEO" | "PHONE" | "IN_PERSON"
 
-  meetLink          String?   // Jitsi meet URL
-  meetPassword      String?   // optional room password
+  meetLink          String?
+  meetPassword      String?
 
-  userNotes         String?   // user's brief description
-  lawyerNotes       String?   // lawyer's prep notes (private)
+  userNotes         String?
+  lawyerNotes       String?
 
   consultationFee   Float
   currency          String    @default("INR")
   paymentStatus     String    @default("PENDING")
-  // "PENDING" | "PAID" | "REFUNDED" | "FAILED"
   razorpayOrderId   String?
   razorpayPaymentId String?
+  razorpaySignature String?
 
-  confirmationCode  String    @unique // e.g. "LN-2026-8471"
+  confirmationCode  String    @unique
 
   userEmailSent     Boolean   @default(false)
   lawyerEmailSent   Boolean   @default(false)
@@ -164,6 +202,11 @@ model Booking {
 
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
+
+  @@index([userId])
+  @@index([advocateId])
+  @@index([paymentStatus])
+  @@index([status])
 }
 
 model Message {
@@ -173,10 +216,14 @@ model Message {
   matter    Matter   @relation(fields: [matterId], references: [id])
   senderId  String
   sender    User     @relation(fields: [senderId], references: [id])
+  isRead    Boolean  @default(false)
   createdAt DateTime @default(now())
+
+  @@index([matterId])
+  @@index([senderId])
 }
 
-// ─── New Models ───────────────────────────────────────────
+// ─── Case Models ──────────────────────────────────────────
 
 model CaseParty {
   id       String    @id @default(cuid())
@@ -189,6 +236,9 @@ model CaseParty {
   lawyer   Advocate? @relation(fields: [lawyerId], references: [id])
   joinedAt DateTime  @default(now())
   status   String    @default("ACTIVE")
+
+  @@index([caseId])
+  @@index([userId])
 }
 
 model Hearing {
@@ -201,15 +251,15 @@ model Hearing {
   courtNumber   String?
   judgeName     String?
   purpose       String
-  // "FIRST_HEARING" | "EVIDENCE" | "ARGUMENTS" |
-  // "JUDGMENT" | "ADJOURNED"
   outcome       String?
-  // "ADJOURNED" | "ARGUED" | "ORDER_RESERVED" | "JUDGMENT_PASSED"
   adjournReason String?
   nextDate      DateTime?
   notes         String?
   createdAt     DateTime  @default(now())
   reminderSent  Boolean   @default(false)
+
+  @@index([caseId])
+  @@index([hearingDate])
 }
 
 model CourtDocument {
@@ -218,16 +268,18 @@ model CourtDocument {
   matter        Matter   @relation(fields: [caseId], references: [id])
   title         String
   type          String
-  // "COMPLAINT" | "WRITTEN_STATEMENT" | "AFFIDAVIT" |
-  // "EVIDENCE" | "VAKALATNAMA" | "LEGAL_NOTICE" | "ORDER"
-  filedBy       String   // "PLAINTIFF" | "DEFENDANT" | "COURT"
-  fileUrl       String?  // Supabase storage URL
-  content       String?  // AI generated text
-  isShared      Boolean  @default(false) // visible to both parties?
+  filedBy       String
+  fileUrl       String?
+  storagePath   String?
+  content       String?
+  isShared      Boolean  @default(false)
   filingDate    DateTime @default(now())
   courtReceived Boolean  @default(false)
-  exhibitNumber String?  // e.g. "P-1", "D-1"
+  exhibitNumber String?
   uploadedById  String
+  createdAt     DateTime @default(now())
+
+  @@index([caseId])
 }
 
 model Evidence {
@@ -237,12 +289,15 @@ model Evidence {
   title           String
   description     String
   fileUrl         String?
-  fileType        String?  // "PDF" | "IMAGE" | "VIDEO" | "AUDIO"
+  storagePath     String?
+  fileType        String?
   uploadedById    String
-  party           String   // "PLAINTIFF" | "DEFENDANT"
-  exhibitNum      String?  // "P-1", "P-2", "D-1" etc
+  party           String
+  exhibitNum      String?
   admittedByCourt Boolean  @default(false)
   createdAt       DateTime @default(now())
+
+  @@index([caseId])
 }
 
 model LimitationPeriod {
@@ -251,26 +306,30 @@ model LimitationPeriod {
   matter         Matter   @relation(fields: [caseId], references: [id])
   caseType       String
   filingDeadline DateTime
-  warningDays    String   // JSON string e.g. "[30,15,7,1]" (SQLite: no Int[])
-  warningsSent   String   @default("[]") // JSON string
+  warningDays    Int[]    @default([30, 15, 7, 1])
+  warningsSent   Int[]    @default([])
   isExpired      Boolean  @default(false)
-  legalBasis     String   // e.g. "Limitation Act 1963, Article 5"
+  legalBasis     String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }
 
 model Settlement {
   id                String    @id @default(cuid())
   caseId            String
   matter            Matter    @relation(fields: [caseId], references: [id])
-  proposedBy        String    // userId
-  terms             String    // full settlement terms text
+  proposedBy        String
+  terms             String
   amount            Float?
   status            String    @default("PROPOSED")
-  // "PROPOSED" | "COUNTER" | "ACCEPTED" | "REJECTED" | "EXECUTED"
   signedByPlaintiff Boolean   @default(false)
   signedByDefendant Boolean   @default(false)
   signedAt          DateTime?
   expiresAt         DateTime?
   createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  @@index([caseId])
 }
 
 model Judgment {
@@ -280,9 +339,8 @@ model Judgment {
   judgmentDate    DateTime
   judgeName       String
   outcome         String
-  // "PLAINTIFF_WON" | "DEFENDANT_WON" | "PARTIAL" | "DISMISSED"
-  orderText       String    // full judgment text
-  plainEnglish    String    // AI explanation for non-lawyers
+  orderText       String
+  plainEnglish    String
   amountAwarded   Float?
   executionStatus String    @default("PENDING")
   appealDeadline  DateTime?
@@ -295,13 +353,94 @@ model CaseNotification {
   user        User      @relation(fields: [userId], references: [id])
   caseId      String
   type        String
-  // "HEARING_REMINDER" | "DOCUMENT_FILED" | "DEADLINE_WARNING" |
-  // "LAWYER_MESSAGE" | "SETTLEMENT_PROPOSAL" | "JUDGMENT"
   title       String
   message     String
-  channel     String    @default("APP") // "APP" | "EMAIL" | "WHATSAPP"
+  channel     String    @default("APP")
   isRead      Boolean   @default(false)
   scheduledAt DateTime?
   sentAt      DateTime?
   createdAt   DateTime  @default(now())
+
+  @@index([userId])
+  @@index([isRead])
+}
+
+// ─── SaaS / Billing Models ────────────────────────────────
+
+model Plan {
+  id                    String         @id @default(cuid())
+  name                  String         @unique // "FREE" | "PROFESSIONAL" | "ENTERPRISE"
+  displayName           String
+  priceMonthly          Float
+  priceYearly           Float
+  aiChatsLimit          Int            @default(5)     // -1 = unlimited
+  documentsLimit        Int            @default(2)
+  advocateBookingsLimit Int            @default(0)
+  apiAccess             Boolean        @default(false)
+  features              String[]       @default([])
+  razorpayPlanId        String?
+  subscriptions         Subscription[]
+  createdAt             DateTime       @default(now())
+}
+
+model Subscription {
+  id               String    @id @default(cuid())
+  userId           String    @unique
+  user             User      @relation(fields: [userId], references: [id])
+  planId           String
+  plan             Plan      @relation(fields: [planId], references: [id])
+  status           String    @default("ACTIVE") // "ACTIVE" | "CANCELLED" | "PAST_DUE" | "TRIALING"
+  currentPeriodStart DateTime
+  currentPeriodEnd DateTime
+  razorpaySubId    String?
+  cancelAtPeriodEnd Boolean  @default(false)
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  @@index([userId])
+  @@index([status])
+}
+
+model UsageQuota {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  periodStart DateTime
+  periodEnd   DateTime
+  aiChatsUsed Int      @default(0)
+  docsUsed    Int      @default(0)
+  bookingsUsed Int     @default(0)
+  updatedAt   DateTime @updatedAt
+}
+
+// ─── Enterprise / Multi-Tenancy ───────────────────────────
+
+model Organization {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  plan      String   @default("STARTUP") // "STARTUP" | "BUSINESS" | "ENTERPRISE"
+  apiKey    String   @unique @default(cuid())
+  members   User[]
+  cases     Matter[]
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([slug])
+  @@index([apiKey])
+}
+
+// ─── Auth helpers ─────────────────────────────────────────
+
+model VerificationToken {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  type      String   // "EMAIL_VERIFY" | "PASSWORD_RESET"
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
+
+  @@index([token])
+  @@index([userId])
 }

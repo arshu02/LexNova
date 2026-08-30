@@ -5,9 +5,101 @@ const isValidKey = rawKey && rawKey !== 're_your_key_here' && rawKey.startsWith(
 const resend = isValidKey ? new Resend(rawKey) : new Resend('re_placeholder');
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
-const FROM = process.env.EMAIL_FROM && !process.env.EMAIL_FROM.includes('lexnova.in')
+const FROM = process.env.EMAIL_FROM && !process.env.EMAIL_FROM.includes('placeholder')
   ? process.env.EMAIL_FROM
   : 'LexNova <onboarding@resend.dev>';
+
+// ── WELCOME + EMAIL VERIFICATION ───────────────────────────
+export async function sendWelcomeEmail(data: {
+  name: string;
+  email: string;
+  verificationToken: string;
+}): Promise<boolean> {
+  const verifyUrl = `${APP_URL}/api/auth/verify-email?token=${data.verificationToken}`;
+  try {
+    const { error } = await resend.emails.send({
+      from: FROM,
+      to: data.email,
+      subject: '⚖️ Verify your LexNova account',
+      html: `
+        <div style="font-family:sans-serif;max-width:560px;margin:40px auto;background:#fff;border-radius:12px;overflow:hidden;border:1px solid #E2E8F0">
+          <div style="background:linear-gradient(135deg,#1E3A5F,#2563EB);padding:36px;text-align:center">
+            <div style="font-size:24px;font-weight:700;color:white">⚖️ LexNova</div>
+            <div style="font-size:12px;color:#93C5FD;letter-spacing:2px;margin-top:4px">LEGAL OS · AI-POWERED</div>
+          </div>
+          <div style="padding:32px">
+            <h2 style="font-size:22px;color:#1E293B;margin-bottom:8px">Welcome, ${data.name}! 🎉</h2>
+            <p style="font-size:14px;color:#64748B;line-height:1.6;margin-bottom:24px">
+              Your LexNova account is ready. Please verify your email address to unlock full access to India's AI Legal Operating System.
+            </p>
+            <a href="${verifyUrl}" style="display:block;background:#2563EB;color:white;text-decoration:none;text-align:center;font-size:15px;font-weight:600;padding:14px;border-radius:10px;margin-bottom:16px">
+              ✓ Verify Email Address
+            </a>
+            <p style="font-size:12px;color:#94A3B8;text-align:center">
+              This link expires in 24 hours. If you didn't create an account, ignore this email.
+            </p>
+            <div style="margin-top:24px;padding:16px;background:#F0FDF4;border-radius:8px;font-size:13px;color:#166534">
+              <strong>What you can do with LexNova:</strong><br>
+              ✓ AI-powered legal case analysis · ✓ Automated limitation tracking · ✓ Court-ready notice drafting · ✓ 2,400+ verified advocates
+            </div>
+          </div>
+          <div style="background:#F1F5F9;padding:16px;text-align:center;font-size:11px;color:#94A3B8">
+            LexNova Legal OS · India's AI-Powered Legal Platform<br>
+            This is legal information only — not legal advice.
+          </div>
+        </div>
+      `,
+    });
+    if (error) { console.error('[Email] Welcome email error:', error); return false; }
+    return true;
+  } catch (err) {
+    console.error('[Email] Welcome email exception:', err);
+    return false;
+  }
+}
+
+// ── PASSWORD RESET EMAIL ────────────────────────────────────
+export async function sendPasswordResetEmail(data: {
+  name: string;
+  email: string;
+  token: string;
+}): Promise<boolean> {
+  const resetUrl = `${APP_URL}/auth/reset-password?token=${data.token}`;
+  try {
+    const { error } = await resend.emails.send({
+      from: FROM,
+      to: data.email,
+      subject: '🔑 Reset your LexNova password',
+      html: `
+        <div style="font-family:sans-serif;max-width:520px;margin:40px auto;background:#fff;border-radius:12px;overflow:hidden;border:1px solid #E2E8F0">
+          <div style="background:#1E3A5F;padding:28px;text-align:center">
+            <div style="font-size:20px;font-weight:700;color:white">🔑 Password Reset</div>
+            <div style="font-size:12px;color:#93C5FD;margin-top:4px">LexNova Security</div>
+          </div>
+          <div style="padding:28px">
+            <p style="font-size:16px;color:#1E293B">Hello, <strong>${data.name}</strong></p>
+            <p style="font-size:14px;color:#64748B;line-height:1.6">
+              We received a request to reset your password. Click the button below to set a new password. This link expires in <strong>1 hour</strong>.
+            </p>
+            <a href="${resetUrl}" style="display:block;background:#DC2626;color:white;text-decoration:none;text-align:center;font-size:15px;font-weight:600;padding:14px;border-radius:10px;margin:20px 0">
+              Reset My Password →
+            </a>
+            <p style="font-size:12px;color:#94A3B8;text-align:center">
+              If you didn't request a password reset, you can safely ignore this email. Your password has not changed.
+            </p>
+          </div>
+        </div>
+      `,
+    });
+    if (error) { console.error('[Email] Reset email error:', error); return false; }
+    return true;
+  } catch (err) {
+    console.error('[Email] Reset email exception:', err);
+    return false;
+  }
+}
+
+
 
 // ── Types ──────────────────────────────────────────
 interface BookingEmailData {
