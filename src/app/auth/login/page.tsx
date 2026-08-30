@@ -57,6 +57,7 @@ function LoginForm() {
     setLoading(true);
     setError(null);
     try {
+      await supabase.auth.signOut();
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {

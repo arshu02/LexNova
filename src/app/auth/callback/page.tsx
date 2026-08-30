@@ -50,14 +50,24 @@ export default function AuthCallbackPage() {
 
       if (syncRes.ok) {
         const data = await syncRes.json();
-        await signIn("credentials", {
+        const signInResult = await signIn("credentials", {
           email: data.email,
           password: data.password,
           redirect: false,
         });
-        window.location.href = "/dashboard/user";
+
+        if (signInResult?.error) {
+          console.error("NextAuth signIn failed:", signInResult.error);
+          setStatus(`Sign-in error: ${signInResult.error}. Redirecting to login...`);
+          setTimeout(() => { window.location.href = "/auth/login"; }, 2000);
+        } else {
+          window.location.href = "/dashboard/user";
+        }
       } else {
-        window.location.href = "/auth/login";
+        const errJson = await syncRes.json();
+        console.error("Supabase sync failed:", errJson);
+        setStatus("Could not synchronize user account. Redirecting to login...");
+        setTimeout(() => { window.location.href = "/auth/login"; }, 2000);
       }
     }
 

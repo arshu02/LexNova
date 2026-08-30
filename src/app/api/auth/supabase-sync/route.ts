@@ -14,16 +14,20 @@ export async function POST(req: Request) {
     const passwordHash = await bcrypt.hash(demoPassword, 10);
 
     const user = await prisma.user.upsert({
-      where: { email },
+      where: { email: email.toLowerCase().trim() },
       update: {
-        name: name || "Gmail User",
+        name: name || email.split("@")[0],
         passwordHash: passwordHash,
+        emailVerified: new Date(),
+        isActive: true,
       },
       create: {
-        name: name || "Gmail User",
-        email,
+        name: name || email.split("@")[0],
+        email: email.toLowerCase().trim(),
         passwordHash: passwordHash,
         role: "USER",
+        emailVerified: new Date(),
+        isActive: true,
       },
     });
 

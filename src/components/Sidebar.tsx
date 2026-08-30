@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { signOut, useSession } from 'next-auth/react';
+import { supabase } from '@/lib/supabaseClient';
 import {
   Scale, LayoutDashboard, MessageSquare, Briefcase,
   FileText, Users, Calendar, Settings, ShieldCheck,
@@ -265,7 +266,10 @@ export function Sidebar() {
           </div>
 
           <button
-            onClick={() => signOut({ callbackUrl: '/auth/login' })}
+            onClick={async () => {
+              try { await supabase.auth.signOut(); } catch (e) {}
+              await signOut({ callbackUrl: '/auth/login' });
+            }}
             style={{
               background: 'none',
               border: 'none',

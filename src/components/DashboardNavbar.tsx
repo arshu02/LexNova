@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useSession, signOut } from 'next-auth/react';
 import { Search, Bell, Plus, X, CheckCircle, Calendar, FileText, ArrowRight, User, Settings, LogOut } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { supabase } from '@/lib/supabaseClient';
 
 export function DashboardNavbar() {
   const { data: session } = useSession();
@@ -14,6 +15,13 @@ export function DashboardNavbar() {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const notifRef = useRef<HTMLDivElement>(null);
   const profileRef = useRef<HTMLDivElement>(null);
+
+  const handleSignOut = async () => {
+    try {
+      await supabase.auth.signOut();
+    } catch (e) {}
+    await signOut({ callbackUrl: '/auth/login' });
+  };
 
   const initial = session?.user?.name?.[0]?.toUpperCase() || session?.user?.email?.[0]?.toUpperCase() || 'U';
 
@@ -257,7 +265,7 @@ export function DashboardNavbar() {
               </Link>
 
               <button
-                onClick={() => signOut({ callbackUrl: '/auth/login' })}
+                onClick={handleSignOut}
                 style={{
                   background: 'none',
                   border: 'none',

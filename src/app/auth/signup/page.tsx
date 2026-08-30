@@ -92,6 +92,7 @@ export default function SignupPage() {
     setLoading(true);
     setError(null);
     try {
+      await supabase.auth.signOut();
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
