@@ -24,28 +24,22 @@ function generateMeetLink(bookingId: string): string {
 export async function GET(req: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
-    const userId = (session?.user as any)?.id || 
-                   req.nextUrl.searchParams.get('userId');
+    let targetUserId = (session?.user as any)?.id;
+    if (session?.user?.email) {
+      const user = await prisma.user.findUnique({ where: { email: session.user.email } });
+      if (user) targetUserId = user.id;
+    }
+    if (!targetUserId) {
+      const queryId = req.nextUrl.searchParams.get('userId');
+      if (queryId && queryId !== 'user_placeholder') targetUserId = queryId;
+    }
 
-    if (!userId || userId === 'user_placeholder') {
-      // If user is not logged in or no userId, return empty or filter by email if provided
-      const email = session?.user?.email || req.nextUrl.searchParams.get('email');
-      if (email) {
-        const user = await prisma.user.findUnique({ where: { email } });
-        if (user) {
-          const bookings = await prisma.booking.findMany({
-            where: { userId: user.id },
-            include: { advocate: true, matter: true },
-            orderBy: { createdAt: 'desc' },
-          });
-          return NextResponse.json(bookings);
-        }
-      }
+    if (!targetUserId) {
       return NextResponse.json([]);
     }
 
     const bookings = await prisma.booking.findMany({
-      where: { userId },
+      where: { userId: targetUserId },
       include: {
         advocate: true,
         matter: true,

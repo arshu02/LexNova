@@ -33,42 +33,6 @@ export async function GET(req: Request) {
       },
     });
 
-    // If zero matters exist for this user, populate 2 realistic legal matters to show real live metrics right away
-    if (matters.length === 0 && targetUserId) {
-      try {
-        await prisma.matter.createMany({
-          data: [
-            {
-              userId: targetUserId,
-              title: "Security Deposit Refund Notice",
-              description: "Landlord refusing to refund ₹65,000 security deposit after vacating flat in Green Park.",
-              category: "TENANCY",
-              jurisdiction: "Bengaluru",
-              urgency: "HIGH",
-              status: "ACTIVE",
-            },
-            {
-              userId: targetUserId,
-              title: "Unpaid Salary Dues Claim",
-              description: "Employer withheld salary for 2 months amounting to ₹45,000 under Payment of Wages Act.",
-              category: "LABOUR",
-              jurisdiction: "New Delhi",
-              urgency: "MEDIUM",
-              status: "INTAKE",
-            },
-          ],
-        });
-
-        matters = await prisma.matter.findMany({
-          where: { userId: targetUserId },
-          orderBy: { createdAt: "desc" },
-          include: { advocate: true },
-        });
-      } catch (seedErr) {
-        console.error("Error auto-creating initial matters:", seedErr);
-      }
-    }
-
     return NextResponse.json(matters);
   } catch (error) {
     console.error("Error fetching matters:", error);
