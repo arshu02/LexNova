@@ -1,0 +1,86 @@
+const { Resend } = require('resend');
+
+const resend = new Resend('re_is5yqUJU_6zd3JKtXcQNPxgmEdpwN8MYj');
+
+async function test() {
+  console.log("Testing Resend API Key...");
+  try {
+    const result = await resend.emails.send({
+      from: 'LexNova <onboarding@resend.dev>',
+      to: 'hailragnar01@gmail.com',
+      subject: '✅ Booking Confirmed: Advocate Rajesh Sharma on Friday, 28 Aug 2026 — LN-2026-8498',
+      html: `
+        <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 12px; overflow: hidden; border: 1px solid #E2E8F0; color: #1E293B;">
+          <div style="background: #080808; padding: 36px 32px; text-align: center; border-bottom: 1px solid #222;">
+            <div style="font-size: 24px; font-weight: 700; color: #ffffff; letter-spacing: -0.5px;">⚖️ LexNova</div>
+            <div style="font-size: 11px; color: #94A3B8; letter-spacing: 2px; text-transform: uppercase; margin-top: 4px;">Legal OS · Verified Consultation</div>
+            <div style="display: inline-block; background: #10B981; color: #ffffff; font-size: 12px; font-weight: 600; padding: 5px 14px; border-radius: 20px; margin-top: 14px;">✓ Booking Confirmed</div>
+          </div>
+          
+          <div style="padding: 32px;">
+            <h2 style="font-size: 20px; font-weight: 700; color: #0F172A; margin: 0 0 8px 0;">Hello, Ragnar Lothbrok!</h2>
+            <p style="font-size: 14px; color: #64748B; margin: 0 0 24px 0; line-height: 1.6;">
+              Your 1-on-1 legal strategy consultation has been locked with <strong>Advocate Rajesh Sharma</strong>.
+            </p>
+
+            <div style="background: #F8FAFC; border: 1.5px dashed #CBD5E1; border-radius: 10px; padding: 16px; text-align: center; margin-bottom: 24px;">
+              <div style="font-size: 11px; color: #64748B; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Confirmation Code</div>
+              <div style="font-size: 28px; font-weight: 700; font-family: monospace; color: #0F172A; letter-spacing: 4px; margin-top: 4px;">LN-2026-8498</div>
+            </div>
+
+            <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 10px; padding: 18px 20px; margin-bottom: 20px;">
+              <div style="font-size: 12px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px;">📅 Session Details</div>
+              <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+                <tr style="border-bottom: 1px solid #E2E8F0;">
+                  <td style="padding: 8px 0; color: #64748B;">Date & Time</td>
+                  <td style="padding: 8px 0; font-weight: 600; color: #0F172A; text-align: right;">Friday, 28 Aug 2026 @ 2:00 PM IST</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #E2E8F0;">
+                  <td style="padding: 8px 0; color: #64748B;">Advocate</td>
+                  <td style="padding: 8px 0; font-weight: 600; color: #0F172A; text-align: right;">Advocate Rajesh Sharma</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #E2E8F0;">
+                  <td style="padding: 8px 0; color: #64748B;">Specialization</td>
+                  <td style="padding: 8px 0; font-weight: 500; color: #2563EB; text-align: right;">Labour & Employment Counsel</td>
+                </tr>
+                <tr>
+                  <td style="padding: 8px 0; color: #64748B;">Consultation Fee</td>
+                  <td style="padding: 8px 0; font-weight: 700; color: #10B981; text-align: right;">₹1,499</td>
+                </tr>
+              </table>
+            </div>
+
+            <div style="background: #0F172A; border-radius: 10px; padding: 22px; text-align: center; margin-bottom: 24px;">
+              <div style="font-size: 15px; font-weight: 600; color: #ffffff; margin-bottom: 6px;">🎥 Join Encrypted HD Video Consultation</div>
+              <div style="font-size: 12px; color: #94A3B8; margin-bottom: 16px;">Direct camera & microphone encrypted link</div>
+              <a href="https://meet.jit.si/lexnova-cmt6vck2x00077kz8v7zmpt581787561423296-1787561423297" style="display: inline-block; background: #2563EB; color: #ffffff; text-decoration: none; font-size: 13px; font-weight: 600; padding: 12px 28px; border-radius: 8px;">
+                Join Video Call →
+              </a>
+              <div style="font-size: 11px; color: #60A5FA; margin-top: 10px; word-break: break-all; font-family: monospace;">
+                https://meet.jit.si/lexnova-cmt6vck2x00077kz8v7zmpt581787561423296-1787561423297
+              </div>
+            </div>
+
+            <div style="background: #FEF3C7; border: 1px solid #FDE68A; border-radius: 8px; padding: 14px 16px; font-size: 12px; color: #92400E; line-height: 1.5;">
+              <strong>📋 Preparation Tips:</strong><br/>
+              • Have relevant employment agreements and bank statements ready.<br/>
+              • Join 2–3 minutes early to check audio and video.<br/>
+              • A quiet, private room is recommended for confidential legal discussion.
+            </div>
+          </div>
+
+          <div style="background: #F1F5F9; padding: 20px; text-align: center; font-size: 11px; color: #64748B; border-top: 1px solid #E2E8F0;">
+            LexNova Technologies · Bar Council Verified Legal Consultations<br/>
+            This is an automated confirmation email.
+          </div>
+        </div>
+      `
+    });
+
+    console.log("Resend Result:", JSON.stringify(result, null, 2));
+  } catch (e) {
+    console.error("Resend Error:", e);
+  }
+}
+
+test();

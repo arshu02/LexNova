@@ -1,26 +1,291 @@
-@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Instrument+Serif:ital@0;1&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* ── Layered Dark-SaaS Surface Hierarchy ───────────────────────── */
+  --bg-page:        #07090D;
+  --bg-surface:     #0D1118;
+  --bg-secondary:   #121823;
+  --bg-elevated:    #171E29;
+  --bg-input:       #121823;
+  --bg-active:      #1C2433;
+
+  /* ── Crisp SaaS Borders ───────────────────────────────────────── */
+  --border-subtle:  #1B2330;
+  --border-default: #263142;
+  --border-strong:  #38475C;
+  --border-focus:   #3B82F6;
+
+  /* ── 3-Level High-Contrast Typography Palette ─────────────────── */
+  --text-primary:   #FFFFFF;
+  --text-secondary: #D7DCE5;
+  --text-muted:     #9AA5B5;
+  --text-dim:       #6B7A90;
+
+  /* ── Typography Scale Tokens ─────────────────────────────────── */
+  --text-xs:   12px;
+  --text-sm:   14px;
+  --text-md:   16px;
+  --text-lg:   18px;
+  --text-xl:   20px;
+  --text-2xl:  24px;
+  --text-3xl:  32px;
+  --text-4xl:  40px;
+  --text-5xl:  48px;
+  --text-6xl:  60px;
+  --text-hero: clamp(56px, 6vw, 76px);
+
+  /* ── Brand & Status Accents ──────────────────────────────────── */
+  --accent:         #3B82F6;
+  --accent-hover:   #5B8DEF;
+  --accent-subtle:  rgba(59, 130, 246, 0.16);
+  --accent-border:  rgba(59, 130, 246, 0.4);
+
+  --success:        #22C55E;
+  --success-subtle: rgba(34, 197, 94, 0.14);
+  --warning:        #F59E0B;
+  --warning-subtle: rgba(245, 158, 11, 0.14);
+  --danger:         #EF4444;
+  --danger-subtle:  rgba(239, 68, 68, 0.14);
+
+  /* ── Radii ───────────────────────────────────────────────────── */
+  --radius-sm:   8px;
+  --radius-md:   12px;
+  --radius-lg:   16px;
+  --radius-xl:   20px;
+  --radius-pill: 9999px;
+
+  /* ── Button Tokens ───────────────────────────────────────────── */
+  --btn-height: 46px;
+  --btn-px:     22px;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg-page);
+  color: var(--text-primary);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  letter-spacing: -0.012em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Typography Utility Classes ────────────────────────────────── */
+.font-display {
+  font-family: 'Instrument Serif', 'Newsreader', Georgia, serif;
+}
+
+.font-mono {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* ── Sleek Dark SaaS Surface Utilities ─────────────────────────── */
+.surface-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  transition: border-color 0.15s ease, background 0.15s ease, transform 0.15s ease;
+}
+
+.surface-card:hover {
+  border-color: var(--border-strong);
+  background: #151D2A;
+}
+
+.surface-elevated {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+}
+
+/* ── Buttons Hierarchy ─────────────────────────────────────────── */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #FFFFFF;
+  color: #07090D !important;
+  font-size: 15px;
+  font-weight: 600;
+  height: var(--btn-height);
+  padding: 0 var(--btn-px);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+  white-space: nowrap;
+}
+
+.btn-primary:hover {
+  background: #E8EDF5;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(255, 255, 255, 0.15);
+}
+
+.btn-accent {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--accent);
+  color: #FFFFFF !important;
+  font-size: 15px;
+  font-weight: 600;
+  height: var(--btn-height);
+  padding: 0 var(--btn-px);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 2px 12px rgba(59, 130, 246, 0.3);
+  white-space: nowrap;
+}
+
+.btn-accent:hover {
+  background: var(--accent-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 20px rgba(59, 130, 246, 0.45);
+}
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--bg-surface);
+  color: var(--text-secondary) !important;
+  font-size: 15px;
+  font-weight: 500;
+  height: var(--btn-height);
+  padding: 0 var(--btn-px);
+  border-radius: 12px;
+  border: 1px solid var(--border-default);
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+}
+
+.btn-ghost:hover {
+  background: var(--bg-elevated);
+  border-color: var(--border-strong);
+  color: #FFFFFF !important;
+  transform: translateY(-1px);
+}
+
+.resend-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: var(--radius-pill);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+
+.resend-badge:hover {
+  background: var(--bg-secondary);
+  border-color: var(--border-strong);
+  color: #FFFFFF;
+}
+
+/* ── Standard Inputs ───────────────────────────────────────────── */
+input, textarea, select {
+  font-family: inherit;
+  font-size: 15px;
+  color: var(--text-primary);
+  background: var(--bg-input);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+input:focus, textarea:focus, select:focus {
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+}
+
+/* ── Custom Scrollbar ──────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-page); }
+::-webkit-scrollbar-thumb { 
+  background: var(--border-default); 
+  border-radius: 4px; 
+}
+::-webkit-scrollbar-thumb:hover { 
+  background: var(--border-strong); 
+}
+
+/* ── Selection ─────────────────────────────────────────────────── */
+::selection { 
+  background: rgba(59, 130, 246, 0.35); 
+  color: #FFFFFF; 
+}
+
+/* ── Animations ────────────────────────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes ticker {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-33.333%); }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-8px); }
+}
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 8px rgba(59, 130, 246, 0.4); }
+  50%       { box-shadow: 0 0 24px rgba(59, 130, 246, 0.7); }
+}
+
+.animate-fade-up   { animation: fadeUp 0.3s ease forwards; }
+.animate-fade-in   { animation: fadeIn 0.2s ease forwards; }
+.animate-float     { animation: float 4s ease-in-out infinite; }
+.animate-pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
+
+/* Ticker marquee */
+.ticker-track {
+  display: flex;
+  width: max-content;
+  animation: ticker 28s linear infinite;
+}
+
+/* Shimmer text gradient utility */
+.text-shimmer {
+  background: linear-gradient(90deg, #9BAABB 0%, #FFFFFF 30%, #9BAABB 60%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 3s linear infinite;
 }

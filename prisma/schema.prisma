@@ -1,0 +1,307 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+// ─── Models ──────────────────────────────────────────────
+
+model User {
+  id            String             @id @default(cuid())
+  name          String?
+  email         String             @unique
+  passwordHash  String?
+  role          String             @default("USER")
+  city          String?
+  matters       Matter[]
+  bookings      Booking[]
+  documents     Document[]
+  messages      Message[]
+  advocate      Advocate?
+  caseParties   CaseParty[]
+  notifications CaseNotification[]
+  createdAt     DateTime           @default(now())
+}
+
+model Advocate {
+  id              String      @id @default(cuid())
+  userId          String      @unique
+  user            User        @relation(fields: [userId], references: [id])
+  name            String
+  specialization  String
+  barNumber       String?
+  experienceYears Int         @default(0)
+  languages       String      @default("English")
+  city            String
+  pricing         String
+  availability    String      @default("Available")
+  rating          Float       @default(0.0)
+  verified        Boolean     @default(false)
+  email           String?
+  phone           String?
+  calendarLink    String?
+  availableDays   String      @default("MON,TUE,WED,THU,FRI")
+  availableFrom   String      @default("10:00")
+  availableTo     String      @default("18:00")
+  consultationFee Float       @default(999)
+  isAvailable     Boolean     @default(true)
+  bookings        Booking[]
+  matters         Matter[]
+  caseParties     CaseParty[]
+  createdAt       DateTime    @default(now())
+}
+
+model Matter {
+  id                  String            @id @default(cuid())
+  title               String
+  description         String
+  status              String            @default("ACTIVE")
+  priority            String            @default("MEDIUM")
+  jurisdiction        String
+  category            String?
+  caseType            String?
+  urgency             String            @default("MEDIUM")
+  complexity          String            @default("MEDIUM")
+  lawyerType          String?
+  userId              String
+  user                User              @relation(fields: [userId], references: [id])
+  advocateId          String?
+  advocate            Advocate?         @relation(fields: [advocateId], references: [id])
+  // ── New court-tracking fields ──────────────────────────
+  caseNumber          String?           @unique  // e.g. "CASE-2026-BLR-0041"
+  courtName           String?
+  courtCaseNum        String?           // official court case number
+  filingDate          DateTime?
+  nextHearingDate     DateTime?
+  opposingPartyName   String?
+  opposingPartyEmail  String?
+  caseInviteToken     String?           @unique  // for defendant to join
+  // ── Relations ─────────────────────────────────────────
+  documents           Document[]
+  timeline            TimelineEvent[]
+  bookings            Booking[]
+  messages            Message[]
+  caseParties         CaseParty[]
+  hearings            Hearing[]
+  courtDocuments      CourtDocument[]
+  evidence            Evidence[]
+  limitationPeriod    LimitationPeriod?
+  settlements         Settlement[]
+  judgment            Judgment?
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+}
+
+model Document {
+  id          String    @id @default(cuid())
+  title       String
+  type        String
+  content     String?
+  fileUrl     String?
+  matterId    String
+  matter      Matter    @relation(fields: [matterId], references: [id])
+  uploaderId  String
+  uploader    User      @relation(fields: [uploaderId], references: [id])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model TimelineEvent {
+  id          String    @id @default(cuid())
+  title       String
+  description String?
+  date        DateTime
+  matterId    String
+  matter      Matter    @relation(fields: [matterId], references: [id])
+  createdAt   DateTime  @default(now())
+}
+
+model Booking {
+  id                String    @id @default(cuid())
+  userId            String
+  user              User      @relation(fields: [userId], references: [id])
+  advocateId        String
+  advocate          Advocate  @relation(fields: [advocateId], references: [id])
+  matterId          String?
+  matter            Matter?   @relation(fields: [matterId], references: [id])
+
+  date              String    // "2026-08-10"
+  time              String    // "11:00 AM"
+  duration          Int       @default(60) // minutes
+  timezone          String    @default("Asia/Kolkata")
+
+  status            String    @default("CONFIRMED")
+  // "PENDING" | "CONFIRMED" | "CANCELLED" | "COMPLETED" | "RESCHEDULED"
+
+  consultationType  String    @default("VIDEO")
+  // "VIDEO" | "PHONE" | "IN_PERSON"
+
+  meetLink          String?   // Jitsi meet URL
+  meetPassword      String?   // optional room password
+
+  userNotes         String?   // user's brief description
+  lawyerNotes       String?   // lawyer's prep notes (private)
+
+  consultationFee   Float
+  currency          String    @default("INR")
+  paymentStatus     String    @default("PENDING")
+  // "PENDING" | "PAID" | "REFUNDED" | "FAILED"
+  razorpayOrderId   String?
+  razorpayPaymentId String?
+
+  confirmationCode  String    @unique // e.g. "LN-2026-8471"
+
+  userEmailSent     Boolean   @default(false)
+  lawyerEmailSent   Boolean   @default(false)
+  reminderSent      Boolean   @default(false)
+
+  cancelReason      String?
+  cancelledBy       String?
+  cancelledAt       DateTime?
+
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  text      String
+  matterId  String
+  matter    Matter   @relation(fields: [matterId], references: [id])
+  senderId  String
+  sender    User     @relation(fields: [senderId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+// ─── New Models ───────────────────────────────────────────
+
+model CaseParty {
+  id       String    @id @default(cuid())
+  caseId   String
+  matter   Matter    @relation(fields: [caseId], references: [id])
+  userId   String
+  user     User      @relation(fields: [userId], references: [id])
+  role     String    // "PLAINTIFF" | "DEFENDANT" | "WITNESS"
+  lawyerId String?
+  lawyer   Advocate? @relation(fields: [lawyerId], references: [id])
+  joinedAt DateTime  @default(now())
+  status   String    @default("ACTIVE")
+}
+
+model Hearing {
+  id            String    @id @default(cuid())
+  caseId        String
+  matter        Matter    @relation(fields: [caseId], references: [id])
+  hearingDate   DateTime
+  hearingTime   String
+  courtName     String
+  courtNumber   String?
+  judgeName     String?
+  purpose       String
+  // "FIRST_HEARING" | "EVIDENCE" | "ARGUMENTS" |
+  // "JUDGMENT" | "ADJOURNED"
+  outcome       String?
+  // "ADJOURNED" | "ARGUED" | "ORDER_RESERVED" | "JUDGMENT_PASSED"
+  adjournReason String?
+  nextDate      DateTime?
+  notes         String?
+  createdAt     DateTime  @default(now())
+  reminderSent  Boolean   @default(false)
+}
+
+model CourtDocument {
+  id            String   @id @default(cuid())
+  caseId        String
+  matter        Matter   @relation(fields: [caseId], references: [id])
+  title         String
+  type          String
+  // "COMPLAINT" | "WRITTEN_STATEMENT" | "AFFIDAVIT" |
+  // "EVIDENCE" | "VAKALATNAMA" | "LEGAL_NOTICE" | "ORDER"
+  filedBy       String   // "PLAINTIFF" | "DEFENDANT" | "COURT"
+  fileUrl       String?  // Supabase storage URL
+  content       String?  // AI generated text
+  isShared      Boolean  @default(false) // visible to both parties?
+  filingDate    DateTime @default(now())
+  courtReceived Boolean  @default(false)
+  exhibitNumber String?  // e.g. "P-1", "D-1"
+  uploadedById  String
+}
+
+model Evidence {
+  id              String   @id @default(cuid())
+  caseId          String
+  matter          Matter   @relation(fields: [caseId], references: [id])
+  title           String
+  description     String
+  fileUrl         String?
+  fileType        String?  // "PDF" | "IMAGE" | "VIDEO" | "AUDIO"
+  uploadedById    String
+  party           String   // "PLAINTIFF" | "DEFENDANT"
+  exhibitNum      String?  // "P-1", "P-2", "D-1" etc
+  admittedByCourt Boolean  @default(false)
+  createdAt       DateTime @default(now())
+}
+
+model LimitationPeriod {
+  id             String   @id @default(cuid())
+  caseId         String   @unique
+  matter         Matter   @relation(fields: [caseId], references: [id])
+  caseType       String
+  filingDeadline DateTime
+  warningDays    String   // JSON string e.g. "[30,15,7,1]" (SQLite: no Int[])
+  warningsSent   String   @default("[]") // JSON string
+  isExpired      Boolean  @default(false)
+  legalBasis     String   // e.g. "Limitation Act 1963, Article 5"
+}
+
+model Settlement {
+  id                String    @id @default(cuid())
+  caseId            String
+  matter            Matter    @relation(fields: [caseId], references: [id])
+  proposedBy        String    // userId
+  terms             String    // full settlement terms text
+  amount            Float?
+  status            String    @default("PROPOSED")
+  // "PROPOSED" | "COUNTER" | "ACCEPTED" | "REJECTED" | "EXECUTED"
+  signedByPlaintiff Boolean   @default(false)
+  signedByDefendant Boolean   @default(false)
+  signedAt          DateTime?
+  expiresAt         DateTime?
+  createdAt         DateTime  @default(now())
+}
+
+model Judgment {
+  id              String    @id @default(cuid())
+  caseId          String    @unique
+  matter          Matter    @relation(fields: [caseId], references: [id])
+  judgmentDate    DateTime
+  judgeName       String
+  outcome         String
+  // "PLAINTIFF_WON" | "DEFENDANT_WON" | "PARTIAL" | "DISMISSED"
+  orderText       String    // full judgment text
+  plainEnglish    String    // AI explanation for non-lawyers
+  amountAwarded   Float?
+  executionStatus String    @default("PENDING")
+  appealDeadline  DateTime?
+  createdAt       DateTime  @default(now())
+}
+
+model CaseNotification {
+  id          String    @id @default(cuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id])
+  caseId      String
+  type        String
+  // "HEARING_REMINDER" | "DOCUMENT_FILED" | "DEADLINE_WARNING" |
+  // "LAWYER_MESSAGE" | "SETTLEMENT_PROPOSAL" | "JUDGMENT"
+  title       String
+  message     String
+  channel     String    @default("APP") // "APP" | "EMAIL" | "WHATSAPP"
+  isRead      Boolean   @default(false)
+  scheduledAt DateTime?
+  sentAt      DateTime?
+  createdAt   DateTime  @default(now())
+}

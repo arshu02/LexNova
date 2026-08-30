@@ -1,0 +1,50 @@
+[
+  {
+    "id": 1,
+    "name": "Rahul Sharma",
+    "type": "Labour Lawyer",
+    "experience": 8,
+    "location": "Delhi",
+    "rating": 4.7,
+    "casesHandled": 120,
+    "qualification": "LLB, Delhi University",
+    "specialization": ["Salary Disputes", "Employment Issues"],
+    "fee": "₹2000/session"
+  },
+  {
+    "id": 2,
+    "name": "Priya Mehta",
+    "type": "Consumer Lawyer",
+    "experience": 6,
+    "location": "Mumbai",
+    "rating": 4.5,
+    "casesHandled": 95,
+    "qualification": "LLM, Mumbai University",
+    "specialization": ["Refund Cases", "E-commerce Disputes"],
+    "fee": "₹1500/session"
+  },
+  {
+    "id": 3,
+    "name": "Amit Verma",
+    "type": "Criminal Lawyer",
+    "experience": 10,
+    "location": "Bangalore",
+    "rating": 4.8,
+    "casesHandled": 200,
+    "qualification": "LLB, NLSIU Bangalore",
+    "specialization": ["Cyber Crime", "Fraud"],
+    "fee": "₹3000/session"
+  },
+  {
+    "id": 4,
+    "name": "Sneha Kapoor",
+    "type": "Property Lawyer",
+    "experience": 7,
+    "location": "Delhi",
+    "rating": 4.6,
+    "casesHandled": 140,
+    "qualification": "LLB, Amity University",
+    "specialization": ["Rental Disputes", "Property Law"],
+    "fee": "₹1800/session"
+  }
+]
