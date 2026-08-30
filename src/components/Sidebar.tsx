@@ -252,20 +252,20 @@ export function Sidebar() {
               fontSize: '12px', fontWeight: '700', color: '#FFFFFF',
               flexShrink: 0,
             }}>
-              {session?.user?.name ? session.user.name[0].toUpperCase() : 'R'}
+              {session?.user?.name ? session.user.name[0].toUpperCase() : (session?.user?.email ? session.user.email[0].toUpperCase() : 'U')}
             </div>
             <div style={{ minWidth: 0 }}>
               <div style={{ fontSize: '13px', fontWeight: '600', color: '#FFFFFF', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                {session?.user?.name || 'Ragnar Lothbrok'}
+                {session?.user?.name || session?.user?.email?.split('@')[0] || 'User'}
               </div>
               <div style={{ fontSize: '11px', color: '#9AA5B5', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                {session?.user?.email || 'hailragnar01@gmail.com'}
+                {session?.user?.email || ''}
               </div>
             </div>
           </div>
 
           <button
-            onClick={() => signOut({ callbackUrl: '/' })}
+            onClick={() => signOut({ callbackUrl: '/auth/login' })}
             style={{
               background: 'none',
               border: 'none',

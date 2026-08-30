@@ -86,7 +86,7 @@ export default function UserOverviewDashboard() {
             <Sparkles size={14} /> Enterprise Legal Command Center
           </div>
           <h1 style={{ fontSize: "32px", fontWeight: "700", color: "#FFFFFF", letterSpacing: "-0.03em" }}>
-            Welcome back, {session?.user?.name || "Ragnar Lothbrok"}
+            Welcome back, {session?.user?.name || session?.user?.email?.split('@')[0] || "User"}
           </h1>
           <p style={{ fontSize: "15px", color: "#D7DCE5", marginTop: "4px" }}>
             Overview of your active legal matters, court limitation windows, scheduled video consultations, and pending pleadings.

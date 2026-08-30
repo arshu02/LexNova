@@ -37,7 +37,7 @@ export default function ConsultationRoomPage() {
       id: "m2",
       sender: "lawyer",
       senderName: "Advocate Rajesh Sharma",
-      text: "Good afternoon Ragnar. I have reviewed your employment agreement and the resignation acceptance email. Everything is in order for the RPAD notice.",
+      text: "Good afternoon. I have reviewed your employment agreement and the resignation acceptance email. Everything is in order for the RPAD notice.",
       time: "04:30 PM",
     }
   ]);
@@ -59,7 +59,7 @@ export default function ConsultationRoomPage() {
     const newMsg: ChatMessage = {
       id: Date.now().toString(),
       sender: "client",
-      senderName: session?.user?.name || "Ragnar Lothbrok",
+      senderName: session?.user?.name || session?.user?.email?.split('@')[0] || "Client",
       text: input.trim(),
       time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     };
@@ -166,7 +166,7 @@ export default function ConsultationRoomPage() {
           </div>
 
           <div style={{ background: "#171E29", border: "1px solid #263142", borderRadius: "12px", padding: "14px", fontSize: "13px", color: "#D7DCE5", lineHeight: "1.55" }}>
-            <strong style={{ color: "#FFFFFF" }}>Client:</strong> Ragnar Lothbrok<br />
+            <strong style={{ color: "#FFFFFF" }}>Client:</strong> {session?.user?.name || session?.user?.email?.split('@')[0] || "Client"}<br />
             <strong style={{ color: "#FFFFFF" }}>Opposing:</strong> TechCorp Solutions<br />
             <strong style={{ color: "#FFFFFF" }}>Claim:</strong> ₹95,000 Unpaid Salary<br />
             <strong style={{ color: "#FFFFFF" }}>Statute:</strong> Payment of Wages Act §15

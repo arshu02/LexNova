@@ -21,7 +21,6 @@ const nextConfig = {
   poweredByHeader: false,
   compress: true,
   swcMinify: true,
-  output: 'standalone',
 
   experimental: {
     optimizePackageImports: ['lucide-react', 'framer-motion', 'axios'],

@@ -216,7 +216,7 @@ export default function SignupPage() {
               required
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder={role === 'USER' ? 'e.g. Ragnar Lothbrok' : 'e.g. Adv. Rajesh Sharma'}
+              placeholder={role === 'USER' ? 'e.g. Arjun Mehta' : 'e.g. Adv. Rajesh Sharma'}
               className="w-full bg-[#07090E] border border-white/[0.1] rounded-xl px-3.5 py-2.5 text-[14px] text-white placeholder-[#4E5D70] focus:border-blue-500 focus:outline-none transition-colors"
             />
           </div>

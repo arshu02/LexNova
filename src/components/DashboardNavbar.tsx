@@ -235,8 +235,8 @@ export function DashboardNavbar() {
               gap: '10px',
             }}>
               <div style={{ borderBottom: '1px solid #263142', paddingBottom: '10px' }}>
-                <div style={{ fontSize: '14px', fontWeight: '700', color: '#FFFFFF' }}>{session?.user?.name || 'Ragnar Lothbrok'}</div>
-                <div style={{ fontSize: '12px', color: '#9AA5B5', marginTop: '1px' }}>{session?.user?.email || 'hailragnar01@gmail.com'}</div>
+                <div style={{ fontSize: '14px', fontWeight: '700', color: '#FFFFFF' }}>{session?.user?.name || session?.user?.email?.split('@')[0] || 'User'}</div>
+                <div style={{ fontSize: '12px', color: '#9AA5B5', marginTop: '1px' }}>{session?.user?.email || ''}</div>
               </div>
 
               <Link
@@ -257,7 +257,7 @@ export function DashboardNavbar() {
               </Link>
 
               <button
-                onClick={() => signOut({ callbackUrl: '/' })}
+                onClick={() => signOut({ callbackUrl: '/auth/login' })}
                 style={{
                   background: 'none',
                   border: 'none',
