@@ -1,4 +1,6 @@
 'use client';
+
+import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { signOut, useSession } from 'next-auth/react';
@@ -25,128 +27,48 @@ export function Sidebar() {
   const { data: session } = useSession();
 
   return (
-    <aside style={{
-      position: 'fixed',
-      top: 0, left: 0, bottom: 0,
-      width: '250px',
-      background: '#0D1118',
-      borderRight: '1px solid #263142',
-      display: 'flex',
-      flexDirection: 'column',
-      zIndex: 40,
-      fontFamily: 'var(--font-sans)',
-    }}>
-
-      {/* Logo -> Redirects to Main Page */}
+    <aside className="fixed top-0 left-0 bottom-0 w-[250px] bg-[#06080F] border-r border-white/[0.08] flex flex-col z-40">
+      
+      {/* Brand Header */}
       <Link 
         href="/" 
-        style={{
-          textDecoration: 'none',
-          padding: '20px 20px',
-          borderBottom: '1px solid #263142',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '12px',
-          transition: 'background 0.15s ease',
-          cursor: 'pointer',
-        }}
-        onMouseEnter={(e) => {
-          (e.currentTarget as HTMLElement).style.background = '#121823';
-        }}
-        onMouseLeave={(e) => {
-          (e.currentTarget as HTMLElement).style.background = 'transparent';
-        }}
+        className="p-5 border-b border-white/[0.06] flex items-center gap-3 hover:bg-white/[0.02] transition-colors group cursor-pointer"
         title="Go to LexNova Homepage"
       >
-        <div style={{
-          width: '36px', height: '36px',
-          background: 'linear-gradient(135deg, #3B82F6, #1D4ED8)',
-          borderRadius: '10px',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          boxShadow: '0 2px 10px rgba(59, 130, 246, 0.4)',
-          flexShrink: 0,
-        }}>
-          <Scale size={20} color="white" />
+        <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-700 flex items-center justify-center text-white shadow-lg shadow-blue-500/25 group-hover:scale-105 transition-transform flex-shrink-0">
+          <Scale size={18} />
         </div>
         <div>
-          <div style={{
-            fontSize: '17px', fontWeight: '700',
-            color: '#FFFFFF', letterSpacing: '-0.02em',
-            display: 'flex', alignItems: 'center', gap: '6px',
-          }}>
+          <div className="text-[16px] font-bold text-white tracking-tight flex items-center gap-1.5">
             LexNova
-            <span style={{
-              fontSize: '11px',
-              padding: '2px 6px',
-              borderRadius: '4px',
-              background: 'rgba(59, 130, 246, 0.16)',
-              border: '1px solid rgba(59, 130, 246, 0.3)',
-              color: '#60A5FA',
-              fontWeight: '700',
-              letterSpacing: '0.04em',
-            }}>
-              OS
+            <span className="text-[10px] font-bold text-blue-400 bg-blue-500/10 border border-blue-500/25 px-1.5 py-0.2 rounded-md tracking-wider uppercase">
+              2.5
             </span>
           </div>
-          <div style={{
-            fontSize: '11px', color: '#9AA5B5',
-            letterSpacing: '0.04em',
-            fontWeight: '600',
-            marginTop: '2px',
-          }}>
+          <p className="text-[11px] text-[#6B7B94] font-medium mt-0.5">
             AI Legal Operating System
-          </div>
+          </p>
         </div>
       </Link>
 
       {/* Start New Matter Action CTA Button */}
-      <div style={{ padding: '16px 16px 8px 16px' }}>
+      <div className="p-4 pb-2">
         <Link
           href="/dashboard/chat"
-          style={{
-            textDecoration: 'none',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            background: 'linear-gradient(180deg, #1C2433, #121823)',
-            border: '1px solid #38475C',
-            borderRadius: '12px',
-            padding: '11px 16px',
-            color: '#FFFFFF',
-            fontSize: '14px',
-            fontWeight: '600',
-            transition: 'all 0.15s ease',
-            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)',
-          }}
-          onMouseEnter={(e) => {
-            (e.currentTarget as HTMLElement).style.borderColor = '#3B82F6';
-            (e.currentTarget as HTMLElement).style.boxShadow = '0 2px 14px rgba(59, 130, 246, 0.35)';
-          }}
-          onMouseLeave={(e) => {
-            (e.currentTarget as HTMLElement).style.borderColor = '#38475C';
-            (e.currentTarget as HTMLElement).style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.3)';
-          }}
+          className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-blue-600/20 to-indigo-600/10 hover:from-blue-600/30 hover:to-indigo-600/20 border border-blue-500/30 hover:border-blue-500/50 text-white text-[13.5px] font-semibold transition-all shadow-md group"
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Plus size={16} color="#60A5FA" />
+          <div className="flex items-center gap-2">
+            <Plus size={15} className="text-blue-400 group-hover:rotate-90 transition-transform" />
             <span>New Case Matter</span>
           </div>
-          <ChevronRight size={14} color="#9AA5B5" />
+          <ChevronRight size={14} className="text-[#8D9CB0] group-hover:translate-x-0.5 transition-transform" />
         </Link>
       </div>
 
       {/* Navigation Sections */}
-      <div style={{ flex: 1, overflowY: 'auto', padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-        
-        <div style={{
-          fontSize: '11px',
-          fontWeight: '700',
-          color: '#6B7A90',
-          textTransform: 'uppercase',
-          letterSpacing: '0.08em',
-          padding: '8px 10px 4px 10px',
-        }}>
-          Workspace
+      <div className="flex-1 overflow-y-auto px-3 py-2 space-y-1 scrollbar-none">
+        <div className="text-[10.5px] font-bold text-[#55667E] uppercase tracking-wider px-3 py-2">
+          Workspace Hub
         </div>
 
         {NAV_MAIN.map((item) => {
@@ -157,109 +79,36 @@ export function Sidebar() {
             <Link
               key={item.href}
               href={item.href}
-              style={{
-                textDecoration: 'none',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                padding: '10px 14px',
-                borderRadius: '10px',
-                fontSize: '14.5px',
-                fontWeight: isActive ? '600' : '500',
-                color: isActive ? '#FFFFFF' : '#D7DCE5',
-                background: isActive ? '#1C2433' : 'transparent',
-                border: isActive ? '1px solid #38475C' : '1px solid transparent',
-                transition: 'all 0.15s ease',
-              }}
-              onMouseEnter={(e) => {
-                if (!isActive) {
-                  (e.currentTarget as HTMLElement).style.background = '#121823';
-                  (e.currentTarget as HTMLElement).style.color = '#FFFFFF';
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (!isActive) {
-                  (e.currentTarget as HTMLElement).style.background = 'transparent';
-                  (e.currentTarget as HTMLElement).style.color = '#D7DCE5';
-                }
-              }}
+              className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-[13.5px] font-medium transition-all ${
+                isActive
+                  ? 'text-white bg-blue-600/15 border border-blue-500/30 shadow-sm'
+                  : 'text-[#8D9CB0] hover:text-white hover:bg-white/[0.04] border border-transparent'
+              }`}
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <Icon size={17} color={isActive ? '#3B82F6' : '#9AA5B5'} />
+              <div className="flex items-center gap-2.5">
+                <Icon size={16} className={isActive ? 'text-blue-400' : 'text-[#6B7B94]'} />
                 <span>{item.label}</span>
               </div>
               {isActive && (
-                <span style={{
-                  width: '6px', height: '6px',
-                  borderRadius: '50%',
-                  background: '#3B82F6',
-                  boxShadow: '0 0 8px #3B82F6',
-                }} />
+                <span className="w-1.5 h-1.5 rounded-full bg-blue-400 shadow-[0_0_8px_#3B82F6]" />
               )}
             </Link>
           );
         })}
       </div>
 
-      {/* User Footer Profile & Settings */}
-      <div style={{
-        padding: '14px 16px',
-        borderTop: '1px solid #263142',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '10px',
-        background: '#0D1118',
-      }}>
-        <Link
-          href="/dashboard/settings"
-          style={{
-            textDecoration: 'none',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            fontSize: '13px',
-            color: '#9AA5B5',
-            padding: '6px 8px',
-            borderRadius: '8px',
-            transition: 'color 0.15s ease',
-          }}
-          onMouseEnter={(e) => {
-            (e.currentTarget as HTMLElement).style.color = '#FFFFFF';
-          }}
-          onMouseLeave={(e) => {
-            (e.currentTarget as HTMLElement).style.color = '#9AA5B5';
-          }}
-        >
-          <Settings size={15} />
-          <span>Settings & API Keys</span>
-        </Link>
-
-        {/* User Card */}
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          padding: '8px 10px',
-          background: '#121823',
-          border: '1px solid #263142',
-          borderRadius: '10px',
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '9px', minWidth: 0 }}>
-            <div style={{
-              width: '28px', height: '28px',
-              borderRadius: '50%',
-              background: 'linear-gradient(135deg, #3B82F6, #1E293B)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: '12px', fontWeight: '700', color: '#FFFFFF',
-              flexShrink: 0,
-            }}>
+      {/* User Session Footer */}
+      <div className="p-3 border-t border-white/[0.06] bg-[#04060B]">
+        <div className="p-2 rounded-xl bg-white/[0.03] border border-white/[0.06] flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center text-white text-[12px] font-bold shrink-0 shadow-sm">
               {session?.user?.name ? session.user.name[0].toUpperCase() : (session?.user?.email ? session.user.email[0].toUpperCase() : 'U')}
             </div>
-            <div style={{ minWidth: 0 }}>
-              <div style={{ fontSize: '13px', fontWeight: '600', color: '#FFFFFF', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+            <div className="min-w-0">
+              <div className="text-[13px] font-semibold text-white truncate">
                 {session?.user?.name || session?.user?.email?.split('@')[0] || 'User'}
               </div>
-              <div style={{ fontSize: '11px', color: '#9AA5B5', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              <div className="text-[11px] text-[#6B7B94] truncate">
                 {session?.user?.email || ''}
               </div>
             </div>
@@ -270,25 +119,10 @@ export function Sidebar() {
               try { await supabase.auth.signOut(); } catch (e) {}
               await signOut({ callbackUrl: '/auth/login' });
             }}
-            style={{
-              background: 'none',
-              border: 'none',
-              color: '#9AA5B5',
-              cursor: 'pointer',
-              padding: '4px',
-              borderRadius: '4px',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              transition: 'color 0.15s ease',
-            }}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLElement).style.color = '#EF4444';
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLElement).style.color = '#9AA5B5';
-            }}
+            className="p-1.5 text-[#8D9CB0] hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors shrink-0"
             title="Sign out"
           >
-            <LogOut size={15} />
+            <LogOut size={14} />
           </button>
         </div>
       </div>
@@ -296,4 +130,5 @@ export function Sidebar() {
     </aside>
   );
 }
+
 export default Sidebar;

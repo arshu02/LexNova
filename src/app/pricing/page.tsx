@@ -1,157 +1,190 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
-import { Check, ArrowRight, Shield, Sparkles, Scale, Video } from 'lucide-react';
+import { Check, ArrowRight, ShieldCheck, Sparkles, Scale, Video, Zap, Building2, HelpCircle } from 'lucide-react';
 import Link from 'next/link';
 
+const PLANS = [
+  {
+    name: "Citizen Starter",
+    desc: "For individuals and citizens evaluating legal disputes and limitation deadlines.",
+    priceMonthly: "₹0",
+    priceAnnual: "₹0",
+    period: "forever free",
+    badge: null,
+    highlight: false,
+    cta: "Start Free Assessment",
+    ctaLink: "/dashboard/chat",
+    features: [
+      "AI Neural Case Assessment (42ms)",
+      "Statutory Act & Section Mapping",
+      "Limitation Clock Countdown",
+      "Supreme Court Precedent Search",
+      "High Court Advocate Matching",
+      "Standard Community Support",
+    ],
+  },
+  {
+    name: "Professional Advocate",
+    desc: "For practicing advocates, solo legal counsels, and litigation teams.",
+    priceMonthly: "₹799",
+    priceAnnual: "₹639",
+    period: "per month, billed annually",
+    badge: "Most Popular",
+    highlight: true,
+    cta: "Start 14-Day Free Trial",
+    ctaLink: "/auth/signup",
+    features: [
+      "Everything in Citizen Starter",
+      "Court-Ready RPAD Demand Notice Drafting",
+      "Section 138 Cheque Bounce & Recovery Notices",
+      "Consumer Court (NCDRC/DCDRC) Complaints",
+      "Digital Watermark & Seal Customization",
+      "Client Video Consultation Room with Jitsi",
+      "Priority WhatsApp & Email Support",
+    ],
+  },
+  {
+    name: "Enterprise Law Firm",
+    desc: "For multi-advocate law firms, corporate legal teams, and enterprise enterprises.",
+    priceMonthly: "₹4,999",
+    priceAnnual: "₹3,999",
+    period: "per workspace / month",
+    badge: "Enterprise Grade",
+    highlight: false,
+    cta: "Deploy Enterprise Workspace",
+    ctaLink: "/dashboard/team",
+    features: [
+      "Everything in Professional Advocate",
+      "Unlimited Multi-Tenant Team Members",
+      "Role-Based Access (Partner, Senior, Associate)",
+      "Public REST API v1 (120 req/min)",
+      "Automated PII Sanitization Engine",
+      "Immutable SOC 2 / ISO 27001 SIEM Audit Logs",
+      "Dedicated Enterprise Account Manager & SLA",
+    ],
+  },
+];
+
 export default function PricingPage() {
+  const [annual, setAnnual] = useState(true);
+
   return (
-    <div className="min-h-screen bg-[#000000] text-[#F5F5F7] selection:bg-blue-600/30 font-sans overflow-x-hidden">
+    <div className="min-h-screen bg-[#05070D] text-white selection:bg-blue-600 selection:text-white flex flex-col">
       <Navbar />
 
-      {/* Ambient Glow */}
-      <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[700px] h-[700px] bg-white/[0.02] rounded-full blur-[160px]" />
-      </div>
+      {/* Hero Ambient Glow */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-radial-glow from-blue-600/[0.1] to-transparent rounded-full blur-[140px] pointer-events-none" />
 
-      <main className="max-w-7xl mx-auto px-6 pt-44 pb-32 relative z-10 space-y-20">
+      <main className="max-w-6xl mx-auto px-6 pt-36 sm:pt-44 pb-28 relative z-10 space-y-16">
         
         {/* Header */}
-        <div className="max-w-3xl space-y-4">
-          <div className="resend-badge">
-            <span className="text-[13.5px]">Plans & Transparent Pricing</span>
+        <div className="text-center space-y-4 max-w-3xl mx-auto">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[12px] font-semibold">
+            <Sparkles size={13} /> Transparent Pricing Architecture
           </div>
-          
-          <h1 className="text-[52px] md:text-[68px] font-display text-white tracking-tight leading-[1.02]">
-            Simple, transparent<br />pricing
+          <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-gradient leading-tight">
+            Predictable Plans for Every Legal Scale
           </h1>
-          <p className="text-[19px] text-[#CBD5E1] leading-relaxed max-w-xl">
-            Start with free AI legal analysis. Upgrade to automated court-ready drafting or schedule consultations with verified advocates.
+          <p className="text-[16px] text-[#8D9CB0] max-w-xl mx-auto">
+            From single-matter citizen assessments to multi-partner enterprise law firm infrastructure.
           </p>
+
+          {/* Billing Toggle */}
+          <div className="pt-4 flex items-center justify-center gap-3">
+            <span className={`text-[13.5px] font-semibold ${!annual ? 'text-white' : 'text-[#8D9CB0]'}`}>Monthly</span>
+            <button
+              onClick={() => setAnnual(!annual)}
+              className="w-14 h-7 rounded-full bg-white/[0.08] border border-white/[0.12] p-1 relative transition-colors focus:outline-none"
+            >
+              <div className={`w-5 h-5 rounded-full bg-blue-500 transition-transform ${annual ? 'translate-x-7' : 'translate-x-0'}`} />
+            </button>
+            <span className={`text-[13.5px] font-semibold flex items-center gap-1.5 ${annual ? 'text-white' : 'text-[#8D9CB0]'}`}>
+              <span>Annual</span>
+              <span className="px-2 py-0.5 rounded-full text-[10.5px] font-bold uppercase tracking-wider bg-emerald-500/15 border border-emerald-500/30 text-emerald-400">
+                Save 20%
+              </span>
+            </span>
+          </div>
         </div>
 
-        {/* Pricing Cards Grid */}
-        <div className="grid md:grid-cols-3 gap-8 items-stretch">
-          
-          {/* Plan 1: Free Starter */}
-          <div className="p-8 sm:p-9 bg-[#0A0A0D] border border-white/[0.1] rounded-2xl flex flex-col justify-between hover:border-white/[0.2] transition-colors space-y-8 shadow-xl">
-            <div className="space-y-6">
-              <div>
-                <h3 className="text-[22px] font-bold text-white">AI Case Intake</h3>
-                <p className="text-[14px] text-[#94A3B8] mt-1">For citizens and individuals exploring legal rights.</p>
-              </div>
+        {/* Pricing Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
+          {PLANS.map((plan, idx) => (
+            <div
+              key={idx}
+              className={`rounded-3xl p-8 flex flex-col justify-between transition-all duration-300 relative ${
+                plan.highlight
+                  ? 'bg-gradient-to-b from-[#0E1528] to-[#080C17] border-2 border-blue-500/50 shadow-2xl shadow-blue-500/10 -translate-y-2'
+                  : 'bg-[#080B14]/80 backdrop-blur-xl border border-white/[0.08] hover:border-white/[0.16]'
+              }`}
+            >
+              {plan.badge && (
+                <div className="absolute -top-3 right-6 px-3 py-0.5 bg-blue-600 text-white text-[11px] font-bold rounded-full uppercase tracking-wider shadow-md">
+                  {plan.badge}
+                </div>
+              )}
 
-              <div className="flex items-baseline gap-1.5">
-                <span className="text-[42px] font-bold text-white font-mono">₹0</span>
-                <span className="text-[14px] text-[#94A3B8]">/ forever free</span>
-              </div>
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-xl font-bold text-white">{plan.name}</h3>
+                  <p className="text-[13px] text-[#8D9CB0] mt-1 leading-relaxed">{plan.desc}</p>
+                </div>
 
-              <div className="pt-5 border-t border-white/[0.08] space-y-3.5">
-                {[
-                  "4-Step Conversational AI Intake",
-                  "Statutory Act Identification (CPC, CPA 2019)",
-                  "Limitation Period Clock Calculation",
-                  "Authoritative Supreme Court Guidance",
-                  "Advocate Matching & Compatibility Score",
-                ].map((item) => (
-                  <div key={item} className="flex items-center gap-3 text-[15px] text-[#CBD5E1]">
-                    <Check size={16} className="text-emerald-400 shrink-0" />
-                    <span>{item}</span>
+                <div>
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-4xl font-extrabold text-white">
+                      {annual ? plan.priceAnnual : plan.priceMonthly}
+                    </span>
+                    <span className="text-[13px] text-[#8D9CB0] ml-1">/ {annual ? 'mo (billed annually)' : 'month'}</span>
                   </div>
-                ))}
+                </div>
+
+                <div className="pt-4 border-t border-white/[0.06] space-y-3">
+                  {plan.features.map((feat, fIdx) => (
+                    <div key={fIdx} className="flex items-start gap-2.5 text-[13.5px] text-[#CBD5E1]">
+                      <Check size={16} className="text-emerald-400 shrink-0 mt-0.5" />
+                      <span>{feat}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="pt-8">
+                <Link
+                  href={plan.ctaLink}
+                  className={`w-full py-3 rounded-xl font-semibold text-[14px] transition-all flex items-center justify-center gap-2 ${
+                    plan.highlight
+                      ? 'btn-glow-blue shadow-lg shadow-blue-600/30'
+                      : 'btn-ghost'
+                  }`}
+                >
+                  <span>{plan.cta}</span>
+                  <ArrowRight size={14} />
+                </Link>
               </div>
             </div>
+          ))}
+        </div>
 
-            <Link
-              href="/dashboard/chat"
-              className="btn-ghost text-[15px] font-semibold text-center w-full"
-            >
-              Get Started Free
-            </Link>
+        {/* Enterprise Security Section */}
+        <div className="p-8 rounded-3xl bg-[#080B14] border border-white/[0.08] flex flex-col sm:flex-row items-center justify-between gap-6">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-2xl bg-cyan-500/10 border border-cyan-500/25 flex items-center justify-center text-cyan-400 shrink-0">
+              <ShieldCheck size={24} />
+            </div>
+            <div>
+              <h4 className="text-[16px] font-bold text-white">Need a Custom Enterprise SLA or On-Premises Deployment?</h4>
+              <p className="text-[13px] text-[#8D9CB0]">We support custom compliance requirements, SSO/SAML integration, and high-concurrency dedicated RAG clusters.</p>
+            </div>
           </div>
 
-          {/* Plan 2: Document Studio (Featured) */}
-          <div className="p-8 sm:p-9 bg-[#0E0E12] border border-white/[0.25] rounded-2xl flex flex-col justify-between shadow-2xl relative space-y-8 shadow-blue-950/30">
-            <div className="absolute -top-3.5 right-6 px-3.5 py-1 bg-white text-black text-[11px] font-mono font-bold rounded-full uppercase tracking-wider">
-              Most Popular
-            </div>
-
-            <div className="space-y-6">
-              <div>
-                <h3 className="text-[22px] font-bold text-white">Document Studio</h3>
-                <p className="text-[14px] text-[#94A3B8] mt-1">For automated legal notices & complaint drafting.</p>
-              </div>
-
-              <div className="flex items-baseline gap-1.5">
-                <span className="text-[42px] font-bold text-white font-mono">₹499</span>
-                <span className="text-[14px] text-[#94A3B8]">/ month</span>
-              </div>
-
-              <div className="pt-5 border-t border-white/[0.08] space-y-3.5">
-                {[
-                  "Everything in AI Case Intake",
-                  "Unlimited Legal Notice Drafting",
-                  "Consumer Court (NCDRC) Petitions",
-                  "Section 138 Cheque Bounce Notices",
-                  "Direct Print & PDF Export",
-                  "Custom Fact Customization & History",
-                ].map((item) => (
-                  <div key={item} className="flex items-center gap-3 text-[15px] text-[#CBD5E1]">
-                    <Check size={16} className="text-emerald-400 shrink-0" />
-                    <span>{item}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <Link
-              href="/dashboard/documents"
-              className="btn-primary text-[15px] font-semibold text-center w-full"
-            >
-              Access Document Studio →
-            </Link>
-          </div>
-
-          {/* Plan 3: Advocate Video Consultations */}
-          <div className="p-8 sm:p-9 bg-[#0A0A0D] border border-white/[0.1] rounded-2xl flex flex-col justify-between hover:border-white/[0.2] transition-colors space-y-8 shadow-xl">
-            <div className="space-y-6">
-              <div>
-                <h3 className="text-[22px] font-bold text-white">Video Consultation</h3>
-                <p className="text-[14px] text-[#94A3B8] mt-1">Direct 1-on-1 strategy call with verified counsel.</p>
-              </div>
-
-              <div className="flex items-baseline gap-1.5">
-                <span className="text-[42px] font-bold text-white font-mono">₹799</span>
-                <span className="text-[14px] text-[#94A3B8]">/ from per 60-min session</span>
-              </div>
-
-              <div className="pt-5 border-t border-white/[0.08] space-y-3.5">
-                {[
-                  "Bar Council Enrolled Trial Advocates",
-                  "60-Minute HD Video Consultation Room",
-                  "Pre-Meeting 60s AI Counsel Briefing",
-                  "Document Sign-off & RPAD Notice Review",
-                  "Email Confirmation & Appointment Reminders",
-                ].map((item) => (
-                  <div key={item} className="flex items-center gap-3 text-[15px] text-[#CBD5E1]">
-                    <Check size={16} className="text-emerald-400 shrink-0" />
-                    <span>{item}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <Link
-              href="/advocates"
-              className="btn-ghost text-[15px] font-semibold text-center w-full"
-            >
-              Browse Advocates
-            </Link>
-          </div>
-
+          <Link href="/dashboard/team" className="btn-primary shrink-0 text-[13.5px]">
+            Contact Legal Engineering →
+          </Link>
         </div>
 
       </main>
