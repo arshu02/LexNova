@@ -6,7 +6,8 @@ import {
   Send, Loader2, RefreshCw, Copy, Shield, ShieldCheck, Lock, Star, 
   Users, Scale, CheckCircle, ChevronRight, FileText, AlertCircle, Briefcase,
   ArrowUp, Sparkles, MapPin, AlertTriangle, Home, ShoppingCart, KeyRound, 
-  Building, HeartHandshake, FileSignature, Clock, Check
+  Building, HeartHandshake, FileSignature, Clock, Check, Mic, Paperclip,
+  Languages, CornerDownLeft
 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import BookingModal from '@/components/BookingModal';
@@ -49,73 +50,52 @@ interface Message {
   };
 }
 
-const LEGAL_CATEGORIES = [
+const POPULAR_PROMPTS = [
   {
     icon: Home,
-    title: "Rental & Property",
-    color: "#60A5FA",
-    queries: [
-      "Landlord refusing to return ₹75,000 security deposit",
-      "Received sudden 15-day illegal eviction notice from landlord",
-      "Builder delayed flat possession by 2 years under RERA"
-    ]
+    tag: "Tenancy Dispute",
+    title: "Landlord refusing to refund security deposit",
+    description: "Calculate 15-day RPAD demand notice & statutory interest under State Rent Act",
+    query: "My landlord is withholding my ₹75,000 security deposit after I vacated the flat with 30 days notice. What legal notice should I send and how do I recover it under the Rent Control Act?",
+    color: "from-blue-500/20 to-cyan-500/10",
+    border: "group-hover:border-blue-500/40",
+    badge: "text-blue-400 bg-blue-500/10 border-blue-500/20",
   },
   {
     icon: Briefcase,
-    title: "Employment & Labour",
-    color: "#34D399",
-    queries: [
-      "Company withheld 2 months salary (₹95,000) and full & final settlement",
-      "Wrongfully terminated without notice period pay or severance",
-      "Employer threatening legal notice over 2-year non-compete clause"
-    ]
-  },
-  {
-    icon: ShoppingCart,
-    title: "Consumer Grievance",
-    color: "#FBBF24",
-    queries: [
-      "E-commerce seller delivered defective laptop and denied refund",
-      "Airline cancelled flight and refusing full ticket refund",
-      "Health insurance claim rejected citing vague pre-existing condition"
-    ]
-  },
-  {
-    icon: KeyRound,
-    title: "Cyber & Banking Fraud",
-    color: "#F87171",
-    queries: [
-      "Lost ₹45,000 in unauthorized UPI phishing transaction",
-      "Fake investment app scam — frozen bank account assistance",
-      "Identity theft and cyber defamation on social media"
-    ]
+    tag: "Labour & Salary",
+    title: "Wrongful termination & unpaid severance",
+    description: "Recovery under Payment of Wages Act §15 & Industrial Disputes Act",
+    query: "I was terminated without notice period pay and the company is withholding 2 months salary (₹1,20,000) and relieving letter. What are my legal remedies?",
+    color: "from-emerald-500/20 to-teal-500/10",
+    border: "group-hover:border-emerald-500/40",
+    badge: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20",
   },
   {
     icon: Building,
-    title: "Contracts & Dues",
-    color: "#A78BFA",
-    queries: [
-      "Client defaulted on ₹1,20,000 invoice for freelance software work",
-      "Received cheque bounce bank memo (Section 138 NI Act notice)",
-      "Vendor breached exclusive supply agreement with penalty clause"
-    ]
+    tag: "Commercial NI Act",
+    title: "Section 138 Cheque bounce demand",
+    description: "Strict 30-day statutory limitation timeline calculation & criminal complaint",
+    query: "A client issued a cheque of ₹2,50,000 for invoice dues which bounced due to 'Insufficient Funds'. How do I issue a Section 138 NI Act statutory legal notice?",
+    color: "from-purple-500/20 to-indigo-500/10",
+    border: "group-hover:border-purple-500/40",
+    badge: "text-purple-400 bg-purple-500/10 border-purple-500/20",
   },
   {
-    icon: HeartHandshake,
-    title: "Family & Matrimonial",
-    color: "#F472B6",
-    queries: [
-      "Mutual consent divorce process and 6-month cooling period waiver",
-      "Child custody rights and interim maintenance calculation",
-      "Ancestral property partition suit among legal heirs"
-    ]
-  }
+    icon: KeyRound,
+    tag: "Cyber Fraud",
+    title: "Unauthorized bank/UPI fraud & freezing",
+    description: "RBI circular compliance & Cyber Crime Portal 1930 recovery SOP",
+    query: "Lost ₹45,000 in an unauthorized UPI phishing transaction yesterday. How do I initiate bank chargeback and cyber cell FIR under IT Act §66D?",
+    color: "from-amber-500/20 to-orange-500/10",
+    border: "group-hover:border-amber-500/40",
+    badge: "text-amber-400 bg-amber-500/10 border-amber-500/20",
+  },
 ];
 
 function ChatContent() {
   const { data: session } = useSession();
   const userId = (session?.user as any)?.id || "user_placeholder";
-  const router = useRouter();
   const searchParams = useSearchParams();
   const initPrompt = searchParams?.get("init");
 
@@ -128,6 +108,7 @@ function ChatContent() {
   const [bookingOpen, setBookingOpen] = useState(false);
   const [selectedLawyer, setSelectedLawyer] = useState<Lawyer | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [selectedLang, setSelectedLang] = useState<'EN' | 'HI' | 'TA'>('EN');
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -137,7 +118,6 @@ function ChatContent() {
     if (initPrompt && messages.length === 0 && !loading) {
       send(initPrompt);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initPrompt]);
 
   const send = async (text?: string) => {
@@ -153,14 +133,16 @@ function ChatContent() {
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: query, userId, caseId: caseId || undefined }),
+        body: JSON.stringify({ 
+          message: query, 
+          userId, 
+          caseId: caseId || undefined,
+          language: selectedLang 
+        }),
       });
 
       const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Failed to analyze legal query");
-      }
+      if (!response.ok) throw new Error(data.error || "Failed to analyze query");
 
       if (data.caseId) setCaseId(data.caseId);
 
@@ -181,7 +163,7 @@ function ChatContent() {
         {
           id: (Date.now() + 1).toString(),
           role: "assistant",
-          content: `⚠️ Analysis Engine Error: ${err.message || "Failed to process query. Please try again."}`,
+          content: `⚠️ Analysis Engine Notice: ${err.message || "Failed to connect with AI Gateway. Please try again."}`,
           timestamp: new Date(),
         },
       ]);
@@ -207,47 +189,34 @@ function ChatContent() {
     return lines.map((line, i) => {
       if (line.startsWith("### ")) {
         return (
-          <h3 key={i} style={{ fontSize: "16px", fontWeight: "700", color: "#FFFFFF", marginTop: "16px", marginBottom: "6px", letterSpacing: "-0.01em" }}>
+          <h3 key={i} className="text-[15.5px] font-bold text-white mt-4 mb-2 tracking-tight">
             {line.replace("### ", "")}
           </h3>
         );
       }
       if (line.startsWith("## ")) {
         return (
-          <h2 key={i} style={{ fontSize: "18px", fontWeight: "700", color: "#FFFFFF", marginTop: "18px", marginBottom: "8px", letterSpacing: "-0.02em" }}>
+          <h2 key={i} className="text-[17px] font-bold text-white mt-5 mb-2.5 tracking-tight border-b border-white/[0.06] pb-1.5">
             {line.replace("## ", "")}
           </h2>
         );
       }
       if (line.startsWith("⏳") || line.toLowerCase().includes("limitation")) {
         return (
-          <div key={i} style={{
-            margin: "12px 0",
-            padding: "12px 16px",
-            borderRadius: "10px",
-            fontSize: "14px",
-            fontWeight: "500",
-            background: "rgba(245, 158, 11, 0.1)",
-            border: "1px solid rgba(245, 158, 11, 0.3)",
-            color: "#FBBF24",
-            display: "flex",
-            alignItems: "flex-start",
-            gap: "10px",
-            lineHeight: "1.5"
-          }}>
-            <Clock size={16} style={{ flexShrink: 0, marginTop: "2px" }} />
+          <div key={i} className="my-3 p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/25 text-amber-300 text-[13.5px] flex items-start gap-2.5 leading-relaxed">
+            <Clock size={16} className="shrink-0 mt-0.5 text-amber-400" />
             <span>{line.replace(/^[⏳⚠️🚨]\s*/, "")}</span>
           </div>
         );
       }
       if (line.trim() === "---") {
-        return <hr key={i} style={{ borderColor: "rgba(255, 255, 255, 0.08)", margin: "16px 0" }} />;
+        return <hr key={i} className="border-white/[0.08] my-4" />;
       }
-      const bold = line.replace(/\*\*([^*]+)\*\*/g, "<strong style='color: #FFFFFF; font-weight: 600;'>$1</strong>");
+      const bold = line.replace(/\*\*([^*]+)\*\*/g, "<strong class='text-white font-semibold'>$1</strong>");
       return (
         <p
           key={i}
-          style={{ fontSize: "15px", lineHeight: "1.7", color: "#CBD5E1", marginBottom: "8px" }}
+          className="text-[14.5px] leading-relaxed text-[#CBD5E1] mb-2"
           dangerouslySetInnerHTML={{ __html: bold }}
         />
       );
@@ -255,172 +224,108 @@ function ChatContent() {
   };
 
   return (
-    <div style={{
-      display: "flex",
-      flexDirection: "column",
-      height: "calc(100vh - 112px)",
-      maxWidth: "1160px",
-      margin: "0 auto",
-      background: "#08080A",
-      borderRadius: "18px",
-      border: "1px solid rgba(255, 255, 255, 0.08)",
-      overflow: "hidden",
-      position: "relative",
-      fontFamily: "var(--font-sans)",
-    }}>
+    <div className="flex flex-col h-[calc(100vh-100px)] max-w-5xl mx-auto rounded-3xl border border-white/[0.08] bg-[#07090E]/90 backdrop-blur-2xl shadow-2xl overflow-hidden relative">
+      
+      {/* Sleek Ambient Glow */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[200px] bg-gradient-to-b from-blue-600/[0.08] to-transparent rounded-full blur-[100px] pointer-events-none" />
 
       {/* Top Header */}
-      <div style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        padding: "16px 24px",
-        background: "#0C0C0F",
-        borderBottom: "1px solid rgba(255, 255, 255, 0.08)",
-        zIndex: 10,
-      }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-          <div style={{
-            width: "36px", height: "36px",
-            borderRadius: "10px",
-            background: "linear-gradient(135deg, #2563EB, #1D4ED8)",
-            display: "flex", alignItems: "center", justifyContent: "center",
-            boxShadow: "0 2px 10px rgba(37, 99, 235, 0.3)",
-          }}>
-            <Scale size={18} color="white" />
+      <div className="flex items-center justify-between px-6 py-4 border-b border-white/[0.06] bg-[#0A0C14]/80 backdrop-blur-md relative z-10">
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-blue-500/20">
+            <Scale size={18} />
           </div>
           <div>
-            <div style={{ fontSize: "16px", fontWeight: "700", color: "#FFFFFF", letterSpacing: "-0.02em" }}>
-              AI Legal Intelligence Advisor
+            <div className="flex items-center gap-2">
+              <span className="text-[15px] font-bold text-white tracking-tight">LexNova AI Legal Intelligence</span>
+              <span className="px-2 py-0.5 rounded-full text-[10.5px] font-semibold bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
+                Live RAG
+              </span>
             </div>
-            <div style={{ fontSize: "12px", color: "#888888", display: "flex", alignItems: "center", gap: "6px", marginTop: "2px" }}>
-              <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#10B981", boxShadow: "0 0 6px #10B981" }} />
-              {caseId ? `Active Case Matter: LN-${caseId.slice(-6).toUpperCase()}` : "Indian Law Trained · RAG Neural Vector Engine"}
-            </div>
+            <p className="text-[11.5px] text-[#6B7B94] mt-0.5">
+              {caseId ? `Active Docket: LN-${caseId.slice(-6).toUpperCase()}` : "Supreme Court Precedents · Limitation Act 1963 · Indian Statutory Code"}
+            </p>
           </div>
         </div>
 
-        <button
-          onClick={resetChat}
-          className="btn-ghost"
-          style={{ padding: "8px 14px", fontSize: "13px", display: "flex", alignItems: "center", gap: "6px" }}
-        >
-          <RefreshCw size={13} /> Start Fresh
-        </button>
+        <div className="flex items-center gap-2">
+          {/* Language Selector */}
+          <div className="flex items-center bg-white/[0.04] border border-white/[0.08] rounded-xl p-1 text-[11.5px] font-medium text-[#8D9CB0]">
+            {(['EN', 'HI', 'TA'] as const).map((lang) => (
+              <button
+                key={lang}
+                onClick={() => setSelectedLang(lang)}
+                className={`px-2.5 py-1 rounded-lg transition-all ${
+                  selectedLang === lang ? 'bg-blue-600 text-white font-semibold shadow-sm' : 'hover:text-white'
+                }`}
+              >
+                {lang === 'EN' ? 'English' : lang === 'HI' ? 'हिंदी' : 'தமிழ்'}
+              </button>
+            ))}
+          </div>
+
+          <button
+            onClick={resetChat}
+            className="p-2 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-[#8D9CB0] hover:text-white transition-all"
+            title="Start Fresh Inquiry"
+          >
+            <RefreshCw size={14} />
+          </button>
+        </div>
       </div>
 
-      {/* Messages Stream */}
-      <div style={{
-        flex: 1,
-        overflowY: "auto",
-        padding: "28px",
-        display: "flex",
-        flexDirection: "column",
-        gap: "24px",
-      }}>
-
-        {/* Empty State with 6 Rich Legal Modules */}
+      {/* Messages Stream / Empty State */}
+      <div className="flex-1 overflow-y-auto px-6 py-6 space-y-6 relative z-10 scrollbar-thin scrollbar-thumb-white/10">
         {messages.length === 0 && (
-          <div className="animate-fade-in" style={{ width: "100%", padding: "8px 0" }}>
+          <div className="max-w-3xl mx-auto py-8 text-center space-y-8 animate-fade-in">
             
-            <div style={{ textAlign: "center", marginBottom: "18px" }}>
-              <div style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "7px",
-                padding: "6px 14px",
-                borderRadius: "9999px",
-                background: "rgba(255, 255, 255, 0.04)",
-                border: "1px solid rgba(255, 255, 255, 0.1)",
-                fontSize: "12px",
-                color: "#A1A1AA",
-                fontWeight: "500",
-                marginBottom: "12px",
-              }}>
-                <Sparkles size={13} color="#60A5FA" /> Instant Statutory Cross-Referencing & Limitation Calculation
+            {/* Hero Prompt Headline */}
+            <div className="space-y-3">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[12px] font-medium shadow-sm">
+                <Sparkles size={13} />
+                <span>Instant Legal Assessment & Notice Preparation</span>
               </div>
-              <h2 style={{ fontSize: "22px", fontWeight: "700", color: "#FFFFFF", letterSpacing: "-0.03em" }}>
-                What legal matter can we analyze today?
+              <h2 className="text-[28px] font-bold text-white tracking-tight">
+                How can LexNova assist your legal matter today?
               </h2>
-              <p style={{ fontSize: "15px", color: "#888888", marginTop: "6px", maxWidth: "600px", margin: "6px auto 0" }}>
-                Select a dispute scenario below or describe your facts in plain words. LexNova matches statutory sections, computes court deadlines, and connects you with verified counsel.
+              <p className="text-[14px] text-[#8D9CB0] max-w-lg mx-auto leading-relaxed">
+                Describe your situation in plain words. Our neural engine maps Indian statutes, calculates court limitation deadlines, and drafts court-compliant demand notices.
               </p>
             </div>
 
-            {/* 6 Grid Categories */}
-            <div style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(3, 1fr)",
-              gap: "10px",
-            }}>
-              {LEGAL_CATEGORIES.map((cat, idx) => {
-                const Icon = cat.icon;
+            {/* 4 Sleek Prompt Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 text-left">
+              {POPULAR_PROMPTS.map((item, idx) => {
+                const Icon = item.icon;
                 return (
-                  <div
+                  <motion.button
                     key={idx}
-                    style={{
-                      background: "#0D0D10",
-                      border: "1px solid rgba(255, 255, 255, 0.08)",
-                      borderRadius: "12px",
-                      padding: "12px",
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "8px",
-                    }}
+                    onClick={() => send(item.query)}
+                    whileHover={{ y: -3 }}
+                    className={`group relative p-4 rounded-2xl bg-gradient-to-br ${item.color} bg-[#0A0D16] border border-white/[0.07] ${item.border} text-left transition-all shadow-lg flex flex-col justify-between`}
                   >
-                    <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "2px" }}>
-                      <div style={{
-                        width: "28px", height: "28px", borderRadius: "7px",
-                        background: `${cat.color}15`,
-                        border: `1px solid ${cat.color}30`,
-                        display: "flex", alignItems: "center", justifyContent: "center",
-                        color: cat.color,
-                      }}>
-                        <Icon size={15} />
+                    <div>
+                      <div className="flex items-center justify-between mb-2.5">
+                        <span className={`px-2.5 py-0.5 rounded-md text-[10.5px] font-bold uppercase tracking-wider border ${item.badge}`}>
+                          {item.tag}
+                        </span>
+                        <div className="w-7 h-7 rounded-lg bg-white/[0.05] border border-white/[0.08] flex items-center justify-center text-white/70 group-hover:text-white transition-colors">
+                          <Icon size={14} />
+                        </div>
                       </div>
-                      <span style={{ fontSize: "14px", fontWeight: "700", color: "#FFFFFF" }}>
-                        {cat.title}
-                      </span>
+                      <h4 className="text-[14.5px] font-bold text-white group-hover:text-blue-300 transition-colors leading-snug mb-1">
+                        {item.title}
+                      </h4>
+                      <p className="text-[12px] text-[#7A8A9E] leading-relaxed">
+                        {item.description}
+                      </p>
                     </div>
 
-                    <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-                      {cat.queries.map((q, qIdx) => (
-                        <button
-                          key={qIdx}
-                          onClick={() => send(q)}
-                          style={{
-                            background: "rgba(255, 255, 255, 0.02)",
-                            border: "1px solid rgba(255, 255, 255, 0.06)",
-                            borderRadius: "8px",
-                            padding: "7px 10px",
-                            fontSize: "12px",
-                            color: "#CCCCCC",
-                            textAlign: "left",
-                            cursor: "pointer",
-                            transition: "all 0.15s ease",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "space-between",
-                            gap: "8px",
-                            lineHeight: "1.4",
-                          }}
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.background = "rgba(255, 255, 255, 0.06)";
-                            e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.18)";
-                            e.currentTarget.style.color = "#FFFFFF";
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.background = "rgba(255, 255, 255, 0.02)";
-                            e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.06)";
-                            e.currentTarget.style.color = "#CCCCCC";
-                          }}
-                        >
-                          <span>{q}</span>
-                          <ChevronRight size={12} color="#666666" style={{ flexShrink: 0 }} />
-                        </button>
-                      ))}
+                    <div className="mt-3.5 pt-2.5 border-t border-white/[0.04] flex items-center justify-between text-[11.5px] text-[#6B7B94] group-hover:text-blue-400">
+                      <span>Analyze Scenario</span>
+                      <ChevronRight size={13} className="transform group-hover:translate-x-0.5 transition-transform" />
                     </div>
-                  </div>
+                  </motion.button>
                 );
               })}
             </div>
@@ -428,130 +333,73 @@ function ChatContent() {
           </div>
         )}
 
-        {/* Message Bubbles */}
+        {/* Message Stream */}
         <AnimatePresence initial={false}>
           {messages.map((msg) => {
-            const isUser = msg.role === "user";
-
+            const isUser = msg.role === 'user';
             return (
               <motion.div
                 key={msg.id}
-                initial={{ opacity: 0, y: 8 }}
+                initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.2 }}
-                style={{
-                  display: "flex",
-                  justifyContent: isUser ? "flex-end" : "flex-start",
-                  alignItems: "flex-start",
-                  gap: "12px",
-                }}
+                className={`flex gap-3.5 ${isUser ? 'justify-end' : 'justify-start'}`}
               >
                 {!isUser && (
-                  <div style={{
-                    width: "36px", height: "36px",
-                    borderRadius: "10px",
-                    background: "linear-gradient(135deg, #2563EB, #1D4ED8)",
-                    border: "1px solid rgba(255, 255, 255, 0.2)",
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    color: "white", flexShrink: 0,
-                    boxShadow: "0 2px 10px rgba(37, 99, 235, 0.3)",
-                  }}>
-                    <Scale size={18} />
+                  <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center text-white shrink-0 mt-1 shadow-md shadow-blue-500/20">
+                    <Scale size={15} />
                   </div>
                 )}
 
-                <div style={{ maxWidth: isUser ? "75%" : "85%", width: isUser ? "auto" : "100%" }}>
-                  
-                  <div style={{
-                    background: isUser ? "#FFFFFF" : "#0D0D10",
-                    color: isUser ? "#000000" : "#E2E8F0",
-                    border: isUser ? "none" : "1px solid rgba(255, 255, 255, 0.09)",
-                    borderRadius: isUser ? "16px 16px 4px 16px" : "16px 16px 16px 4px",
-                    padding: "18px 22px",
-                    fontSize: "15px",
-                    lineHeight: "1.65",
-                    boxShadow: isUser ? "0 4px 16px rgba(255, 255, 255, 0.1)" : "0 4px 20px rgba(0, 0, 0, 0.5)",
-                    position: "relative",
-                  }}>
-                    {isUser ? (
-                      <p style={{ margin: 0, fontWeight: "500", fontSize: "15px" }}>{msg.content}</p>
-                    ) : (
-                      <>
-                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "14px", borderBottom: "1px solid rgba(255, 255, 255, 0.06)", paddingBottom: "10px" }}>
-                          <span style={{ fontSize: "12px", fontWeight: "700", color: "#60A5FA", textTransform: "uppercase", letterSpacing: "0.06em" }}>
-                            ⚖️ Legal Assessment & Statutory Analysis
-                          </span>
-                          <button
-                            onClick={() => handleCopy(msg.id, msg.content)}
-                            style={{
-                              background: "none", border: "none", color: "#888888", cursor: "pointer",
-                              display: "flex", alignItems: "center", gap: "4px", fontSize: "12px",
-                            }}
-                          >
-                            {copiedId === msg.id ? <Check size={13} color="#10B981" /> : <Copy size={13} />}
-                            {copiedId === msg.id ? "Copied" : "Copy"}
-                          </button>
-                        </div>
-                        {renderContent(msg.content)}
-                      </>
-                    )}
-                  </div>
+                <div className={`max-w-2xl rounded-2xl p-5 ${
+                  isUser
+                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20 rounded-tr-sm'
+                    : 'bg-[#0E121E] border border-white/[0.08] text-[#E2E8F0] shadow-xl rounded-tl-sm'
+                }`}>
+                  {isUser ? (
+                    <p className="text-[14.5px] leading-relaxed">{msg.content}</p>
+                  ) : (
+                    <div>
+                      {renderContent(msg.content)}
 
-                  {/* Recommended Lawyers Grid if returned */}
-                  {!isUser && msg.lawyers && msg.lawyers.length > 0 && (
-                    <div style={{ marginTop: "16px" }}>
-                      <div style={{ fontSize: "12px", fontWeight: "700", color: "#A1A1AA", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: "10px", display: "flex", alignItems: "center", gap: "6px" }}>
-                        <Users size={14} color="#60A5FA" /> Matched Bar Council Verified Advocates
-                      </div>
-                      
-                      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "12px" }}>
-                        {msg.lawyers.map((lawyer, lIdx) => (
-                          <div
-                            key={lIdx}
-                            style={{
-                              background: "#0D0D10",
-                              border: "1px solid rgba(255, 255, 255, 0.08)",
-                              borderRadius: "12px",
-                              padding: "14px",
-                              display: "flex",
-                              flexDirection: "column",
-                              justifyContent: "space-between",
-                              gap: "10px",
-                            }}
-                          >
-                            <div>
-                              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-                                <h4 style={{ fontSize: "14px", fontWeight: "700", color: "#FFFFFF", margin: 0 }}>
-                                  {lawyer.name}
-                                </h4>
-                                <span style={{ fontSize: "11px", color: "#10B981", background: "rgba(16,185,129,0.1)", padding: "1px 6px", borderRadius: "4px", fontWeight: "600" }}>
-                                  ★ {lawyer.rating || 4.8}
-                                </span>
-                              </div>
-                              <p style={{ fontSize: "12px", color: "#888888", marginTop: "2px" }}>
-                                {lawyer.type || lawyer.specialization || "Legal Consultant"}
-                              </p>
-                              <div style={{ fontSize: "11.5px", color: "#666666", marginTop: "4px" }}>
-                                {lawyer.city || "Pan-India"} · {lawyer.experienceYears || lawyer.experience || 8} yrs practice
-                              </div>
-                            </div>
-
-                            <button
-                              onClick={() => {
-                                setSelectedLawyer(lawyer);
-                                setBookingOpen(true);
-                              }}
-                              className="btn-primary"
-                              style={{ width: "100%", fontSize: "12px", padding: "7px" }}
-                            >
-                              Book Consultation · ₹{lawyer.consultationFee || 999}
-                            </button>
+                      {/* Recommended Advocates */}
+                      {msg.lawyers && msg.lawyers.length > 0 && (
+                        <div className="mt-5 pt-4 border-t border-white/[0.08] space-y-3">
+                          <div className="flex items-center gap-2 text-[12px] font-bold text-blue-400 uppercase tracking-wider">
+                            <Users size={13} /> Matched High Court Counsel
                           </div>
-                        ))}
-                      </div>
+
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            {msg.lawyers.slice(0, 2).map((adv: any) => (
+                              <div
+                                key={adv.id}
+                                className="p-3.5 rounded-xl bg-[#080B14] border border-white/[0.08] flex flex-col justify-between gap-3"
+                              >
+                                <div>
+                                  <div className="flex items-center justify-between">
+                                    <span className="text-[13.5px] font-bold text-white">{adv.name}</span>
+                                    <span className="text-[11px] font-semibold text-emerald-400 flex items-center gap-1">
+                                      <Star size={11} fill="currentColor" /> {adv.rating || '4.9'}
+                                    </span>
+                                  </div>
+                                  <p className="text-[11.5px] text-[#7A8A9E] mt-0.5">{adv.specialization || 'High Court Counsel'}</p>
+                                </div>
+
+                                <button
+                                  onClick={() => {
+                                    setSelectedLawyer(adv);
+                                    setBookingOpen(true);
+                                  }}
+                                  className="w-full py-2 rounded-lg bg-blue-600/20 hover:bg-blue-600 border border-blue-500/30 text-blue-300 hover:text-white text-[12px] font-semibold transition-all flex items-center justify-center gap-1.5"
+                                >
+                                  Book Consultation (₹{adv.consultationFee || 999})
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
                     </div>
                   )}
-
                 </div>
               </motion.div>
             );
@@ -559,108 +407,57 @@ function ChatContent() {
         </AnimatePresence>
 
         {loading && (
-          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-            <div style={{
-              width: "36px", height: "36px",
-              borderRadius: "10px",
-              background: "#121216",
-              border: "1px solid rgba(255, 255, 255, 0.1)",
-              display: "flex", alignItems: "center", justifyContent: "center",
-            }}>
-              <Loader2 size={18} className="animate-spin text-blue-400" />
-            </div>
-            <div style={{
-              background: "#0D0D10",
-              border: "1px solid rgba(255, 255, 255, 0.08)",
-              borderRadius: "14px",
-              padding: "12px 18px",
-              fontSize: "14px",
-              color: "#94A3B8",
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-            }}>
-              <Sparkles size={15} color="#60A5FA" />
-              Cross-referencing 50,000+ Indian court precedents and calculating limitation clock...
-            </div>
+          <div className="flex items-center gap-3 text-[#8D9CB0] text-[13px] pl-11">
+            <Loader2 size={16} className="animate-spin text-blue-400" />
+            <span>Cross-referencing statutory databases & limitation clock...</span>
           </div>
         )}
 
         <div ref={bottomRef} />
       </div>
 
-      {/* Spacious Luxury Input Bar */}
-      <div style={{
-        padding: "16px 24px 20px",
-        background: "#0C0C0F",
-        borderTop: "1px solid rgba(255, 255, 255, 0.08)",
-      }}>
+      {/* Modern Floating Command Input Bar */}
+      <div className="p-4 sm:p-5 border-t border-white/[0.06] bg-[#0A0C14]/90 backdrop-blur-md relative z-20">
         <form
           onSubmit={(e) => {
             e.preventDefault();
             send();
           }}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "12px",
-            background: "#141418",
-            border: "1px solid rgba(255, 255, 255, 0.12)",
-            borderRadius: "9999px",
-            padding: "8px 10px 8px 20px",
-            boxShadow: "0 4px 20px rgba(0, 0, 0, 0.6)",
-          }}
+          className="relative bg-[#05070C] border border-white/[0.1] focus-within:border-blue-500/50 rounded-2xl p-2.5 transition-all shadow-xl"
         >
-          <input
-            type="text"
+          <textarea
+            rows={2}
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Explain your legal situation in plain English or Hindi (e.g. landlord won't return deposit)..."
-            style={{
-              flex: 1,
-              background: "transparent !important",
-              border: "none !important",
-              outline: "none",
-              fontSize: "14.5px",
-              color: "#FFFFFF !important",
-              padding: "4px 0",
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                send();
+              }
             }}
+            placeholder="Explain your legal situation in plain English or Hindi (e.g. landlord won't return deposit, cheque bounced)..."
+            className="w-full bg-transparent border-none text-white text-[14px] placeholder-[#4E5D70] focus:outline-none resize-none px-3 py-1.5"
           />
 
-          <button
-            type="submit"
-            disabled={!input.trim() || loading}
-            style={{
-              width: "40px",
-              height: "40px",
-              borderRadius: "50%",
-              background: input.trim() && !loading ? "#FFFFFF" : "rgba(255, 255, 255, 0.08)",
-              color: input.trim() && !loading ? "#000000" : "#555555",
-              border: "none",
-              cursor: input.trim() && !loading ? "pointer" : "default",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              transition: "all 0.15s ease",
-              flexShrink: 0,
-            }}
-          >
-            {loading ? <Loader2 size={16} className="animate-spin" /> : <ArrowUp size={18} strokeWidth={2.5} />}
-          </button>
-        </form>
+          <div className="flex items-center justify-between pt-2 px-2 border-t border-white/[0.04]">
+            <div className="flex items-center gap-3 text-[11.5px] text-[#6B7B94]">
+              <span className="flex items-center gap-1">
+                <Lock size={11} className="text-emerald-400" /> 256-Bit Encrypted · Attorney Privilege
+              </span>
+            </div>
 
-        <div style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          fontSize: "11.5px",
-          color: "#666666",
-          marginTop: "10px",
-          padding: "0 10px",
-        }}>
-          <span>🔒 AES-256 Encrypted & Attorney-Client Confidential</span>
-          <span>Press <strong style={{ color: "#888" }}>↵ Enter</strong> to send query</span>
-        </div>
+            <div className="flex items-center gap-2">
+              <button
+                type="submit"
+                disabled={!input.trim() || loading}
+                className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:opacity-40 disabled:hover:bg-blue-600 text-white font-semibold text-[13px] transition-all flex items-center gap-1.5 shadow-lg shadow-blue-600/25 active:scale-95"
+              >
+                {loading ? <Loader2 size={14} className="animate-spin" /> : <span>Analyze</span>}
+                <CornerDownLeft size={13} />
+              </button>
+            </div>
+          </div>
+        </form>
       </div>
 
       {/* Booking Modal */}
@@ -682,7 +479,7 @@ function ChatContent() {
 
 export default function ChatPage() {
   return (
-    <Suspense fallback={<div style={{ padding: "40px", textAlign: "center", color: "#888" }}>Loading AI Case Advisor...</div>}>
+    <Suspense fallback={<div className="p-8 text-center text-[#8D9CB0]">Loading AI Case Advisor...</div>}>
       <ChatContent />
     </Suspense>
   );
