@@ -5,7 +5,7 @@ import { signOut, useSession } from 'next-auth/react';
 import {
   Scale, LayoutDashboard, MessageSquare, Briefcase,
   FileText, Users, Calendar, Settings, ShieldCheck,
-  LogOut, ChevronRight, Sparkles, Plus, ExternalLink
+  LogOut, ChevronRight, Sparkles, Plus, ExternalLink, Building2
 } from 'lucide-react';
 
 const NAV_MAIN = [
@@ -15,6 +15,7 @@ const NAV_MAIN = [
   { href: '/dashboard/documents', icon: FileText,        label: 'Documents Studio' },
   { href: '/dashboard/advocates', icon: Users,           label: 'Find an Advocate' },
   { href: '/dashboard/bookings',  icon: Calendar,        label: 'Consultations' },
+  { href: '/dashboard/team',      icon: Building2,       label: 'Team & API' },
   { href: '/dashboard/advocate',  icon: ShieldCheck,     label: 'Lawyer Console' },
 ];
 
