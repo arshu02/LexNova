@@ -1,23 +1,23 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  /* ── Deep Obsidian SaaS Hierarchy ───────────────────────── */
-  --bg-page:        #05070D;
-  --bg-surface:     #090D17;
-  --bg-secondary:   #0E1424;
-  --bg-elevated:    #141C30;
-  --bg-input:       #0A0F1D;
-  --bg-active:      #1A243D;
+  /* ── Deep Obsidian & Space Matrix ─────────────────────────── */
+  --bg-page:        #000000;
+  --bg-surface:     #05070C;
+  --bg-secondary:   #090D17;
+  --bg-elevated:    #0E1424;
+  --bg-input:       #060913;
+  --bg-active:      #121A30;
 
-  /* ── Ultra-Fine Luminous Borders ────────────────────────── */
-  --border-subtle:  rgba(255, 255, 255, 0.05);
-  --border-default: rgba(255, 255, 255, 0.09);
-  --border-strong:  rgba(255, 255, 255, 0.18);
-  --border-focus:   #3B82F6;
+  /* ── Ultra-Fine Laser Borders ─────────────────────────────── */
+  --border-subtle:  rgba(255, 255, 255, 0.06);
+  --border-default: rgba(255, 255, 255, 0.10);
+  --border-strong:  rgba(255, 255, 255, 0.20);
+  --border-laser:   #3B82F6;
 
   /* ── High-Contrast Typography ───────────────────────────── */
   --text-primary:   #FFFFFF;
@@ -25,11 +25,10 @@
   --text-muted:     #8D9CB0;
   --text-dim:       #55667E;
 
-  /* ── Accents & Neon Highlights ──────────────────────────── */
+  /* ── Aerospace & Stripe Accents ─────────────────────────── */
   --accent:         #2563EB;
-  --accent-glow:    rgba(37, 99, 235, 0.35);
-  --accent-hover:   #3B82F6;
   --accent-cyan:    #06B6D4;
+  --accent-purple:  #8B5CF6;
   --success:        #10B981;
   --warning:        #F59E0B;
   --danger:         #EF4444;
@@ -60,106 +59,102 @@ body {
 
 /* ── Custom Scrollbar ─────────────────────────────────────────── */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
-  background: #05070D;
+  background: #000000;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.15);
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.3);
 }
 
-/* ── Typography & Mono Utilities ──────────────────────────────── */
+/* ── Monospaced Telemetry Font ────────────────────────────────── */
 .font-mono {
   font-family: 'JetBrains Mono', monospace;
+  font-feature-settings: "liga" 0;
 }
 
+/* ── High-Impact Text Gradients ───────────────────────────────── */
 .text-gradient {
-  background: linear-gradient(180deg, #FFFFFF 0%, rgba(255, 255, 255, 0.85) 50%, rgba(255, 255, 255, 0.55) 100%);
+  background: linear-gradient(180deg, #FFFFFF 0%, rgba(255, 255, 255, 0.85) 45%, rgba(255, 255, 255, 0.45) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-.text-gradient-blue {
-  background: linear-gradient(135deg, #60A5FA 0%, #3B82F6 50%, #06B6D4 100%);
+.text-gradient-stripe {
+  background: linear-gradient(135deg, #60A5FA 0%, #A78BFA 50%, #06B6D4 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-/* ── Luminous Shimmer Borders ─────────────────────────────────── */
-.border-shimmer {
-  position: relative;
-  background: linear-gradient(#090D17, #090D17) padding-box,
-              linear-gradient(135deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.03), rgba(59, 130, 246, 0.25)) border-box;
-  border: 1px solid transparent;
+/* ── SpaceX / Tesla HUD & Grid Overlays ───────────────────────── */
+.hud-grid {
+  background-size: 50px 50px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
 }
 
-.border-shimmer:hover {
-  background: linear-gradient(#0E1424, #0E1424) padding-box,
-              linear-gradient(135deg, rgba(59, 130, 246, 0.5), rgba(6, 182, 212, 0.3), rgba(255, 255, 255, 0.1)) border-box;
+.hud-mesh {
+  background-image: 
+    radial-gradient(at 10% 20%, rgba(37, 99, 235, 0.15) 0px, transparent 50%),
+    radial-gradient(at 90% 80%, rgba(6, 182, 212, 0.12) 0px, transparent 50%),
+    radial-gradient(at 50% 50%, rgba(139, 92, 246, 0.08) 0px, transparent 50%);
 }
 
-/* ── Glassmorphic Cards ───────────────────────────────────────── */
-.glass-card {
-  background: rgba(9, 13, 23, 0.7);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+.hud-panel {
+  background: rgba(5, 7, 12, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 20px;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.glass-card:hover {
-  border-color: rgba(255, 255, 255, 0.16);
+.hud-panel:hover {
+  border-color: rgba(255, 255, 255, 0.18);
+  box-shadow: 0 20px 50px -15px rgba(0, 0, 0, 0.9), 0 0 35px -10px rgba(37, 99, 235, 0.25);
   transform: translateY(-2px);
-  box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.7), 0 0 30px -10px rgba(37, 99, 235, 0.15);
 }
 
-/* ── Glow Radial Overlays ─────────────────────────────────────── */
-.glow-mesh {
-  background-image: 
-    radial-gradient(at 20% 15%, rgba(37, 99, 235, 0.12) 0px, transparent 50%),
-    radial-gradient(at 80% 85%, rgba(6, 182, 212, 0.08) 0px, transparent 50%),
-    radial-gradient(at 50% 50%, rgba(99, 102, 241, 0.06) 0px, transparent 50%);
+/* ── Laser Shimmer Borders ────────────────────────────────────── */
+.border-laser-shimmer {
+  position: relative;
+  background: linear-gradient(#05070C, #05070C) padding-box,
+              linear-gradient(135deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.02), rgba(59, 130, 246, 0.4)) border-box;
+  border: 1px solid transparent;
 }
 
-.grid-overlay {
-  background-size: 40px 40px;
-  background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-}
-
-/* ── Billion Dollar SaaS Buttons ──────────────────────────────── */
+/* ── SpaceX / Stripe Buttons ──────────────────────────────────── */
 .btn-primary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
   background: #FFFFFF;
-  color: #05070D !important;
+  color: #000000 !important;
   font-size: 14.5px;
   font-weight: 600;
-  height: 44px;
-  padding: 0 20px;
+  height: 46px;
+  padding: 0 22px;
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.95);
   cursor: pointer;
   text-decoration: none;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 255, 255, 0.15);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5), 0 0 25px rgba(255, 255, 255, 0.2);
   white-space: nowrap;
 }
 
 .btn-primary:hover {
-  background: #E2E8F0;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 20px rgba(255, 255, 255, 0.3);
+  background: #F1F5F9;
+  transform: translateY(-1.5px);
+  box-shadow: 0 6px 25px rgba(255, 255, 255, 0.35);
 }
 
 .btn-primary:active {
@@ -171,25 +166,25 @@ body {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);
+  background: linear-gradient(135deg, #2563EB 0%, #1E40AF 100%);
   color: #FFFFFF !important;
   font-size: 14.5px;
   font-weight: 600;
-  height: 44px;
-  padding: 0 22px;
+  height: 46px;
+  padding: 0 24px;
   border-radius: 12px;
-  border: 1px solid rgba(96, 165, 250, 0.4);
+  border: 1px solid rgba(96, 165, 250, 0.5);
   cursor: pointer;
   text-decoration: none;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 2px 12px rgba(37, 99, 235, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  box-shadow: 0 2px 14px rgba(37, 99, 235, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.25);
   white-space: nowrap;
 }
 
 .btn-glow-blue:hover {
   background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
-  transform: translateY(-1px);
-  box-shadow: 0 6px 25px rgba(37, 99, 235, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  transform: translateY(-1.5px);
+  box-shadow: 0 8px 30px rgba(37, 99, 235, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.35);
 }
 
 .btn-glow-blue:active {
@@ -201,14 +196,14 @@ body {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(255, 255, 255, 0.03);
   color: #CBD5E1 !important;
   font-size: 14.5px;
   font-weight: 500;
-  height: 44px;
-  padding: 0 20px;
+  height: 46px;
+  padding: 0 22px;
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.09);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   cursor: pointer;
   text-decoration: none;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
@@ -217,30 +212,21 @@ body {
 
 .btn-ghost:hover {
   background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.2);
   color: #FFFFFF !important;
-  transform: translateY(-1px);
+  transform: translateY(-1.5px);
 }
 
 .btn-ghost:active {
   transform: scale(0.98);
 }
 
-/* ── Animations ───────────────────────────────────────────────── */
-@keyframes pulseGlow {
-  0%, 100% { opacity: 0.4; transform: scale(1); }
-  50% { opacity: 0.8; transform: scale(1.05); }
+/* ── Telemetry Pulse ──────────────────────────────────────────── */
+@keyframes radarSweep {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
-.animate-pulse-glow {
-  animation: pulseGlow 6s ease-in-out infinite;
-}
-
-@keyframes floatSmooth {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-6px); }
-}
-
-.animate-float {
-  animation: floatSmooth 4s ease-in-out infinite;
+.animate-radar {
+  animation: radarSweep 10s linear infinite;
 }
