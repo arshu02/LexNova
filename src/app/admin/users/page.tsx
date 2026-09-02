@@ -29,6 +29,8 @@ import {
   ChevronLeft,
   ChevronRight,
   Zap,
+  Trash2,
+  Edit3,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
@@ -112,6 +114,30 @@ export default function AdminUsersPage() {
         setSelectedUser(null);
       } else {
         showToast(data.error || "Action failed", "error");
+      }
+    } catch {
+      showToast("Network error", "error");
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
+  const handleDeleteUser = async (userId: string, email: string) => {
+    if (!window.confirm(`Are you sure you want to permanently delete user "${email}"? This action cannot be undone.`)) {
+      return;
+    }
+    try {
+      setActionLoading(`${userId}-delete`);
+      const res = await fetch(`/api/admin/users?userId=${userId}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+      if (res.ok) {
+        showToast(`✅ User "${email}" permanently deleted`);
+        fetchUsers(pagination.page);
+        setSelectedUser(null);
+      } else {
+        showToast(data.error || "Failed to delete user", "error");
       }
     } catch {
       showToast("Network error", "error");
@@ -356,16 +382,15 @@ export default function AdminUsersPage() {
                       <td className="px-4 py-3.5 text-slate-500 text-xs whitespace-nowrap">
                         {new Date(user.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "2-digit" })}
                       </td>
-                      <td className="px-4 py-3.5">
-                        <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <button
-                            onClick={() => setSelectedUser(user)}
-                            className="p-1.5 rounded-lg hover:bg-white/10 text-slate-400 hover:text-white transition-colors"
-                            title="Manage User"
-                          >
-                            <MoreVertical className="h-4 w-4" />
-                          </button>
-                        </div>
+                      <td className="px-4 py-3.5 text-right">
+                        <button
+                          onClick={() => setSelectedUser(user)}
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 hover:bg-white/15 text-slate-300 hover:text-white text-xs font-medium transition-all"
+                          title="Manage User"
+                        >
+                          <Edit3 className="h-3.5 w-3.5 text-blue-400" />
+                          <span>Manage</span>
+                        </button>
                       </td>
                     </motion.tr>
                   ))
@@ -464,7 +489,7 @@ export default function AdminUsersPage() {
 
                 {/* Role Actions */}
                 <div className="grid grid-cols-2 gap-2">
-                  {["USER", "ADVOCATE", "ADMIN"].map(r => (
+                  {["USER", "ADVOCATE", "ADMIN", "SUPER_ADMIN"].map(r => (
                     <button
                       key={r}
                       onClick={() => handleAction(selectedUser.id, "SET_ROLE", r)}
@@ -528,6 +553,18 @@ export default function AdminUsersPage() {
                       <Unlock className="h-3 w-3 inline mr-1" /> Unlock
                     </button>
                   )}
+                </div>
+
+                {/* Delete User Action */}
+                <div className="pt-3 mt-3 border-t border-white/10 flex justify-end">
+                  <button
+                    onClick={() => handleDeleteUser(selectedUser.id, selectedUser.email)}
+                    disabled={!!actionLoading}
+                    className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold text-red-400 bg-red-500/10 border border-red-500/20 hover:bg-red-500/20 hover:border-red-500/40 transition-all disabled:opacity-50"
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                    <span>Delete User Permanently</span>
+                  </button>
                 </div>
               </div>
             </motion.div>

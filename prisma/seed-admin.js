@@ -13,7 +13,7 @@ async function seedAdmin() {
   const passwordHash = await bcrypt.hash("Admin@LexNova2026", 12);
 
   const admin = await prisma.user.upsert({
-    where: { email: "arshu@lexnova.in" },
+    where: { email: "arshusingh26@gmail.com" },
     update: {
       role: "SUPER_ADMIN",
       plan: "ENTERPRISE",
@@ -22,23 +22,6 @@ async function seedAdmin() {
       isBanned: false,
       emailVerified: new Date(),
     },
-    create: {
-      email: "arshu@lexnova.in",
-      name: "Arshu Singh",
-      passwordHash,
-      role: "SUPER_ADMIN",
-      plan: "ENTERPRISE",
-      isActive: true,
-      isBanned: false,
-      emailVerified: new Date(),
-      createdByAdmin: true,
-    },
-  });
-
-  // Also ensure existing arshusingh26@gmail.com stays as ADMIN
-  await prisma.user.upsert({
-    where: { email: "arshusingh26@gmail.com" },
-    update: { role: "SUPER_ADMIN", plan: "ENTERPRISE", isActive: true, isBanned: false },
     create: {
       email: "arshusingh26@gmail.com",
       name: "Arshu Singh",
@@ -82,11 +65,10 @@ async function seedAdmin() {
   }
 
   console.log("\n✅ Admin user created/updated:");
-  console.log("   Email:     arshu@lexnova.in");
+  console.log("   Email:     arshusingh26@gmail.com");
   console.log("   Password:  Admin@LexNova2026");
   console.log("   Role:      SUPER_ADMIN");
   console.log("   Plan:      ENTERPRISE");
-  console.log("\n✅ Also updated: arshusingh26@gmail.com → SUPER_ADMIN");
   console.log("\n✅ Default AppSettings seeded.");
   console.log("\n🚀 Login at: /auth/login");
   console.log("📊 Admin dashboard: /admin");
