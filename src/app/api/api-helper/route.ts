@@ -1,21 +1,55 @@
 import { NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 
 export async function POST(req: Request) {
   try {
-    const { matterId, caseId, message, userId } = await req.json();
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.email && !(session?.user as any)?.id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const sessionUserId = (session?.user as any)?.id;
+    const sessionEmail = session?.user?.email;
+
+    const caller = await prisma.user.findFirst({
+      where: {
+        OR: [
+          ...(sessionUserId ? [{ id: sessionUserId }] : []),
+          ...(sessionEmail ? [{ email: sessionEmail }] : []),
+        ],
+      },
+    });
+
+    if (!caller) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    const { matterId, caseId, message } = await req.json();
     const targetMatterId = matterId || caseId;
 
     if (!targetMatterId || !message) {
       return NextResponse.json({ error: "Missing matterId or message" }, { status: 400 });
     }
 
-    const matterData = await prisma.matter.findUnique({
-      where: { id: targetMatterId }
+    const matterData = await prisma.matter.findFirst({
+      where: {
+        id: targetMatterId,
+        ...(caller.role !== "ADMIN"
+          ? {
+              OR: [
+                { userId: caller.id },
+                { advocate: { userId: caller.id } },
+                { caseParties: { some: { userId: caller.id } } },
+              ],
+            }
+          : {}),
+      },
     });
 
     if (!matterData) {
-      return NextResponse.json({ error: "Matter not found" }, { status: 404 });
+      return NextResponse.json({ error: "Matter not found or access denied" }, { status: 404 });
     }
 
     const lowerMsg = message.toLowerCase();

@@ -1,18 +1,28 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { sendUserBookingConfirmation } from '@/lib/email';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
 import { Resend } from 'resend';
 
 export async function POST(req: NextRequest) {
   try {
+    const session = await getServerSession(authOptions);
+    if (!session?.user || (session.user as any).role !== 'ADMIN') {
+      return NextResponse.json({ error: 'Forbidden: Admin access required.' }, { status: 403 });
+    }
+
     const body = await req.json().catch(() => ({}));
-    const email = body.email || 'hnlragnar01@gmail.com';
+    const email = body.email;
+
+    if (!email || typeof email !== 'string' || !email.includes('@')) {
+      return NextResponse.json({ error: 'Valid recipient email is required.' }, { status: 400 });
+    }
+
     const rawKey = process.env.RESEND_API_KEY || '';
 
     if (!rawKey || rawKey === 're_your_key_here' || !rawKey.startsWith('re_')) {
       return NextResponse.json({
         success: false,
-        error: 'RESEND_API_KEY is not set or is still the placeholder "re_your_key_here". Please update RESEND_API_KEY in .env.local and .env.',
-        currentKey: rawKey ? `${rawKey.slice(0, 5)}...` : 'not_set',
+        error: 'RESEND_API_KEY is not configured properly in environment variables.',
       }, { status: 400 });
     }
 

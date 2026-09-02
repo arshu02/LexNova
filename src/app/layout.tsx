@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import CookieConsent from '@/components/CookieConsent';
 import SessionProvider from '@/components/providers/SessionProvider';
+import GlobalCommandPalette from '@/components/GlobalCommandPalette';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -126,6 +127,7 @@ export default function RootLayout({
       <body className={`${inter.className} antialiased`}>
         <SessionProvider>
           {children}
+          <GlobalCommandPalette />
           <CookieConsent />
         </SessionProvider>
       </body>

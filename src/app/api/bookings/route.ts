@@ -24,22 +24,38 @@ function generateMeetLink(bookingId: string): string {
 export async function GET(req: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
-    let targetUserId = (session?.user as any)?.id;
-    if (session?.user?.email) {
-      const user = await prisma.user.findUnique({ where: { email: session.user.email } });
-      if (user) targetUserId = user.id;
-    }
-    if (!targetUserId) {
-      const queryId = req.nextUrl.searchParams.get('userId');
-      if (queryId && queryId !== 'user_placeholder') targetUserId = queryId;
+    if (!session?.user?.email && !(session?.user as any)?.id) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    if (!targetUserId) {
-      return NextResponse.json([]);
+    const sessionUserId = (session?.user as any)?.id;
+    const sessionEmail = session?.user?.email;
+
+    const caller = await prisma.user.findFirst({
+      where: {
+        OR: [
+          ...(sessionUserId ? [{ id: sessionUserId }] : []),
+          ...(sessionEmail ? [{ email: sessionEmail }] : []),
+        ],
+      },
+    });
+
+    if (!caller) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
+
+    const whereClause =
+      caller.role === 'ADMIN'
+        ? {}
+        : {
+            OR: [
+              { userId: caller.id },
+              { advocate: { userId: caller.id } },
+            ],
+          };
 
     const bookings = await prisma.booking.findMany({
-      where: { userId: targetUserId },
+      where: whereClause,
       include: {
         advocate: true,
         matter: true,
@@ -306,6 +322,27 @@ export async function POST(req: NextRequest) {
 // ── PATCH: Cancel or update booking ───────────────
 export async function PATCH(req: NextRequest) {
   try {
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.email && !(session?.user as any)?.id) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const sessionUserId = (session?.user as any)?.id;
+    const sessionEmail = session?.user?.email;
+
+    const caller = await prisma.user.findFirst({
+      where: {
+        OR: [
+          ...(sessionUserId ? [{ id: sessionUserId }] : []),
+          ...(sessionEmail ? [{ email: sessionEmail }] : []),
+        ],
+      },
+    });
+
+    if (!caller) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    }
+
     const body = await req.json();
     const { bookingId, action, reason } = body;
 
@@ -325,6 +362,18 @@ export async function PATCH(req: NextRequest) {
       return NextResponse.json(
         { error: 'Booking not found' },
         { status: 404 }
+      );
+    }
+
+    const isAuthorized =
+      caller.role === 'ADMIN' ||
+      booking.userId === caller.id ||
+      booking.advocate.userId === caller.id;
+
+    if (!isAuthorized) {
+      return NextResponse.json(
+        { error: 'Access denied' },
+        { status: 403 }
       );
     }
 

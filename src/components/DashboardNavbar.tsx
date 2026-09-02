@@ -60,47 +60,44 @@ export function DashboardNavbar() {
       zIndex: 30,
       fontFamily: 'var(--font-sans)',
     }}>
-      {/* Search Input Bar */}
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: '10px',
-        background: '#121823',
-        border: '1px solid #263142',
-        borderRadius: '10px',
-        padding: '8px 14px',
-        width: '400px',
-        transition: 'all 0.15s ease',
-      }}>
-        <Search size={15} color="#9AA5B5" style={{ flexShrink: 0 }} />
-        <input
-          type="text"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          onKeyDown={handleSearchKeyDown}
-          placeholder="Search statutory acts, cases, advocates... (Press Enter)"
-          style={{
-            background: 'transparent',
-            border: 'none',
-            outline: 'none',
-            fontSize: '13.5px',
-            color: '#FFFFFF',
-            width: '100%',
-          }}
-        />
+      {/* Search Input Bar & Omni-Search Trigger */}
+      <button
+        onClick={() => {
+          window.dispatchEvent(
+            new KeyboardEvent("keydown", { key: "k", metaKey: true, bubbles: true })
+          );
+        }}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '10px',
+          background: '#121823',
+          border: '1px solid #263142',
+          borderRadius: '10px',
+          padding: '8px 14px',
+          width: '400px',
+          transition: 'all 0.15s ease',
+          cursor: 'pointer',
+          textAlign: 'left',
+        }}
+      >
+        <Search size={15} color="#F59E0B" style={{ flexShrink: 0 }} />
+        <span style={{ fontSize: '13px', color: '#9AA5B5', flex: 1 }}>
+          Quick search cases, statutes, advocates...
+        </span>
         <div style={{
-          fontSize: '11px',
-          fontWeight: '600',
-          color: '#9AA5B5',
-          background: '#171E29',
+          fontSize: '10px',
+          fontWeight: '700',
+          color: '#F59E0B',
+          background: 'rgba(245, 158, 11, 0.1)',
           padding: '2px 6px',
           borderRadius: '4px',
-          border: '1px solid #38475C',
+          border: '1px solid rgba(245, 158, 11, 0.25)',
           fontFamily: 'var(--font-mono)',
         }}>
-          ↵
+          ⌘K
         </div>
-      </div>
+      </button>
 
       {/* Right Controls */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
@@ -246,6 +243,28 @@ export function DashboardNavbar() {
                 <div style={{ fontSize: '14px', fontWeight: '700', color: '#FFFFFF' }}>{session?.user?.name || session?.user?.email?.split('@')[0] || 'User'}</div>
                 <div style={{ fontSize: '12px', color: '#9AA5B5', marginTop: '1px' }}>{session?.user?.email || ''}</div>
               </div>
+
+              {(session?.user as any)?.role === 'ADMIN' && (
+                <Link
+                  href="/admin"
+                  onClick={() => setShowProfileMenu(false)}
+                  style={{
+                    textDecoration: 'none',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    fontSize: '13.5px',
+                    color: '#F59E0B',
+                    fontWeight: '700',
+                    padding: '6px 8px',
+                    borderRadius: '8px',
+                    background: 'rgba(245, 158, 11, 0.1)',
+                    border: '1px solid rgba(245, 158, 11, 0.25)',
+                  }}
+                >
+                  <FileText size={15} color="#F59E0B" /> Institutional Admin
+                </Link>
+              )}
 
               <Link
                 href="/dashboard/settings"

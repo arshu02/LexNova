@@ -28,9 +28,10 @@ export default function AuthCallbackPage() {
         const user = session.user;
         const email = user.email;
         const name = user.user_metadata?.full_name || user.user_metadata?.name || email?.split("@")[0];
+        const accessToken = session.access_token;
 
-        if (email) {
-          await syncAndLogin(email, name);
+        if (email && accessToken) {
+          await syncAndLogin(email, accessToken, name);
         } else {
           window.location.href = "/auth/login";
         }
@@ -40,11 +41,14 @@ export default function AuthCallbackPage() {
       }
     }
 
-    async function syncAndLogin(email: string, name?: string) {
+    async function syncAndLogin(email: string, accessToken: string, name?: string) {
       setStatus(`Logging in as ${email}...`);
       const syncRes = await fetch("/api/auth/supabase-sync", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
         body: JSON.stringify({ email, name }),
       });
 

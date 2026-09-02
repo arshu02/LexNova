@@ -20,7 +20,7 @@ export default function SettingsPage() {
 
   useEffect(() => {
     if (user?.email) {
-      fetch(`/api/user/profile?email=${encodeURIComponent(user.email)}`)
+      fetch(`/api/user/profile`)
         .then((res) => res.json())
         .then((data) => {
           if (!data.error) {
@@ -45,7 +45,6 @@ export default function SettingsPage() {
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user?.email) return;
     setSaving(true);
     setSavedSuccess(false);
 
@@ -54,7 +53,6 @@ export default function SettingsPage() {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          email: user.email,
           name,
           city,
         }),

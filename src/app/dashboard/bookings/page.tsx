@@ -102,7 +102,7 @@ export default function BookingsPage() {
   const fetchBookings = async () => {
     try {
       setLoading(true);
-      const res = await fetch(`/api/bookings?userId=${userId}`);
+      const res = await fetch(`/api/bookings`);
       if (res.ok) {
         const data = await res.json();
         setBookings(Array.isArray(data) ? data : []);

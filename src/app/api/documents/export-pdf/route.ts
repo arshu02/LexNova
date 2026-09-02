@@ -1,8 +1,25 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
+import { rateLimit } from '@/lib/redis';
 import { generateLegalNoticeHTML } from '@/lib/pdf-generator';
 
 export async function POST(req: NextRequest) {
   try {
+    const session = await getServerSession(authOptions);
+    if (!session?.user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const userId = (session.user as any)?.id || session.user.email || 'user';
+    const rl = await rateLimit(`pdfexport:${userId}`, 15, 60);
+    if (!rl.allowed) {
+      return NextResponse.json(
+        { error: 'Rate limit exceeded. Please slow down.' },
+        { status: 429 }
+      );
+    }
+
     const body = await req.json();
     const {
       noticeRef = `LN-NOT-${Date.now().toString().slice(-6)}`,

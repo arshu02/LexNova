@@ -1,9 +1,12 @@
 import { NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 import { classifyLegalIssue, CATEGORY_INFO } from "@/lib/ai-classification";
 import { getMatchedLawyers } from "@/lib/lawyer-match";
 import { searchLawForCase } from "@/lib/rag-search";
 import prisma from "@/lib/prisma";
 import Anthropic from "@anthropic-ai/sdk";
+import PIIRedactor from "@/lib/pii-redactor";
 import {
   resolveLimitationKey,
   calculateLimitation,
@@ -174,8 +177,11 @@ RULES:
 - Do NOT suggest anything unethical or illegal
 - End with: ⚠️ This is legal information only, not legal advice. Always consult a licensed advocate.`;
 
+    // Redact PII before sending to third-party LLM
+    const { redactedText, replacements } = PIIRedactor.redact(answersText);
+
     const userPrompt = `CASE FACTS (from ${party === "PLAINTIFF" ? "the person who initiated the matter" : "the person who received a notice or summons"}):
-${answersText}
+${redactedText}
 ${lawContextBlock}
 ${perspectiveBlock}`;
 
@@ -190,7 +196,9 @@ ${perspectiveBlock}`;
     if (!textContent || textContent.type !== "text") {
       return buildFallbackAdvice(answersText);
     }
-    return textContent.text.trim();
+    
+    // Rehydrate synthetic tokens back to original safe values
+    return PIIRedactor.unredact(textContent.text.trim(), replacements);
 
   } catch (error) {
     console.error("[Chat API] Error generating legal advice:", error);
@@ -247,19 +255,36 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Missing message parameter" }, { status: 400 });
     }
 
-    const resolvedUserId = userId || "user_placeholder";
+    const session = await getServerSession(authOptions);
+    let resolvedUserId = (session?.user as any)?.id;
 
-    // Ensure user exists in DB
-    const existingUser = await prisma.user.findUnique({ where: { id: resolvedUserId } });
-    if (!existingUser) {
-      await prisma.user.create({
-        data: {
-          id: resolvedUserId,
-          name: "Guest User",
-          email: "guest_" + resolvedUserId + "_" + Date.now() + "@lexnova.com",
-          role: "USER",
-        },
+    if (session?.user?.email && !resolvedUserId) {
+      const dbUser = await prisma.user.findUnique({
+        where: { email: session.user.email },
       });
+      if (dbUser) resolvedUserId = dbUser.id;
+    }
+
+    if (!resolvedUserId && userId && userId !== "user_placeholder") {
+      const existing = await prisma.user.findUnique({ where: { id: userId } });
+      if (existing) resolvedUserId = existing.id;
+    }
+
+    if (!resolvedUserId) {
+      resolvedUserId = "user_placeholder";
+      const placeholderUser = await prisma.user.findUnique({
+        where: { id: "user_placeholder" },
+      });
+      if (!placeholderUser) {
+        await prisma.user.create({
+          data: {
+            id: "user_placeholder",
+            name: "Guest Client",
+            email: "guest_placeholder@lexnova.in",
+            role: "USER",
+          },
+        });
+      }
     }
 
     // ── Scenario A: New intake ──────────────────────────────────────────────

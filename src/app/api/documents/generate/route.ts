@@ -236,10 +236,28 @@ Facts: ${f.statementFacts}
 City: ${f.city}`
 };
 
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import { rateLimit } from "@/lib/redis";
+
 export async function POST(req: Request) {
   let type = "";
   let fields: any = {};
   try {
+    const session = await getServerSession(authOptions);
+    if (!session?.user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const userId = (session.user as any)?.id || session.user.email || "user";
+    const rl = await rateLimit(`docgen:${userId}`, 10, 60);
+    if (!rl.allowed) {
+      return NextResponse.json(
+        { error: "Rate limit exceeded. Please wait a minute before generating more documents." },
+        { status: 429 }
+      );
+    }
+
     const body = await req.json();
     type = body.type;
     fields = body.fields || {};

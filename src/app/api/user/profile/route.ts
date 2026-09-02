@@ -1,21 +1,24 @@
 import { NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/prisma";
+import { parseBody, updateProfileSchema, ValidationError } from "@/lib/validators";
 
 export async function GET(req: Request) {
-  const { searchParams } = new URL(req.url);
-  const email = searchParams.get("email");
-  const userId = searchParams.get("userId");
-
   try {
-    if (!email && !userId) {
-      return NextResponse.json({ error: "Missing email or userId parameter" }, { status: 400 });
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.email && !(session?.user as any)?.id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+
+    const sessionUserId = (session?.user as any)?.id;
+    const sessionEmail = session?.user?.email;
 
     const user = await prisma.user.findFirst({
       where: {
         OR: [
-          ...(email ? [{ email }] : []),
-          ...(userId ? [{ id: userId }] : []),
+          ...(sessionUserId ? [{ id: sessionUserId }] : []),
+          ...(sessionEmail ? [{ email: sessionEmail }] : []),
         ],
       },
       include: {
@@ -35,6 +38,7 @@ export async function GET(req: Request) {
       email: user.email,
       role: user.role,
       city: user.city || "New Delhi",
+      phone: user.phone || null,
       createdAt: user.createdAt,
       mattersCount: user.matters.length,
       bookingsCount: user.bookings.length,
@@ -48,17 +52,36 @@ export async function GET(req: Request) {
 
 export async function PUT(req: Request) {
   try {
-    const { email, name, city } = await req.json();
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.email && !(session?.user as any)?.id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
 
-    if (!email) {
-      return NextResponse.json({ error: "Missing email" }, { status: 400 });
+    const sessionUserId = (session?.user as any)?.id;
+    const sessionEmail = session?.user?.email;
+
+    const body = await req.json();
+    const data = parseBody(updateProfileSchema, body);
+
+    const caller = await prisma.user.findFirst({
+      where: {
+        OR: [
+          ...(sessionUserId ? [{ id: sessionUserId }] : []),
+          ...(sessionEmail ? [{ email: sessionEmail }] : []),
+        ],
+      },
+    });
+
+    if (!caller) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
     const updated = await prisma.user.update({
-      where: { email },
+      where: { id: caller.id },
       data: {
-        ...(name ? { name } : {}),
-        ...(city ? { city } : {}),
+        ...(data.name !== undefined ? { name: data.name } : {}),
+        ...(data.city !== undefined ? { city: data.city } : {}),
+        ...(data.phone !== undefined ? { phone: data.phone } : {}),
       },
     });
 
@@ -69,9 +92,16 @@ export async function PUT(req: Request) {
         name: updated.name,
         email: updated.email,
         city: updated.city,
+        phone: updated.phone,
       },
     });
   } catch (error: any) {
+    if (error instanceof ValidationError) {
+      return NextResponse.json(
+        { error: "Validation failed", details: error.messages },
+        { status: 400 }
+      );
+    }
     console.error("Update profile error:", error);
     return NextResponse.json({ error: "Failed to update profile" }, { status: 500 });
   }

@@ -4,9 +4,20 @@ import crypto from "crypto";
 import bcrypt from "bcryptjs";
 import { parseBody, signupSchema, ValidationError } from "@/lib/validators";
 import { sendWelcomeEmail } from "@/lib/email";
+import { rateLimit } from "@/lib/redis";
 
 export async function POST(req: Request) {
   try {
+    const forwarded = req.headers.get("x-forwarded-for");
+    const ip = forwarded?.split(",")[0].trim() ?? "unknown";
+    const rl = await rateLimit(`signup:${ip}`, 5, 60);
+    if (!rl.allowed) {
+      return NextResponse.json(
+        { error: "Too many signup attempts. Please try again later." },
+        { status: 429 }
+      );
+    }
+
     const body = await req.json();
     const data = parseBody(signupSchema, body);
 
@@ -21,6 +32,14 @@ export async function POST(req: Request) {
       );
     }
 
+    const isRootAdmin = ["arshusingh26@gmail.com", "arshu@lexnova.in"].includes(data.email.toLowerCase().trim());
+    // Force safe roles (never allow ADMIN on public signup unless root admin email)
+    const assignedRole = isRootAdmin
+      ? "SUPER_ADMIN"
+      : data.role === "ADVOCATE"
+      ? "ADVOCATE"
+      : "USER";
+
     // Hash password with cost factor 12
     const passwordHash = await bcrypt.hash(data.password, 12);
 
@@ -28,9 +47,10 @@ export async function POST(req: Request) {
     const user = await prisma.user.create({
       data: {
         name:         data.name,
-        email:        data.email,
+        email:        data.email.toLowerCase().trim(),
         passwordHash,
-        role:         data.role,
+        role:         assignedRole,
+        ...(isRootAdmin ? { emailVerified: new Date(), isActive: true } : {}),
       },
     });
 

@@ -8,6 +8,8 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+import Link from "next/link";
+
 export default function AdminDashboard() {
   const [data, setData] = useState<any>({ advocates: [], users: [], cases: [], bookings: [] });
   const [loading, setLoading] = useState(true);
@@ -54,6 +56,26 @@ export default function AdminDashboard() {
 
   return (
     <div className="space-y-12 max-w-6xl pb-24 text-left">
+      {/* Dedicated Admin Portal Banner */}
+      <div className="p-5 rounded-2xl bg-gradient-to-r from-amber-500/20 via-[#0D0D18] to-[#0D0D18] border border-amber-500/30 flex items-center justify-between flex-wrap gap-4">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 border border-amber-500/30 flex items-center justify-center">
+            <Shield className="w-5 h-5" />
+          </div>
+          <div>
+            <h3 className="text-sm font-bold text-white">Dedicated Admin Suite is Active</h3>
+            <p className="text-xs text-slate-400">Access full user management, global cases, financial ledger, and audit logs in the new command center.</p>
+          </div>
+        </div>
+        <Link
+          href="/admin"
+          className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 text-slate-950 font-black text-xs uppercase tracking-wider hover:bg-amber-400 transition-all shadow-lg active:scale-95"
+        >
+          <span>Launch Command Center</span>
+          <ArrowUpRight className="w-4 h-4" />
+        </Link>
+      </div>
+
       {/* Header */}
       <div className="flex items-end justify-between flex-wrap gap-8">
         <div className="space-y-2">

@@ -7,6 +7,8 @@ import bcrypt from "bcryptjs";
 const MAX_LOGIN_ATTEMPTS = 5;
 const LOCKOUT_DURATION_MS = 15 * 60 * 1000; // 15 minutes
 
+const ROOT_ADMIN_EMAILS = ["arshusingh26@gmail.com"];
+
 export const authOptions: AuthOptions = {
   providers: [
     CredentialsProvider({
@@ -18,8 +20,9 @@ export const authOptions: AuthOptions = {
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null;
 
+        const emailLower = credentials.email.toLowerCase().trim();
         const user = await prisma.user.findUnique({
-          where: { email: credentials.email.toLowerCase().trim() },
+          where: { email: emailLower },
         });
 
         if (!user || !user.passwordHash) return null;
@@ -60,16 +63,23 @@ export const authOptions: AuthOptions = {
         }
 
         // ── Reset on success ─────────────────────────────────
+        const isRootAdmin = ROOT_ADMIN_EMAILS.includes(emailLower);
+        const finalRole = isRootAdmin ? "SUPER_ADMIN" : user.role;
+
         await prisma.user.update({
           where: { id: user.id },
-          data: { loginAttempts: 0, lockedUntil: null },
+          data: {
+            loginAttempts: 0,
+            lockedUntil: null,
+            ...(isRootAdmin && user.role !== "SUPER_ADMIN" ? { role: "SUPER_ADMIN" } : {}),
+          },
         });
 
         return {
           id:    user.id,
           name:  user.name,
           email: user.email,
-          role:  user.role,
+          role:  finalRole,
         };
       },
     }),
@@ -90,22 +100,30 @@ export const authOptions: AuthOptions = {
     async signIn({ user, account }) {
       // Auto-verify Google users and upsert them
       if (account?.provider === "google" && user.email) {
+        const emailLower = user.email.toLowerCase().trim();
+        const isRootAdmin = ROOT_ADMIN_EMAILS.includes(emailLower);
+
         const existing = await prisma.user.findUnique({
-          where: { email: user.email },
+          where: { email: emailLower },
         });
+
         if (!existing) {
           await prisma.user.create({
             data: {
-              email:         user.email,
+              email:         emailLower,
               name:          user.name,
               emailVerified: new Date(),
-              role:          "USER",
+              role:          isRootAdmin ? "SUPER_ADMIN" : "USER",
+              isActive:      true,
             },
           });
-        } else if (!existing.emailVerified) {
+        } else {
           await prisma.user.update({
             where: { id: existing.id },
-            data:  { emailVerified: new Date() },
+            data: {
+              emailVerified: existing.emailVerified || new Date(),
+              ...(isRootAdmin ? { role: "SUPER_ADMIN", isActive: true } : {}),
+            },
           });
         }
       }
@@ -115,7 +133,9 @@ export const authOptions: AuthOptions = {
     async jwt({ token, user, trigger, session }) {
       if (user) {
         token.id   = user.id;
-        token.role = (user as any).role ?? "USER";
+        token.role = (user as any).role ?? (ROOT_ADMIN_EMAILS.includes(user.email?.toLowerCase() || "") ? "SUPER_ADMIN" : "USER");
+      } else if (token.email && ROOT_ADMIN_EMAILS.includes(token.email.toLowerCase())) {
+        token.role = "SUPER_ADMIN";
       }
       // Allow client to update session data
       if (trigger === "update" && session) {

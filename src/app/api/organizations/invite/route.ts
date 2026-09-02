@@ -34,7 +34,19 @@ export async function POST(req: Request) {
     // Check if user already exists
     const existingUser = await prisma.user.findUnique({ where: { email: email.toLowerCase().trim() } });
     if (existingUser) {
-      // Connect existing user to the org
+      if (existingUser.orgId === currentUser.orgId) {
+        return NextResponse.json(
+          { error: 'User is already a member of this workspace.' },
+          { status: 409 }
+        );
+      }
+      if (existingUser.orgId) {
+        return NextResponse.json(
+          { error: 'This user already belongs to another organization workspace.' },
+          { status: 400 }
+        );
+      }
+      // Connect unaffiliated existing user to the org
       await prisma.user.update({
         where: { id: existingUser.id },
         data: { orgId: currentUser.orgId, role: role.toUpperCase() },

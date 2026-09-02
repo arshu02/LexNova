@@ -27,7 +27,47 @@ async function redisRequest(
 
 // ── Core operations ─────────────────────────────────────────
 
+// ── In-Memory Fallback Store (when Redis is unconfigured or offline) ─────────
+interface MemoryEntry {
+  count: number;
+  resetAt: number;
+}
+const memoryStore = new Map<string, MemoryEntry>();
+const memoryCache = new Map<string, { value: string; expiresAt: number }>();
+
+// Periodic cleanup of stale memory entries (every 2 minutes)
+if (typeof setInterval !== "undefined") {
+  setInterval(() => {
+    const now = Math.floor(Date.now() / 1000);
+    for (const [key, entry] of memoryStore.entries()) {
+      if (entry.resetAt <= now) {
+        memoryStore.delete(key);
+      }
+    }
+    const msNow = Date.now();
+    for (const [key, item] of memoryCache.entries()) {
+      if (item.expiresAt <= msNow) {
+        memoryCache.delete(key);
+      }
+    }
+  }, 120_000).unref?.();
+}
+
 export async function cacheGet<T>(key: string): Promise<T | null> {
+  if (!REDIS_URL || !REDIS_TOKEN) {
+    const item = memoryCache.get(key);
+    if (!item) return null;
+    if (item.expiresAt <= Date.now()) {
+      memoryCache.delete(key);
+      return null;
+    }
+    try {
+      return JSON.parse(item.value) as T;
+    } catch {
+      return item.value as unknown as T;
+    }
+  }
+
   const result = await redisRequest("GET", `/get/${encodeURIComponent(key)}`);
   if (!result || typeof result !== "string") return null;
   try {
@@ -43,6 +83,14 @@ export async function cacheSet(
   ttlSeconds = 300
 ): Promise<void> {
   const serialised = JSON.stringify(value);
+  if (!REDIS_URL || !REDIS_TOKEN) {
+    memoryCache.set(key, {
+      value: serialised,
+      expiresAt: Date.now() + ttlSeconds * 1000,
+    });
+    return;
+  }
+
   await redisRequest(
     "POST",
     `/set/${encodeURIComponent(key)}`,
@@ -51,10 +99,14 @@ export async function cacheSet(
 }
 
 export async function cacheDel(key: string): Promise<void> {
+  if (!REDIS_URL || !REDIS_TOKEN) {
+    memoryCache.delete(key);
+    return;
+  }
   await redisRequest("GET", `/del/${encodeURIComponent(key)}`);
 }
 
-// ── Rate limiting (sliding window) ─────────────────────────
+// ── Rate limiting (sliding window with memory fallback) ─────────────────────
 
 export interface RateLimitResult {
   allowed: boolean;
@@ -63,7 +115,7 @@ export interface RateLimitResult {
 }
 
 /**
- * Simple fixed-window rate limiter using Redis INCR + EXPIRE.
+ * Robust rate limiter using Redis INCR + EXPIRE, with in-memory fallback.
  * @param identifier - e.g. "ip:1.2.3.4" or "user:abc123"
  * @param limit      - max requests per window
  * @param windowSec  - window size in seconds
@@ -73,13 +125,27 @@ export async function rateLimit(
   limit: number,
   windowSec = 60
 ): Promise<RateLimitResult> {
+  const now = Math.floor(Date.now() / 1000);
+
+  // Fallback to in-memory rate limiting if Redis is not configured
   if (!REDIS_URL || !REDIS_TOKEN) {
-    // No Redis — allow everything in dev
-    return { allowed: true, remaining: limit - 1, resetAt: 0 };
+    const entry = memoryStore.get(identifier);
+    if (!entry || entry.resetAt <= now) {
+      const resetAt = now + windowSec;
+      memoryStore.set(identifier, { count: 1, resetAt });
+      return { allowed: true, remaining: limit - 1, resetAt };
+    }
+
+    entry.count += 1;
+    const remaining = Math.max(0, limit - entry.count);
+    return {
+      allowed: entry.count <= limit,
+      remaining,
+      resetAt: entry.resetAt,
+    };
   }
 
   const key = `rl:${identifier}`;
-  const now = Math.floor(Date.now() / 1000);
   const resetAt = now + windowSec;
 
   try {
@@ -98,7 +164,18 @@ export async function rateLimit(
     const remaining = Math.max(0, limit - count);
     return { allowed: count <= limit, remaining, resetAt };
   } catch {
-    return { allowed: true, remaining: limit, resetAt };
+    // If Redis call fails, fall back to memory store rather than allowing unrestricted requests
+    const entry = memoryStore.get(identifier);
+    if (!entry || entry.resetAt <= now) {
+      memoryStore.set(identifier, { count: 1, resetAt });
+      return { allowed: true, remaining: limit - 1, resetAt };
+    }
+    entry.count += 1;
+    return {
+      allowed: entry.count <= limit,
+      remaining: Math.max(0, limit - entry.count),
+      resetAt: entry.resetAt,
+    };
   }
 }
 

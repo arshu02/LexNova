@@ -69,6 +69,21 @@ export function Navbar() {
 
         {/* Desktop Actions */}
         <div className="hidden md:flex items-center gap-3">
+          <button
+            onClick={() => {
+              window.dispatchEvent(
+                new KeyboardEvent("keydown", { key: "k", metaKey: true, bubbles: true })
+              );
+            }}
+            className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/[0.04] border border-white/10 hover:border-amber-400/40 text-[12px] font-bold text-slate-300 hover:text-white transition-all shadow-sm"
+          >
+            <Terminal size={13} className="text-amber-400" />
+            <span>Search</span>
+            <kbd className="px-1.5 py-0.5 rounded bg-white/5 border border-white/10 text-[9px] font-mono text-slate-400">
+              ⌘K
+            </kbd>
+          </button>
+
           <Link
             href="/auth/login"
             className="text-[13.5px] font-semibold text-[#CBD5E1] hover:text-white transition-colors px-3 py-1.5 rounded-xl hover:bg-white/[0.05]"

@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { getToken } from "next-auth/jwt";
 import { rateLimit } from "@/lib/redis";
 
 // ── Rate limit rules per route pattern ─────────────────────
@@ -8,6 +9,7 @@ const RULES = [
   { pattern: /^\/api\/auth\/signup/,           limit: 5,   window: 60  },
   { pattern: /^\/api\/documents\/generate/,    limit: 5,   window: 60  },
   { pattern: /^\/api\/payments/,               limit: 30,  window: 60  },
+  { pattern: /^\/api\/admin/,                  limit: 100, window: 60  },
   { pattern: /^\/api\//,                       limit: 200, window: 60  }, // global API cap
 ];
 
@@ -21,7 +23,27 @@ function getClientId(req: NextRequest): string {
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  // Only rate-limit API routes
+  // ── 1. Protect Admin Routes (Zero-Trust RBAC) ───────────────
+  if (pathname.startsWith("/admin") || pathname.startsWith("/api/admin")) {
+    const token = await getToken({
+      req,
+      secret: process.env.NEXTAUTH_SECRET,
+    });
+
+    if (!token || !["ADMIN", "SUPER_ADMIN"].includes(token.role as string)) {
+      if (pathname.startsWith("/api/admin")) {
+        return NextResponse.json(
+          { error: "Forbidden: Administrative privileges required." },
+          { status: 403 }
+        );
+      }
+      const loginUrl = new URL("/auth/login", req.url);
+      loginUrl.searchParams.set("callbackUrl", pathname);
+      return NextResponse.redirect(loginUrl);
+    }
+  }
+
+  // ── 2. Rate-limit API routes ────────────────────────────────
   if (!pathname.startsWith("/api/")) {
     return NextResponse.next();
   }
@@ -67,5 +89,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/api/:path*"],
+  matcher: ["/api/:path*", "/admin/:path*"],
 };

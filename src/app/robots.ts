@@ -6,7 +6,7 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: '*',
         allow: '/',
-        disallow: ['/api/', '/dashboard/admin/'],
+        disallow: ['/api/', '/admin/', '/dashboard/admin/'],
       },
     ],
     sitemap: 'https://lexnova.in/sitemap.xml',

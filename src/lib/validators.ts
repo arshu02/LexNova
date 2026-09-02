@@ -98,14 +98,41 @@ export const generateDocumentSchema = z.object({
   additionalContext: z.string().max(2000).optional(),
 });
 
+export const createDocumentRecordSchema = z.object({
+  caseId: z.string().optional(),
+  matterId: z.string().optional(),
+  docType: z.string().min(1).max(100),
+  details: z.string().min(1).max(5000),
+});
+
+export const updateDocumentRecordSchema = z.object({
+  docId: z.string().min(1),
+  content: z.string().max(50000).optional(),
+  title: z.string().min(1).max(200).optional(),
+});
+
+// ── Messages ────────────────────────────────────────────────
+
+export const createMessageSchema = z.object({
+  text: z.string().min(1).max(5000).trim(),
+});
+
 // ── Matters ─────────────────────────────────────────────────
 
 export const createMatterSchema = z.object({
   title: z.string().min(3).max(200).trim(),
   description: z.string().min(10).max(5000).trim(),
   jurisdiction: z.string().min(2).max(100).trim(),
-  category: z.string().optional(),
+  category: z.string().max(100).optional(),
   priority: z.enum(["LOW", "MEDIUM", "HIGH", "CRITICAL"]).default("MEDIUM"),
+  urgency: z.enum(["LOW", "MEDIUM", "HIGH", "CRITICAL"]).default("MEDIUM"),
+});
+
+export const updateMatterSchema = z.object({
+  id: z.string().min(1),
+  status: z.enum(["ACTIVE", "RESOLVED", "SETTLED", "CLOSED", "PENDING_REVIEW"]).optional(),
+  urgency: z.enum(["LOW", "MEDIUM", "HIGH", "CRITICAL"]).optional(),
+  title: z.string().min(3).max(200).trim().optional(),
 });
 
 // ── Hearings ────────────────────────────────────────────────
