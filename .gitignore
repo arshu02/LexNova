@@ -44,3 +44,7 @@ next-env.d.ts
 /scratch/
 server.log
 src.zip
+*.db
+*.db-journal
+*.sqlite
+
