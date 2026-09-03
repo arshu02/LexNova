@@ -34,7 +34,12 @@ interface LegalStore {
     setActiveSession: (id: string) => void;
     addMessage: (message: ChatMessage) => void;
     setTyping: (val: boolean) => void;
-    updateSessionContext: (category: CaseCategory, city: string | null) => void;
+    updateSessionContext: (
+        category: CaseCategory,
+        city: string | null,
+        urgency?: "High" | "Medium" | "Low",
+        complexity?: "Standard" | "Complex" | "Highly Complex"
+    ) => void;
 }
 
 const createEmptySession = (): ChatSession => ({
@@ -97,11 +102,13 @@ export const useLegalStore = create<LegalStore>((set, get) => ({
 
     setTyping: (val) => set({ isTyping: val }),
 
-    updateSessionContext: (category, city) => {
+    updateSessionContext: (category, city, urgency, complexity) => {
         const { activeSessionId } = get();
         set((state) => ({
             detectedCategory: category,
             detectedCity: city,
+            ...(urgency ? { urgency } : {}),
+            ...(complexity ? { complexity } : {}),
             sessions: state.sessions.map((s) =>
                 s.id === activeSessionId ? { ...s, category, city } : s
             ),

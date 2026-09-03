@@ -38,7 +38,8 @@ export default function MattersWorkspaceHub() {
         const res = await fetch('/api/matters');
         if (res.ok) {
           const data = await res.json();
-          setMatters(Array.isArray(data) ? data : []);
+          const list = Array.isArray(data) ? data : (data?.items || []);
+          setMatters(list);
         }
       } catch (err) {
         console.error('Failed to load matters:', err);

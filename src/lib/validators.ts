@@ -130,8 +130,12 @@ export const createMatterSchema = z.object({
 
 export const updateMatterSchema = z.object({
   id: z.string().min(1),
-  status: z.enum(["ACTIVE", "RESOLVED", "SETTLED", "CLOSED", "PENDING_REVIEW"]).optional(),
-  urgency: z.enum(["LOW", "MEDIUM", "HIGH", "CRITICAL"]).optional(),
+  status: z.enum([
+    'DRAFT', 'INTAKE', 'ACTIVE', 'AWAITING_DOCUMENTS',
+    'LAWYER_MATCHING', 'LAWYER_ASSIGNED', 'CONSULTATION_SCHEDULED',
+    'ON_HOLD', 'RESOLVED', 'CLOSED', 'ARCHIVED',
+  ]).optional(),
+  urgency: z.enum(['LOW', 'MEDIUM', 'HIGH', 'CRITICAL']).optional(),
   title: z.string().min(3).max(200).trim().optional(),
 });
 

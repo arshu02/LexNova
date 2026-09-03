@@ -275,7 +275,7 @@ export default function AdvocatesPage() {
                 {/* Top Profile Row */}
                 <div className="flex items-start gap-4">
                   <div className="relative w-16 h-16 rounded-2xl overflow-hidden shrink-0 border border-white/10 shadow-md">
-                    <Image src={adv.photo} alt={adv.name} fill className="object-cover" />
+                    <Image src={adv.photo} alt={adv.name} fill sizes="64px" className="object-cover" />
                     {adv.availableToday && (
                       <div className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-emerald-400 border-2 border-[#0A0C12]" title="Available Today" />
                     )}

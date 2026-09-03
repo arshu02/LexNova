@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 
-// Redirect /dashboard to /app (the real dashboard route)
+// Redirect /dashboard to /dashboard/chat (the main AI Case Intake route)
 export default function DashboardRedirect() {
-  redirect("/app");
+  redirect("/dashboard/chat");
 }

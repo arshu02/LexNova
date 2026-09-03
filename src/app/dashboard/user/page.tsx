@@ -56,12 +56,14 @@ export default function UserOverviewDashboard() {
 
         if (mattersRes.ok) {
           const mData = await mattersRes.json();
-          setMatters(Array.isArray(mData) ? mData : []);
+          const list = Array.isArray(mData) ? mData : (mData?.items || []);
+          setMatters(list);
         }
 
         if (bookingsRes.ok) {
           const bData = await bookingsRes.json();
-          setBookings(Array.isArray(bData) ? bData : []);
+          const list = Array.isArray(bData) ? bData : (bData?.items || []);
+          setBookings(list);
         }
       } catch (err) {
         console.error('Failed to load dashboard data:', err);

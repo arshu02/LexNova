@@ -8,9 +8,9 @@ export const prisma =
   globalForPrisma.prisma ??
   new PrismaClient({
     log:
-      process.env.NODE_ENV === "development"
+      process.env.DEBUG_PRISMA === "true"
         ? ["query", "error", "warn"]
-        : ["error"],
+        : ["error", "warn"],
     datasources: {
       db: {
         url: process.env.DATABASE_URL,

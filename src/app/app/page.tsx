@@ -1,16 +1,5 @@
-"use client";
-
-import { Sidebar } from "@/components/Sidebar";
-import { AnalysisEngine } from "@/components/AnalysisEngine";
-import { AdvocatePanel } from "@/components/AdvocatePanel";
+import { redirect } from "next/navigation";
 
 export default function AppPage() {
-    return (
-        <main className="flex h-screen w-full bg-[#080810] text-slate-200 overflow-hidden">
-            <Sidebar />
-            <AnalysisEngine />
-            <AdvocatePanel />
-        </main>
-    );
+    redirect("/dashboard/chat");
 }
-

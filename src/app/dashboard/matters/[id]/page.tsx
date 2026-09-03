@@ -395,7 +395,7 @@ export default function MatterWorkspacePage() {
           <div className="bg-[#0C101A] border border-[#1E273B] hover:border-[#2F3E5E] rounded-xl p-4 transition-all flex items-center justify-between gap-3">
             <div className="flex items-center gap-3 min-w-0">
               <div className="relative w-10 h-10 rounded-xl overflow-hidden shrink-0 border border-white/10">
-                <Image src={matter.assignedLawyer.photo} alt={matter.assignedLawyer.name} fill className="object-cover" />
+                <Image src={matter.assignedLawyer.photo} alt={matter.assignedLawyer.name} fill sizes="40px" className="object-cover" />
                 <div className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-400 border border-[#0C101A]" />
               </div>
               <div className="min-w-0">
@@ -585,7 +585,7 @@ export default function MatterWorkspacePage() {
 
                   <div className="flex items-center gap-3.5">
                     <div className="relative w-14 h-14 rounded-2xl overflow-hidden shrink-0 border border-white/10">
-                      <Image src={matter.assignedLawyer.photo} alt={matter.assignedLawyer.name} fill className="object-cover" />
+                      <Image src={matter.assignedLawyer.photo} alt={matter.assignedLawyer.name} fill sizes="56px" className="object-cover" />
                     </div>
                     <div>
                       <h4 className="text-[16px] font-bold text-white">{matter.assignedLawyer.name}</h4>

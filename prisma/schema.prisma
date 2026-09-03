@@ -89,6 +89,7 @@ model Advocate {
   bookings        Booking[]
   matters         Matter[]
   caseParties     CaseParty[]
+  availabilitySlots LawyerAvailabilitySlot[]
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
 
@@ -160,6 +161,7 @@ model Document {
   matter      Matter    @relation(fields: [matterId], references: [id])
   uploaderId  String
   uploader    User      @relation(fields: [uploaderId], references: [id])
+  versions    DocumentVersion[]
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
@@ -226,6 +228,10 @@ model Booking {
   @@index([advocateId])
   @@index([paymentStatus])
   @@index([status])
+  @@index([date])
+  // DB-level guard: same advocate cannot have two bookings at the same date+time
+  // This is the authoritative double-booking prevention — the application check is a UX fast-fail only
+  @@unique([advocateId, date, time], name: "unique_advocate_slot")
 }
 
 model Message {
@@ -325,8 +331,8 @@ model LimitationPeriod {
   matter         Matter   @relation(fields: [caseId], references: [id])
   caseType       String
   filingDeadline DateTime
-  warningDays    Int[]    @default([30, 15, 7, 1])
-  warningsSent   Int[]    @default([])
+  warningDays    String   @default("[30,15,7,1]")  // JSON array stored as string for portability
+  warningsSent   String   @default("[]")             // JSON array stored as string
   isExpired      Boolean  @default(false)
   legalBasis     String
   createdAt      DateTime @default(now())
@@ -529,4 +535,99 @@ model AppSetting {
   updatedAt DateTime @updatedAt
 
   @@index([key])
+}
+
+// ─── Audit & Compliance Models ───────────────────────────────
+
+// Append-only audit log — never update or delete records
+// This replaces the CaseNotification audit hack
+model AuditLog {
+  id           String   @id @default(cuid())
+  action       String   // e.g. 'USER_LOGIN', 'CASE_CREATED', 'DOCUMENT_UPLOADED'
+  userId       String?
+  orgId        String?
+  resourceId   String?
+  resourceType String?  // e.g. 'MATTER', 'BOOKING', 'DOCUMENT'
+  ipAddress    String?
+  userAgent    String?
+  metadata     String?  // JSON string of additional context
+  result       String   @default("SUCCESS") // 'SUCCESS' | 'FAILURE'
+  correlationId String?
+  createdAt    DateTime @default(now())
+
+  @@index([userId])
+  @@index([orgId])
+  @@index([action])
+  @@index([resourceType, resourceId])
+  @@index([createdAt])
+}
+
+// AI usage tracking per user/matter for cost controls and analytics
+model AIInteraction {
+  id            String   @id @default(cuid())
+  userId        String
+  orgId         String?
+  matterId      String?
+  workflowType  String   // e.g. 'LEGAL_INTAKE', 'DOCUMENT_GENERATION', 'RAG_SEARCH'
+  provider      String   // 'anthropic' | 'openai' | 'cache' | 'fallback'
+  model         String
+  promptTokens  Int      @default(0)
+  outputTokens  Int      @default(0)
+  totalTokens   Int      @default(0)
+  latencyMs     Int      @default(0)
+  cached        Boolean  @default(false)
+  status        String   @default("SUCCESS") // 'SUCCESS' | 'FAILURE' | 'FALLBACK'
+  errorCode     String?
+  createdAt     DateTime @default(now())
+
+  @@index([userId])
+  @@index([orgId])
+  @@index([matterId])
+  @@index([workflowType])
+  @@index([createdAt])
+  @@index([provider])
+}
+
+// Document versioning — track every meaningful version of a legal document
+model DocumentVersion {
+  id           String   @id @default(cuid())
+  documentId   String
+  document     Document @relation(fields: [documentId], references: [id])
+  version      Int      // Monotonically increasing per document
+  title        String
+  content      String?
+  fileUrl      String?
+  storagePath  String?
+  sizeBytes    Int?
+  contentHash  String?  // SHA-256 of content for integrity verification
+  createdById  String
+  changeNote   String?  // e.g. 'Lawyer reviewed and edited paragraph 3'
+  approvedBy   String?  // userId of lawyer/admin who approved
+  approvedAt   DateTime?
+  createdAt    DateTime @default(now())
+
+  @@index([documentId])
+  @@index([documentId, version])
+  @@index([createdById])
+}
+
+// Real availability slots for lawyers — replaces the static 'availability' string
+model LawyerAvailabilitySlot {
+  id          String   @id @default(cuid())
+  advocateId  String
+  advocate    Advocate @relation(fields: [advocateId], references: [id])
+  date        String   // YYYY-MM-DD
+  startTime   String   // HH:MM (24h)
+  endTime     String   // HH:MM (24h)
+  isBooked    Boolean  @default(false)
+  isBlocked   Boolean  @default(false)  // manually blocked by lawyer (holiday, etc.)
+  bookingId   String?  @unique          // set when slot is booked
+  slotType    String   @default("AVAILABLE") // 'AVAILABLE' | 'BOOKED' | 'BLOCKED'
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([advocateId])
+  @@index([advocateId, date])
+  @@index([date, isBooked])
+  @@unique([advocateId, date, startTime], name: "unique_advocate_timeslot")
 }

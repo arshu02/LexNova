@@ -5,7 +5,17 @@ import { useLegalStore } from "@/store/legalStore";
 import { cn } from "@/lib/utils";
 import { filterAdvocates } from "@/lib/mockData";
 import { AdvocateCard } from "@/components/AdvocateCard";
-import { Scale, RefreshCw, Shield, Zap, Terminal, Activity } from "lucide-react";
+import { 
+    Scale, 
+    ShieldCheck, 
+    Lock, 
+    Sparkles, 
+    Search, 
+    ArrowRight,
+    Briefcase,
+    MapPin,
+    AlertCircle
+} from "lucide-react";
 import { motion } from "framer-motion";
 
 export function AdvocatePanel() {
@@ -13,80 +23,93 @@ export function AdvocatePanel() {
     const advocates = filterAdvocates(detectedCategory, detectedCity);
 
     return (
-        <aside className="w-[400px] flex-shrink-0 bg-[#080810] flex flex-col h-full border-l border-white/5 overflow-hidden sticky right-0">
-            {/* Intel Panel Header */}
-            <div className="p-8 border-b bg-[#0D0D18]/[0.02] relative" style={{ borderColor: "rgba(255,255,255,0.05)" }}>
-                <div className="flex items-center gap-3 mb-8">
-                    <div className="w-8 h-8 flex items-center justify-center rounded-xl" style={{ background: "rgba(245,158,11,0.1)", border: "1px solid rgba(245,158,11,0.2)" }}>
-                        <Activity className="w-4 h-4" style={{ color: "#F59E0B" }} />
+        <aside className="w-[390px] flex-shrink-0 bg-[#070A12] flex flex-col h-full border-l border-white/[0.08] overflow-hidden sticky right-0 z-30">
+            {/* Header */}
+            <div className="p-5 border-b border-white/[0.06] bg-[#0A0E1A]/80 backdrop-blur-md">
+                <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-2.5">
+                        <div className="w-8 h-8 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 shadow-md">
+                            <Scale className="w-4 h-4" />
+                        </div>
+                        <div>
+                            <h2 className="text-[13.5px] font-bold text-white tracking-tight">
+                                Counsel on Record
+                            </h2>
+                            <p className="text-[10px] text-[#6B7B94] font-medium">
+                                Bar Council Verified Advocates
+                            </p>
+                        </div>
                     </div>
-                    <div>
-                        <h2 className="text-sm font-black text-white tracking-[0.2em] uppercase">Lawyer Matching</h2>
-                        <p className="text-[8px] font-bold text-slate-500 uppercase tracking-widest mt-0.5">Top Verified Advocates</p>
+
+                    <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20">
+                        <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                        <span className="text-[9.5px] font-semibold text-emerald-400">
+                            {advocates.length} Available
+                        </span>
                     </div>
                 </div>
 
-                {/* Case Snapshot Card */}
+                {/* Case Intelligence Snapshot */}
                 {activeSessionId && (
                     <motion.div 
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        className="p-8 rounded-3xl text-white relative overflow-hidden group shadow-2xl"
-                        style={{ background: "linear-gradient(135deg, #7C3AED, #F59E0B)" }}
+                        initial={{ opacity: 0, y: -5 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.08] shadow-inner"
                     >
-                        <div className="absolute top-0 right-0 w-32 h-32 bg-[#0D0D18]/10 rounded-full translate-x-16 -translate-y-16 blur-2xl transition-all duration-700 group-hover:scale-110" />
-                        
-                        <div className="flex gap-2 items-center mb-6">
-                            <Terminal className="w-3 h-3 text-white/50" />
-                            <p className="text-[10px] font-bold text-white/70 uppercase tracking-[0.4em]">Case Summary</p>
+                        <div className="flex items-center justify-between text-[10px] uppercase font-bold text-slate-500 tracking-wider mb-2">
+                            <span>Active Matter Snapshot</span>
+                            <span className="text-blue-400 font-mono">LIVE INTELLIGENCE</span>
                         </div>
-                        
-                        <div className="space-y-6 relative z-10">
-                            <div className="grid grid-cols-2 gap-6">
-                                <div>
-                                    <p className="text-white/40 text-[9px] font-bold uppercase tracking-widest mb-1.5 leading-none">Category</p>
-                                    <p className="text-[10px] font-black uppercase tracking-tight text-white leading-tight truncate">{detectedCategory}</p>
+
+                        <div className="grid grid-cols-2 gap-2 text-[11px]">
+                            <div className="p-2 rounded-lg bg-white/[0.02] border border-white/[0.04]">
+                                <span className="text-slate-500 text-[10px] block mb-0.5">Specialization</span>
+                                <span className="font-semibold text-slate-200 truncate block">
+                                    {detectedCategory}
+                                </span>
+                            </div>
+                            <div className="p-2 rounded-lg bg-white/[0.02] border border-white/[0.04]">
+                                <span className="text-slate-500 text-[10px] block mb-0.5">Forum / City</span>
+                                <span className="font-semibold text-slate-200 truncate block">
+                                    {detectedCity || "Bengaluru"}
+                                </span>
+                            </div>
+                            <div className="p-2 rounded-lg bg-white/[0.02] border border-white/[0.04]">
+                                <span className="text-slate-500 text-[10px] block mb-0.5">Urgency Level</span>
+                                <div className="flex items-center gap-1.5">
+                                    <div className={cn("w-1.5 h-1.5 rounded-full", urgency === "High" ? "bg-rose-400 animate-pulse" : "bg-amber-400")} />
+                                    <span className="font-semibold text-slate-200">{urgency}</span>
                                 </div>
-                                <div>
-                                    <p className="text-white/40 text-[9px] font-bold uppercase tracking-widest mb-1.5 leading-none">Location</p>
-                                    <p className="text-[10px] font-black uppercase tracking-tight text-white leading-tight truncate">{detectedCity || "India"}</p>
-                                </div>
-                                <div>
-                                    <p className="text-white/40 text-[9px] font-bold uppercase tracking-widest mb-1.5 leading-none">Urgency</p>
-                                    <div className="flex items-center gap-2">
-                                        <div className={cn("w-1.5 h-1.5 rounded-full", urgency === "High" ? "bg-[#0D0D18] animate-pulse" : "bg-emerald-300")} />
-                                        <p className="text-[10px] font-black uppercase tracking-tight leading-none text-white">{urgency}</p>
-                                    </div>
-                                </div>
-                                <div>
-                                    <p className="text-white/40 text-[9px] font-bold uppercase tracking-widest mb-1.5 leading-none">Complexity</p>
-                                    <p className="text-[10px] font-black uppercase tracking-tight text-white leading-none">{complexity}</p>
-                                </div>
+                            </div>
+                            <div className="p-2 rounded-lg bg-white/[0.02] border border-white/[0.04]">
+                                <span className="text-slate-500 text-[10px] block mb-0.5">Complexity</span>
+                                <span className="font-semibold text-slate-200">{complexity}</span>
                             </div>
                         </div>
                     </motion.div>
                 )}
             </div>
 
-            {/* Matching Engine */}
-            <div className="flex-1 overflow-y-auto px-6 py-8 space-y-6 custom-scrollbar">
-                <div className="flex items-center justify-between mb-4 px-2">
-                    <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em]">Recommended Advocates</p>
-                    {advocates.length > 0 && (
-                        <div className="flex items-center gap-2 px-2 py-1 rounded-full" style={{ background: "rgba(139,92,246,0.1)", border: "1px solid rgba(139,92,246,0.2)" }}>
-                             <div className="w-1 h-1 rounded-full animate-pulse" style={{ background: "#A78BFA" }} />
-                             <span className="text-[9px] font-black uppercase tracking-widest" style={{ color: "#A78BFA" }}>{advocates.length} Lawyers Found</span>
-                        </div>
-                    )}
+            {/* Advocate Cards Feed */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-3.5 custom-scrollbar">
+                <div className="flex items-center justify-between px-1 mb-1">
+                    <span className="text-[11px] font-semibold text-[#8D9CB0] uppercase tracking-wider">
+                        Recommended Advocates
+                    </span>
+                    <span className="text-[10px] text-slate-500">
+                        Ranked by win rate & city
+                    </span>
                 </div>
 
                 {advocates.length === 0 ? (
-                    <div className="py-20 text-center px-10 border border-dashed rounded-[2rem]" style={{ borderColor: "rgba(255,255,255,0.05)" }}>
-                        <RefreshCw className="w-8 h-8 text-white/5 mx-auto mb-6 animate-spin-slow" />
-                        <p className="text-[10px] text-slate-600 font-bold uppercase tracking-[0.3em] leading-loose">Describe your issue to find matching lawyers...</p>
+                    <div className="py-16 text-center px-6 border border-dashed border-white/10 rounded-2xl">
+                        <Scale className="w-8 h-8 text-slate-600 mx-auto mb-3" />
+                        <p className="text-[12px] text-slate-400 font-medium leading-relaxed">
+                            Submit your legal matter in the intake console to match verified High Court advocates.
+                        </p>
                     </div>
                 ) : (
-                    <div className="space-y-4">
+                    <div className="space-y-3">
                         {advocates.map((advocate) => (
                             <AdvocateCard key={advocate.id} advocate={advocate} />
                         ))}
@@ -94,15 +117,13 @@ export function AdvocatePanel() {
                 )}
             </div>
 
-            {/* Footer System Status */}
-            <div className="p-6 bg-[#0D0D18]/[0.02] border-t" style={{ borderColor: "rgba(255,255,255,0.05)" }}>
-                <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                        <Zap className="w-3.5 h-3.5" style={{ color: "rgba(245,158,11,0.5)" }} />
-                        <p className="text-[9px] font-bold text-slate-500 uppercase tracking-[0.2em]">Verified Network Live</p>
-                    </div>
-                    <Shield className="w-4 h-4 text-white/10" />
+            {/* Institutional Security Footer */}
+            <div className="p-3.5 px-5 bg-[#050810] border-t border-white/[0.06] flex items-center justify-between text-[11px] text-[#6B7B94]">
+                <div className="flex items-center gap-2">
+                    <Lock className="w-3.5 h-3.5 text-emerald-400/80" />
+                    <span>Attorney-Client Privilege Protected</span>
                 </div>
+                <ShieldCheck className="w-4 h-4 text-blue-400/70" />
             </div>
         </aside>
     );

@@ -105,7 +105,8 @@ export default function BookingsPage() {
       const res = await fetch(`/api/bookings`);
       if (res.ok) {
         const data = await res.json();
-        setBookings(Array.isArray(data) ? data : []);
+        const list = Array.isArray(data) ? data : (data?.items || []);
+        setBookings(list);
       }
     } catch (err) {
       console.error("Fetch bookings error:", err);

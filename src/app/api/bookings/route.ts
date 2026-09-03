@@ -1,429 +1,375 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
-import { 
+import {
+  requireAuth,
+  isAdmin,
+  canAccessMatter,
+  notFoundResponse,
+  forbiddenResponse,
+  internalErrorResponse,
+} from '@/lib/auth-helpers';
+import {
+  parseBody,
+  createBookingSchema,
+  ValidationError,
+} from '@/lib/validators';
+import {
   sendUserBookingConfirmation,
-  sendLawyerBookingNotification 
+  sendLawyerBookingNotification,
 } from '@/lib/email';
+import { logAuditEvent } from '@/lib/audit-logger';
 
-// ── Generate confirmation code ─────────────────────
+// ── Helpers ────────────────────────────────────────────────────
+
 function generateConfirmationCode(): string {
-  const year = new Date().getFullYear();
+  const year   = new Date().getFullYear();
   const random = Math.floor(1000 + Math.random() * 9000);
   return `LN-${year}-${random}`;
 }
 
-// ── Generate Jitsi meet link ───────────────────────
 function generateMeetLink(bookingId: string): string {
-  const roomName = `lexnova-${bookingId.replace(/[^a-zA-Z0-9]/g, '')}-${Date.now()}`;
-  return `https://meet.jit.si/${roomName}`;
+  // Uses Jitsi — replace with a managed video provider in production
+  const room = `lexnova-${bookingId.replace(/[^a-zA-Z0-9]/g, '')}-${Date.now()}`;
+  return `https://meet.jit.si/${room}`;
 }
 
-// ── GET: Fetch bookings for user ───────────────────
+// ── GET /api/bookings ─────────────────────────────────────────
+// Returns all bookings for the authenticated user (or all if admin).
+// Supports ?limit=&cursor= for pagination.
 export async function GET(req: NextRequest) {
+  const { user, errorResponse } = await requireAuth();
+  if (errorResponse) return errorResponse;
+
   try {
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.email && !(session?.user as any)?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const url    = new URL(req.url);
+    const limit  = Math.min(parseInt(url.searchParams.get('limit') ?? '20', 10), 100);
+    const cursor = url.searchParams.get('cursor') ?? undefined;
 
-    const sessionUserId = (session?.user as any)?.id;
-    const sessionEmail = session?.user?.email;
-
-    const caller = await prisma.user.findFirst({
-      where: {
-        OR: [
-          ...(sessionUserId ? [{ id: sessionUserId }] : []),
-          ...(sessionEmail ? [{ email: sessionEmail }] : []),
-        ],
-      },
-    });
-
-    if (!caller) {
-      return NextResponse.json({ error: 'User not found' }, { status: 404 });
-    }
-
-    const whereClause =
-      caller.role === 'ADMIN'
-        ? {}
-        : {
-            OR: [
-              { userId: caller.id },
-              { advocate: { userId: caller.id } },
-            ],
-          };
+    const whereClause = isAdmin(user.role)
+      ? {}
+      : {
+          OR: [
+            { userId:    user.id },
+            { advocate: { userId: user.id } },
+          ],
+        };
 
     const bookings = await prisma.booking.findMany({
-      where: whereClause,
-      include: {
-        advocate: true,
-        matter: true,
-      },
+      where:   whereClause,
+      include: { advocate: true, matter: true },
       orderBy: { createdAt: 'desc' },
+      take:    limit + 1, // fetch one extra to determine if there's a next page
+      ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
     });
 
-    return NextResponse.json(bookings);
+    const hasMore    = bookings.length > limit;
+    const items      = hasMore ? bookings.slice(0, limit) : bookings;
+    const nextCursor = hasMore ? items[items.length - 1].id : null;
+
+    return NextResponse.json({ items, nextCursor, hasMore });
   } catch (error) {
-    console.error('GET bookings error:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch bookings' }, 
-      { status: 500 }
-    );
+    console.error('[GET /api/bookings] error:', error);
+    return internalErrorResponse('Failed to fetch bookings.');
   }
 }
 
-// ── POST: Create new booking ───────────────────────
+// ── POST /api/bookings ────────────────────────────────────────
+// Creates a new booking. REQUIRES authentication.
+// Validates advocate existence, matter ownership, and prevents double-booking
+// via a DB-level unique constraint + transaction.
 export async function POST(req: NextRequest) {
+  const { user, errorResponse } = await requireAuth();
+  if (errorResponse) return errorResponse;
+
   try {
-    const session = await getServerSession(authOptions);
     const body = await req.json();
-    
-    const { 
-      advocateId, 
-      advocateName,
-      advocateEmail,
-      date, 
-      time, 
-      userNotes,
-      userName: bodyUserName,
-      userEmail: bodyUserEmail,
-      matterId,
-      consultationType = 'VIDEO',
-      duration = 60
-    } = body;
 
-    // Resolve User: from session, body userId, or body email
-    let user = null;
-    const sessionUserId = (session?.user as any)?.id;
-    const sessionUserEmail = session?.user?.email;
-
-    if (sessionUserId) {
-      user = await prisma.user.findUnique({ where: { id: sessionUserId } });
+    // Validate request body
+    let data: ReturnType<typeof parseBody<typeof createBookingSchema>>;
+    try {
+      data = parseBody(createBookingSchema, body);
+    } catch (err) {
+      if (err instanceof ValidationError) {
+        return NextResponse.json(
+          { error: 'Validation Failed', details: err.messages },
+          { status: 400 }
+        );
+      }
+      throw err;
     }
 
-    if (!user && body.userId && body.userId !== 'user_placeholder') {
-      user = await prisma.user.findUnique({ where: { id: body.userId } });
+    // ── 1. Resolve advocate — must exist in DB, no fallbacks ──────────────
+    const advocate = await prisma.advocate.findUnique({
+      where: { id: data.advocateId },
+    });
+
+    if (!advocate) {
+      return NextResponse.json(
+        { error: 'Advocate not found', message: `No advocate with id '${data.advocateId}' exists.` },
+        { status: 422 }
+      );
     }
 
-    const targetEmail = bodyUserEmail || sessionUserEmail || 'client@lexnova.in';
-    const targetName = bodyUserName || session?.user?.name || 'Client';
-
-    if (!user && targetEmail) {
-      user = await prisma.user.findUnique({ where: { email: targetEmail } });
-      if (!user) {
-        // Create user on the fly for guest booking
-        user = await prisma.user.create({
-          data: {
-            email: targetEmail,
-            name: targetName,
-            role: 'USER',
-            passwordHash: 'guest_auth_hash',
-          }
-        });
+    // ── 2. Verify matter ownership if matterId supplied ───────────────────
+    if (data.matterId) {
+      const authorized = await canAccessMatter(user.id, user.role, data.matterId);
+      if (!authorized) {
+        return NextResponse.json(
+          { error: 'Matter access denied', message: 'You are not authorized to book for this matter.' },
+          { status: 403 }
+        );
       }
     }
 
-    // Fallback default user if somehow still null
-    if (!user) {
-      user = await prisma.user.findFirst();
-      if (!user) {
-        user = await prisma.user.create({
-          data: {
-            email: 'client@lexnova.in',
-            name: 'Client',
-            role: 'USER',
-            passwordHash: 'guest_auth_hash',
-          }
-        });
-      }
-    }
-
-    // Resolve Advocate: by ID, Name, or Email
-    let advocate = null;
-    if (advocateId && advocateId !== 'adv_1' && advocateId !== 'adv_2' && advocateId !== 'adv_3' && advocateId !== 'adv_4' && advocateId !== 'adv_5' && advocateId !== 'adv_6') {
-      advocate = await prisma.advocate.findUnique({ where: { id: advocateId } });
-    }
-
-    if (!advocate && advocateName) {
-      advocate = await prisma.advocate.findFirst({
-        where: {
-          name: { contains: advocateName.replace('Advocate ', '').trim() }
-        }
-      });
-    }
-
-    if (!advocate && advocateEmail) {
-      advocate = await prisma.advocate.findFirst({
-        where: { email: advocateEmail }
-      });
-    }
-
-    if (!advocate) {
-      // Find first available advocate in database
-      advocate = await prisma.advocate.findFirst();
-    }
-
-    // If no advocate exists in database, create one
-    if (!advocate) {
-      const advUser = await prisma.user.create({
-        data: {
-          email: advocateEmail || 'priya.mehta@lexnova.in',
-          name: advocateName || 'Advocate Priya Mehta',
-          role: 'ADVOCATE',
-          passwordHash: 'advocate_hash',
-        }
-      });
-
-      advocate = await prisma.advocate.create({
-        data: {
-          userId: advUser.id,
-          name: advocateName || 'Advocate Priya Mehta',
-          email: advocateEmail || 'priya.mehta@lexnova.in',
-          specialization: 'PROPERTY_DISPUTE',
-          pricing: '₹999/session',
-          consultationFee: 999,
-          experienceYears: 9,
-          city: 'Bengaluru',
-          languages: 'Hindi, English',
-          availability: 'Available Today',
-          rating: 4.8,
-          verified: true,
-          isAvailable: true,
-        }
-      });
-    }
-
-    // Check for double booking (same advocate, same slot)
+    // ── 3. Create booking inside a transaction (eliminates race condition) ─
+    // The DB-level unique constraint on (advocateId, date, time) is the
+    // authoritative guard. The pre-check below is an early fast-fail UX path.
     const existing = await prisma.booking.findFirst({
       where: {
         advocateId: advocate.id,
-        date,
-        time,
-        status: { in: ['CONFIRMED', 'PENDING'] }
-      }
+        date:       data.date,
+        time:       data.time,
+        status:     { in: ['CONFIRMED', 'PENDING'] },
+      },
     });
 
     if (existing) {
       return NextResponse.json(
-        { error: 'This time slot is already booked. Please choose another.' },
+        {
+          error:   'Slot unavailable',
+          message: 'This time slot is already booked. Please choose another time.',
+        },
         { status: 409 }
       );
     }
 
-    // Generate codes
-    const confirmationCode = generateConfirmationCode();
-    const meetLink = generateMeetLink(
-      `${advocate.id}-${Date.now()}`
-    );
-    const consultationFee = advocate.consultationFee || 999;
+    const confirmationCode  = generateConfirmationCode();
+    const consultationFee   = advocate.consultationFee || 999;
+    const meetLink          = generateMeetLink(`${advocate.id}-${Date.now()}`);
 
-    // Get matter details if provided
-    let matter = null;
-    if (matterId) {
-      matter = await prisma.matter.findUnique({
-        where: { id: matterId }
+    let booking;
+    try {
+      booking = await prisma.$transaction(async (tx) => {
+        // Re-check inside the transaction for concurrent requests
+        const conflict = await tx.booking.findFirst({
+          where: {
+            advocateId: advocate.id,
+            date:       data.date,
+            time:       data.time,
+            status:     { in: ['CONFIRMED', 'PENDING'] },
+          },
+        });
+
+        if (conflict) {
+          throw new Error('SLOT_CONFLICT');
+        }
+
+        return tx.booking.create({
+          data: {
+            userId:           user.id,
+            advocateId:       advocate.id,
+            matterId:         data.matterId ?? null,
+            date:             data.date,
+            time:             data.time,
+            duration:         data.duration,
+            consultationType: data.consultationType,
+            status:           'CONFIRMED',
+            meetLink,
+            userNotes:        data.userNotes ?? null,
+            consultationFee,
+            paymentStatus:    'PENDING',
+            confirmationCode,
+            userEmailSent:    false,
+            lawyerEmailSent:  false,
+          },
+          include: { advocate: true, user: true, matter: true },
+        });
       });
+    } catch (txErr: any) {
+      if (txErr?.message === 'SLOT_CONFLICT') {
+        return NextResponse.json(
+          {
+            error:   'Slot unavailable',
+            message: 'This time slot was just booked by another user. Please choose another time.',
+          },
+          { status: 409 }
+        );
+      }
+      throw txErr;
     }
 
-    // Create booking
-    const booking = await prisma.booking.create({
-      data: {
-        userId: user.id,
-        advocateId: advocate.id,
-        matterId: matterId || null,
-        date,
-        time,
-        duration,
-        consultationType,
-        status: 'CONFIRMED',
-        meetLink,
-        userNotes: userNotes || null,
-        consultationFee,
-        paymentStatus: 'PENDING',
+    // ── 4. Audit log ──────────────────────────────────────────────────────
+    await logAuditEvent({
+      action:       'CONSULTATION_BOOKED',
+      userId:       user.id,
+      resourceId:   booking.id,
+      resourceType: 'BOOKING',
+      metadata: {
         confirmationCode,
-        userEmailSent: false,
-        lawyerEmailSent: false,
+        advocateId: advocate.id,
+        date:       data.date,
+        time:       data.time,
       },
-      include: {
-        advocate: true,
-        user: true,
-        matter: true,
-      }
     });
 
-    // ── Send emails via Resend ───────────────────────
+    // ── 5. Send confirmation emails (fire-and-forget) ─────────────────────
     const emailData = {
-      bookingId: booking.id,
+      bookingId:             booking.id,
       confirmationCode,
-      userName: user.name || targetName || 'User',
-      userEmail: user.email || targetEmail,
-      lawyerName: advocate.name,
-      lawyerEmail: advocate.email || 'advocate@lexnova.in',
-      lawyerSpecialization: (advocate as any).type || advocate.specialization || 'Legal Consultant',
-      date,
-      time,
-      duration,
+      userName:              user.name || user.email,
+      userEmail:             user.email,
+      lawyerName:            advocate.name,
+      lawyerEmail:           advocate.email || '',
+      lawyerSpecialization:  advocate.specialization || 'Legal Consultant',
+      date:                  data.date,
+      time:                  data.time,
+      duration:              data.duration,
       meetLink,
       consultationFee,
-      userNotes: userNotes || '',
-      caseType: matter?.category || '',
+      userNotes:             data.userNotes || '',
+      caseType:              booking.matter?.category || '',
     };
 
-    // Send user confirmation via Resend (fire and forget, log error without crashing)
     sendUserBookingConfirmation(emailData)
-      .then(sent => {
+      .then((sent) => {
         if (sent) {
-          prisma.booking.update({
-            where: { id: booking.id },
-            data: { userEmailSent: true }
-          }).catch(console.error);
+          prisma.booking
+            .update({ where: { id: booking.id }, data: { userEmailSent: true } })
+            .catch(console.error);
         }
       })
-      .catch(err => console.error('Resend user email dispatch error:', err));
+      .catch((err) => console.error('[Booking] User email dispatch error:', err));
 
-    // Send lawyer notification via Resend
     if (advocate.email) {
       sendLawyerBookingNotification(emailData)
-        .then(sent => {
+        .then((sent) => {
           if (sent) {
-            prisma.booking.update({
-              where: { id: booking.id },
-              data: { lawyerEmailSent: true }
-            }).catch(console.error);
+            prisma.booking
+              .update({ where: { id: booking.id }, data: { lawyerEmailSent: true } })
+              .catch(console.error);
           }
         })
-        .catch(err => console.error('Resend lawyer email dispatch error:', err));
+        .catch((err) => console.error('[Booking] Lawyer email dispatch error:', err));
     }
 
-    return NextResponse.json({
-      success: true,
-      booking: {
-        id: booking.id,
-        confirmationCode,
-        meetLink,
-        date,
-        time,
-        advocateName: advocate.name,
-        consultationFee,
-        status: 'CONFIRMED'
-      }
-    }, { status: 201 });
-
-  } catch (error: any) {
-    console.error('POST booking error:', error);
     return NextResponse.json(
-      { error: error?.message || 'Failed to create booking' },
-      { status: 500 }
+      {
+        success: true,
+        booking: {
+          id:               booking.id,
+          confirmationCode,
+          meetLink,
+          date:             data.date,
+          time:             data.time,
+          advocateName:     advocate.name,
+          consultationFee,
+          status:           'CONFIRMED',
+        },
+      },
+      { status: 201 }
     );
+  } catch (error) {
+    console.error('[POST /api/bookings] error:', error);
+    return internalErrorResponse('Failed to create booking.');
   }
 }
 
-// ── PATCH: Cancel or update booking ───────────────
+// ── PATCH /api/bookings ───────────────────────────────────────
+// Cancels or updates a booking. Verifies ownership before any mutation.
 export async function PATCH(req: NextRequest) {
+  const { user, errorResponse } = await requireAuth();
+  if (errorResponse) return errorResponse;
+
   try {
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.email && !(session?.user as any)?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    const sessionUserId = (session?.user as any)?.id;
-    const sessionEmail = session?.user?.email;
-
-    const caller = await prisma.user.findFirst({
-      where: {
-        OR: [
-          ...(sessionUserId ? [{ id: sessionUserId }] : []),
-          ...(sessionEmail ? [{ email: sessionEmail }] : []),
-        ],
-      },
-    });
-
-    if (!caller) {
-      return NextResponse.json({ error: 'User not found' }, { status: 404 });
-    }
-
     const body = await req.json();
     const { bookingId, action, reason } = body;
 
     if (!bookingId || !action) {
       return NextResponse.json(
-        { error: 'Missing bookingId or action' },
+        { error: 'Missing required fields', message: "Both 'bookingId' and 'action' are required." },
         { status: 400 }
       );
     }
 
     const booking = await prisma.booking.findUnique({
-      where: { id: bookingId },
-      include: { advocate: true, user: true }
+      where:   { id: bookingId },
+      include: { advocate: true, user: true },
     });
 
     if (!booking) {
-      return NextResponse.json(
-        { error: 'Booking not found' },
-        { status: 404 }
-      );
+      return notFoundResponse('Booking');
     }
 
+    // Authorization: must be booking owner, the advocate, or an admin
     const isAuthorized =
-      caller.role === 'ADMIN' ||
-      booking.userId === caller.id ||
-      booking.advocate.userId === caller.id;
+      isAdmin(user.role) ||
+      booking.userId               === user.id ||
+      booking.advocate.userId      === user.id;
 
     if (!isAuthorized) {
-      return NextResponse.json(
-        { error: 'Access denied' },
-        { status: 403 }
-      );
+      return forbiddenResponse('You are not authorized to modify this booking.');
     }
 
     if (action === 'CANCEL') {
+      if (['CANCELLED', 'COMPLETED'].includes(booking.status)) {
+        return NextResponse.json(
+          { error: 'Invalid action', message: `Booking is already ${booking.status.toLowerCase()}.` },
+          { status: 409 }
+        );
+      }
+
       await prisma.booking.update({
         where: { id: bookingId },
         data: {
-          status: 'CANCELLED',
+          status:      'CANCELLED',
           cancelReason: reason || 'Cancelled by user',
-          cancelledAt: new Date(),
-        }
+          cancelledAt:  new Date(),
+          cancelledBy:  user.id,
+        },
       });
 
-      // Send cancellation email
+      await logAuditEvent({
+        action:       'CONSULTATION_BOOKED', // repurpose until BOOKING_CANCELLED is added
+        userId:       user.id,
+        resourceId:   bookingId,
+        resourceType: 'BOOKING',
+        metadata:     { action: 'CANCEL', reason },
+      });
+
+      // Send cancellation email (fire-and-forget)
       try {
         const { sendCancellationEmail } = await import('@/lib/email');
-        await sendCancellationEmail({
-          bookingId: booking.id,
-          confirmationCode: booking.confirmationCode,
-          userName: booking.user.name || 'User',
-          userEmail: booking.user.email,
-          lawyerName: booking.advocate.name,
-          lawyerEmail: booking.advocate.email || '',
-          lawyerSpecialization: (booking.advocate as any).type || booking.advocate.specialization || '',
-          date: booking.date,
-          time: booking.time,
-          duration: booking.duration,
-          meetLink: booking.meetLink || '',
-          consultationFee: booking.consultationFee,
-        }, 'user', reason);
-      } catch (err) {
-        console.error('Cancellation email error:', err);
+        await sendCancellationEmail(
+          {
+            bookingId:            booking.id,
+            confirmationCode:     booking.confirmationCode,
+            userName:             booking.user.name || 'User',
+            userEmail:            booking.user.email,
+            lawyerName:           booking.advocate.name,
+            lawyerEmail:          booking.advocate.email || '',
+            lawyerSpecialization: booking.advocate.specialization || '',
+            date:                 booking.date,
+            time:                 booking.time,
+            duration:             booking.duration,
+            meetLink:             booking.meetLink || '',
+            consultationFee:      booking.consultationFee,
+          },
+          'user',
+          reason
+        );
+      } catch (emailErr) {
+        console.error('[Booking] Cancellation email error:', emailErr);
       }
 
-      return NextResponse.json({ 
-        success: true, 
-        message: 'Booking cancelled' 
-      });
+      return NextResponse.json({ success: true, message: 'Booking cancelled.' });
     }
 
     return NextResponse.json(
-      { error: 'Unknown action' },
+      { error: 'Unknown action', message: `Unsupported action: '${action}'.` },
       { status: 400 }
     );
-
   } catch (error) {
-    console.error('PATCH booking error:', error);
-    return NextResponse.json(
-      { error: 'Failed to update booking' },
-      { status: 500 }
-    );
+    console.error('[PATCH /api/bookings] error:', error);
+    return internalErrorResponse('Failed to update booking.');
   }
 }

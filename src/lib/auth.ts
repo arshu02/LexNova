@@ -7,7 +7,20 @@ import bcrypt from "bcryptjs";
 const MAX_LOGIN_ATTEMPTS = 5;
 const LOCKOUT_DURATION_MS = 15 * 60 * 1000; // 15 minutes
 
-const ROOT_ADMIN_EMAILS = ["arshusingh26@gmail.com"];
+/**
+ * Root admin emails are loaded from ROOT_ADMIN_EMAIL env var (comma-separated).
+ * NEVER hard-code email addresses in source code.
+ * Example: ROOT_ADMIN_EMAIL="admin@lexnova.in,backup@lexnova.in"
+ */
+function getRootAdminEmails(): string[] {
+  const raw = process.env.ROOT_ADMIN_EMAIL || '';
+  return raw
+    .split(',')
+    .map((e) => e.trim().toLowerCase())
+    .filter(Boolean);
+}
+
+const ROOT_ADMIN_EMAILS = getRootAdminEmails();
 
 export const authOptions: AuthOptions = {
   providers: [
@@ -178,5 +191,5 @@ export const authOptions: AuthOptions = {
   },
 
   secret: process.env.NEXTAUTH_SECRET,
-  debug: process.env.NODE_ENV === "development",
+  debug: process.env.NEXTAUTH_DEBUG === "true",
 };

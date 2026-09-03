@@ -102,9 +102,9 @@ const nextConfig = {
 
   async redirects() {
     return [
-      // Redirect old routes
-      { source: '/chat',        destination: '/dashboard/chat', permanent: true },
-      { source: '/app',         destination: '/dashboard',       permanent: true },
+      // Legacy route compat — keep old bookmarked links working
+      { source: '/chat', destination: '/dashboard/chat', permanent: true },
+      { source: '/app',  destination: '/dashboard/chat', permanent: false },
     ];
   },
 };

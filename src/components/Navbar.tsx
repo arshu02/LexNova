@@ -91,7 +91,7 @@ export function Navbar() {
             Sign in
           </Link>
           <Link
-            href="/dashboard/user"
+            href="/dashboard/chat"
             className="btn-glow-blue text-[13px] font-semibold h-[38px] px-4 rounded-xl inline-flex items-center gap-1.5 shadow-md shadow-blue-600/30"
           >
             <span>Launch Console</span>
