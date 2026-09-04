@@ -92,6 +92,21 @@ body {
   -webkit-text-fill-color: transparent;
 }
 
+@keyframes shimmerGradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.text-gradient-flashy {
+  background: linear-gradient(90deg, #60A5FA 0%, #C084FC 25%, #38BDF8 50%, #A78BFA 75%, #60A5FA 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmerGradient 6s ease infinite;
+}
+
+
 /* ── SpaceX / Tesla HUD & Grid Overlays ───────────────────────── */
 .hud-grid {
   background-size: 50px 50px;
@@ -229,4 +244,54 @@ body {
 
 .animate-radar {
   animation: radarSweep 10s linear infinite;
+}
+
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.85; transform: scale(1.05); }
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 4s ease-in-out infinite;
+}
+
+@keyframes scanline {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(1000%); }
+}
+
+.animate-scanline {
+  animation: scanline 8s linear infinite;
+}
+
+/* ── Luxury Gradient Borders & Panels ─────────────────────────── */
+.glass-panel-luxury {
+  background: radial-gradient(120% 120% at 50% 0%, rgba(18, 24, 42, 0.6) 0%, rgba(5, 7, 12, 0.85) 100%);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.glass-panel-luxury:hover {
+  border-color: rgba(59, 130, 246, 0.35);
+  box-shadow: 0 35px 70px -15px rgba(0, 0, 0, 0.9), 0 0 30px -5px rgba(59, 130, 246, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.glow-pill-blue {
+  background: rgba(37, 99, 235, 0.08);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  box-shadow: 0 0 16px -2px rgba(59, 130, 246, 0.25);
+}
+
+.glow-pill-emerald {
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  box-shadow: 0 0 16px -2px rgba(16, 185, 129, 0.25);
+}
+
+.glow-pill-amber {
+  background: rgba(245, 158, 11, 0.08);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  box-shadow: 0 0 16px -2px rgba(245, 158, 11, 0.25);
 }

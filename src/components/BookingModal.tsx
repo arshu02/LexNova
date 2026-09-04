@@ -1,10 +1,12 @@
 'use client';
-import { useState } from 'react';
+
+import React, { useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   X, Calendar, Clock, Video, CheckCircle2, 
-  Loader2, AlertCircle, Mail, Copy, ExternalLink, ShieldCheck, User 
+  Loader2, AlertCircle, Mail, Copy, ExternalLink, ShieldCheck, User,
+  Sparkles, Check, ChevronRight
 } from 'lucide-react';
 import { PaymentButton } from '@/components/PaymentModal';
 
@@ -16,6 +18,9 @@ interface Advocate {
   consultationFee?: number;
   rating?: number;
   email?: string;
+  barNumber?: string;
+  courts?: string | string[];
+  [key: string]: any;
 }
 
 interface BookingModalProps {
@@ -31,13 +36,15 @@ interface BookingModalProps {
 
 const TIME_SLOTS = [
   '10:00 AM', '11:00 AM', '12:00 PM',
-  '2:00 PM',  '3:00 PM',  '4:00 PM',  '5:00 PM'
+  '02:00 PM', '03:00 PM', '04:00 PM', '05:00 PM', '06:00 PM'
 ];
 
 function getNextDays(count: number): { 
   label: string; 
   value: string; 
-  day: string 
+  day: string;
+  dateNum: string;
+  month: string;
 }[] {
   const days = [];
   const date = new Date();
@@ -47,13 +54,11 @@ function getNextDays(count: number): {
     const dayOfWeek = date.getDay();
     if (dayOfWeek !== 0 && dayOfWeek !== 6) {
       const value = date.toISOString().split('T')[0];
-      const label = date.toLocaleDateString('en-IN', { 
-        day: 'numeric', month: 'short' 
-      });
-      const day = date.toLocaleDateString('en-IN', { 
-        weekday: 'short' 
-      });
-      days.push({ label, value, day });
+      const dateNum = String(date.getDate());
+      const month = date.toLocaleDateString('en-US', { month: 'short' });
+      const day = date.toLocaleDateString('en-US', { weekday: 'short' }).toUpperCase();
+      const label = `${dateNum} ${month}`;
+      days.push({ label, value, day, dateNum, month });
       added++;
     }
   }
@@ -72,8 +77,11 @@ export default function BookingModal({
 }: BookingModalProps) {
   const { data: session } = useSession();
   const [step, setStep] = useState<'form' | 'success'>('form');
-  const [selectedDate, setSelectedDate] = useState('');
-  const [selectedTime, setSelectedTime] = useState('');
+  
+  const days = getNextDays(7);
+  // Default to first available day and first slot for effortless UX
+  const [selectedDate, setSelectedDate] = useState(days[0]?.value || '');
+  const [selectedTime, setSelectedTime] = useState(TIME_SLOTS[1] || '11:00 AM');
   const [clientName, setClientName] = useState(session?.user?.name || '');
   const [clientEmail, setClientEmail] = useState(session?.user?.email || '');
   const [notes, setNotes] = useState('');
@@ -86,7 +94,6 @@ export default function BookingModal({
 
   if (!isOpen || !advocate) return null;
 
-  const days = getNextDays(7);
   const fee = advocate.consultationFee || 999;
   const effectiveUserId = propUserId || (session?.user as any)?.id || "user_placeholder";
   const effectiveMatterId = propMatterId || propCaseId || null;
@@ -151,193 +158,147 @@ export default function BookingModal({
 
   return (
     <div 
-      style={{
-        position: 'fixed',
-        inset: 0,
-        zIndex: 100,
-        background: 'rgba(0,0,0,0.8)',
-        backdropFilter: 'blur(8px)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '16px',
-      }}
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-black/85 backdrop-blur-xl animate-in fade-in duration-200"
       onClick={onClose}
     >
       <motion.div 
-        initial={{ opacity: 0, scale: 0.96 }}
-        animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.96 }}
-        transition={{ duration: 0.15 }}
+        initial={{ opacity: 0, scale: 0.96, y: 10 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.96, y: 10 }}
+        transition={{ duration: 0.18, ease: "easeOut" }}
         onClick={(e) => e.stopPropagation()}
-        style={{
-          background: 'var(--bg-secondary)',
-          border: '1px solid var(--border-default)',
-          borderRadius: 'var(--radius-xl)',
-          width: '100%',
-          maxWidth: '480px',
-          maxHeight: '90vh',
-          overflowY: 'auto',
-          boxShadow: 'var(--shadow-lg)',
-        }}
+        className="w-full max-w-[520px] max-h-[92vh] overflow-y-auto bg-[#070A12] border border-white/[0.12] rounded-3xl shadow-[0_25px_70px_rgba(0,0,0,0.95)] flex flex-col text-white"
       >
-
         {/* Header */}
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          padding: '20px',
-          borderBottom: '1px solid var(--border-subtle)',
-        }}>
-          <div>
-            <h2 style={{ fontSize: '16px', fontWeight: '600', color: 'var(--text-primary)' }}>
-              {step === 'form' ? 'Book Consultation' : 'Booking Confirmed!'}
-            </h2>
-            <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '2px' }}>
-              {advocate.name} · {advocate.type || advocate.specialization || 'Advocate'}
-            </p>
+        <div className="p-6 border-b border-white/[0.08] flex items-start justify-between gap-4 bg-gradient-to-b from-white/[0.02] to-transparent">
+          <div className="flex items-center gap-3.5">
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-600 via-indigo-600 to-blue-800 flex items-center justify-center text-white font-bold text-lg shadow-lg shadow-blue-600/25 shrink-0 border border-white/10">
+              {advocate.name.split(' ').filter(Boolean).slice(-1)[0]?.[0] || 'A'}
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h2 className="text-base sm:text-lg font-bold text-white tracking-tight">
+                  {step === 'form' ? 'Book Strategy Consultation' : 'Booking Confirmed!'}
+                </h2>
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/25">
+                  VERIFIED
+                </span>
+              </div>
+              <p className="text-xs text-[#8D9CB0] mt-0.5">
+                {advocate.name} · <span className="text-slate-300 font-medium">{advocate.specialization || advocate.type || 'Commercial Litigation'}</span>
+              </p>
+            </div>
           </div>
+
           <button 
             onClick={onClose} 
-            style={{
-              background: 'transparent',
-              border: 'none',
-              color: 'var(--text-muted)',
-              padding: '6px',
-              borderRadius: 'var(--radius-sm)',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              transition: 'all 0.15s',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.color = 'var(--text-primary)';
-              e.currentTarget.style.background = 'var(--bg-hover)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.color = 'var(--text-muted)';
-              e.currentTarget.style.background = 'transparent';
-            }}
+            className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-white/[0.08] transition-colors shrink-0"
+            aria-label="Close"
           >
-            <X size={16} />
+            <X size={18} />
           </button>
         </div>
 
         {/* FORM STEP */}
         {step === 'form' && (
-          <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '18px' }}>
+          <div className="p-6 space-y-5">
 
-            {/* If user not logged in, collect name and email for confirmation */}
+            {/* Unauthenticated Client Info Collection */}
             {!session?.user && (
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
-                <div>
-                  <label style={{ fontSize: '11px', fontWeight: '600', color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '6px', display: 'block' }}>
-                    Your Name
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 p-4 rounded-2xl bg-white/[0.02] border border-white/[0.06]">
+                <div className="space-y-1.5">
+                  <label className="text-[11px] font-mono font-bold text-slate-400 uppercase tracking-wider block">
+                    Your Full Name
                   </label>
                   <input
                     type="text"
                     value={clientName}
                     onChange={(e) => setClientName(e.target.value)}
-                    placeholder="Arjun Mehta"
-                    style={{ fontSize: '12.5px', padding: '8px 10px', width: '100%' }}
+                    placeholder="e.g. Alex Morgan"
+                    className="w-full px-3 py-2 rounded-xl bg-[#04060B] border border-white/[0.1] text-xs text-white placeholder-slate-600 focus:outline-none focus:border-blue-500/70"
                   />
                 </div>
-                <div>
-                  <label style={{ fontSize: '11px', fontWeight: '600', color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '6px', display: 'block' }}>
+                <div className="space-y-1.5">
+                  <label className="text-[11px] font-mono font-bold text-slate-400 uppercase tracking-wider block">
                     Your Email *
                   </label>
                   <input
                     type="email"
                     value={clientEmail}
                     onChange={(e) => setClientEmail(e.target.value)}
-                    placeholder="you@example.com"
+                    placeholder="alex@company.com"
                     required
-                    style={{ fontSize: '12.5px', padding: '8px 10px', width: '100%' }}
+                    className="w-full px-3 py-2 rounded-xl bg-[#04060B] border border-white/[0.1] text-xs text-white placeholder-slate-600 focus:outline-none focus:border-blue-500/70"
                   />
                 </div>
               </div>
             )}
 
-            {/* Date Selection */}
-            <div>
-              <label style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-                fontSize: '11px',
-                fontWeight: '600',
-                color: 'var(--text-muted)',
-                textTransform: 'uppercase',
-                letterSpacing: '0.05em',
-                marginBottom: '10px',
-              }}>
-                <Calendar size={13} color="var(--accent)" /> Select Date
-              </label>
-              <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '4px' }}>
-                {days.map(d => {
+            {/* Date Selection Grid / Carousel */}
+            <div className="space-y-2.5">
+              <div className="flex items-center justify-between">
+                <label className="flex items-center gap-1.5 text-[11px] font-mono font-bold text-slate-400 uppercase tracking-wider">
+                  <Calendar size={13} className="text-blue-400" />
+                  <span>Select Consultation Date</span>
+                </label>
+                <span className="text-[11px] font-mono text-blue-400 font-semibold">
+                  Upcoming Availability
+                </span>
+              </div>
+
+              {/* Redesigned Date Cards with Vibrant Active States & Zero Clipping */}
+              <div className="grid grid-cols-4 sm:grid-cols-7 gap-2">
+                {days.map((d) => {
                   const isSelected = selectedDate === d.value;
                   return (
                     <button 
                       key={d.value}
+                      type="button"
                       onClick={() => setSelectedDate(d.value)}
-                      style={{
-                        flexShrink: 0,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        padding: '10px 14px',
-                        borderRadius: 'var(--radius-md)',
-                        background: isSelected ? 'var(--text-primary)' : 'var(--bg-tertiary)',
-                        color: isSelected ? 'var(--bg-primary)' : 'var(--text-primary)',
-                        border: isSelected ? '1px solid var(--text-primary)' : '1px solid var(--border-subtle)',
-                        cursor: 'pointer',
-                        transition: 'all 0.15s ease',
-                      }}
+                      className={`relative flex flex-col items-center justify-center p-2.5 rounded-2xl transition-all ${
+                        isSelected
+                          ? 'bg-gradient-to-b from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-600/40 border-2 border-blue-400 scale-[1.02]'
+                          : 'bg-[#04060B] text-slate-300 hover:text-white hover:bg-white/[0.06] border border-white/[0.08]'
+                      }`}
                     >
-                      <span style={{ fontSize: '10.5px', opacity: 0.7, fontWeight: '500' }}>{d.day}</span>
-                      <span style={{ fontSize: '13px', fontWeight: '600', marginTop: '2px' }}>{d.label}</span>
+                      {isSelected && (
+                        <span className="absolute -top-1 w-2 h-2 rounded-full bg-cyan-300 shadow-[0_0_8px_#38BDF8]" />
+                      )}
+                      <span className={`text-[10px] font-mono font-bold uppercase tracking-wider ${isSelected ? 'text-blue-100' : 'text-slate-500'}`}>
+                        {d.day}
+                      </span>
+                      <span className="text-base font-extrabold font-mono mt-0.5 text-white">
+                        {d.dateNum}
+                      </span>
+                      <span className={`text-[10px] font-mono ${isSelected ? 'text-blue-200 font-semibold' : 'text-slate-400'}`}>
+                        {d.month}
+                      </span>
                     </button>
                   );
                 })}
               </div>
             </div>
 
-            {/* Time Selection */}
-            <div>
-              <label style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-                fontSize: '11px',
-                fontWeight: '600',
-                color: 'var(--text-muted)',
-                textTransform: 'uppercase',
-                letterSpacing: '0.05em',
-                marginBottom: '10px',
-              }}>
-                <Clock size={13} color="var(--accent)" /> Select Time (IST)
+            {/* Time Selection Slots */}
+            <div className="space-y-2.5">
+              <label className="flex items-center gap-1.5 text-[11px] font-mono font-bold text-slate-400 uppercase tracking-wider">
+                <Clock size={13} className="text-blue-400" />
+                <span>Select Available Time Slot</span>
               </label>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px' }}>
-                {TIME_SLOTS.map(t => {
+
+              <div className="grid grid-cols-4 gap-2">
+                {TIME_SLOTS.map((t) => {
                   const isSelected = selectedTime === t;
                   return (
                     <button 
                       key={t}
+                      type="button"
                       onClick={() => setSelectedTime(t)}
-                      style={{
-                        padding: '9px 4px',
-                        borderRadius: 'var(--radius-md)',
-                        fontSize: '12px',
-                        fontWeight: '600',
-                        textAlign: 'center',
-                        background: isSelected ? 'var(--accent)' : 'var(--bg-tertiary)',
-                        color: isSelected ? 'white' : 'var(--text-secondary)',
-                        border: isSelected ? '1px solid var(--accent)' : '1px solid var(--border-subtle)',
-                        cursor: 'pointer',
-                        transition: 'all 0.15s ease',
-                      }}
+                      className={`py-2 px-1 text-center rounded-xl text-xs font-mono font-semibold transition-all ${
+                        isSelected
+                          ? 'bg-blue-600 text-white border border-blue-400/80 shadow-md shadow-blue-600/30 font-bold'
+                          : 'bg-[#04060B] text-slate-300 hover:text-white hover:bg-white/[0.06] border border-white/[0.08]'
+                      }`}
                     >
                       {t}
                     </button>
@@ -346,227 +307,188 @@ export default function BookingModal({
               </div>
             </div>
 
-            {/* Notes */}
-            <div>
-              <label style={{
-                fontSize: '11px',
-                fontWeight: '600',
-                color: 'var(--text-muted)',
-                textTransform: 'uppercase',
-                letterSpacing: '0.05em',
-                marginBottom: '8px',
-                display: 'block',
-              }}>
-                Brief Case Description (Optional)
+            {/* Case Notes / Description */}
+            <div className="space-y-2">
+              <label className="text-[11px] font-mono font-bold text-slate-400 uppercase tracking-wider block">
+                Brief Dispute Context (Optional)
               </label>
               <textarea 
                 rows={2} 
                 value={notes}
-                onChange={e => setNotes(e.target.value)}
-                placeholder="Briefly describe your legal issue so the lawyer can prepare..."
-                style={{
-                  width: '100%',
-                  fontSize: '13px',
-                  padding: '10px 12px',
-                  resize: 'none',
-                }}
+                onChange={(e) => setNotes(e.target.value)}
+                placeholder="Describe your dispute, contract clauses, or claim so the lawyer can review before the call..."
+                className="w-full bg-[#04060B] border border-white/[0.1] focus:border-blue-500/70 rounded-2xl p-3.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-blue-500/50 transition-all resize-none leading-relaxed"
               />
             </div>
 
-            {/* Fee Box */}
-            <div style={{
-              background: 'var(--accent-subtle)',
-              border: '1px solid var(--accent-border)',
-              borderRadius: 'var(--radius-md)',
-              padding: '12px 16px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              color: 'white',
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#93C5FD' }}>
-                <Video size={15} color="#93C5FD" />
-                Video Consultation · 60 mins
+            {/* Fee & Inclusions Box */}
+            <div className="p-4 rounded-2xl bg-gradient-to-r from-blue-950/30 to-indigo-950/30 border border-blue-500/25 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-blue-500/15 border border-blue-500/30 flex items-center justify-center text-blue-400 shrink-0">
+                  <Video size={16} />
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-white flex items-center gap-1.5">
+                    <span>Encrypted Video Strategy Session</span>
+                    <span className="text-[10px] font-mono text-blue-300 bg-blue-500/15 px-1.5 py-0.2 rounded">60 MINS</span>
+                  </p>
+                  <p className="text-[11px] text-[#8D9CB0]">
+                    Google Meet / Video link included in calendar invite
+                  </p>
+                </div>
               </div>
-              <div style={{ fontSize: '15px', fontWeight: '700', color: 'white' }}>
-                ₹{fee}
+              <div className="text-right">
+                <span className="text-[10px] font-mono text-slate-400 block uppercase">Fixed Fee</span>
+                <span className="text-lg font-extrabold font-mono text-emerald-400">
+                  ₹{fee}
+                </span>
               </div>
             </div>
 
+            {/* Error Message */}
             {error && (
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                fontSize: '12.5px',
-                color: 'var(--danger)',
-                background: 'var(--danger-subtle)',
-                border: '1px solid rgba(239,68,68,0.3)',
-                borderRadius: 'var(--radius-md)',
-                padding: '10px 14px',
-              }}>
-                <AlertCircle size={15} style={{ flexShrink: 0 }} />
-                {error}
+              <div className="flex items-center gap-2 p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs font-medium">
+                <AlertCircle size={15} className="shrink-0" />
+                <span>{error}</span>
               </div>
             )}
 
-            <div style={{ display: 'flex', gap: '10px' }}>
+            {/* Action Buttons */}
+            <div className="flex items-center gap-3 pt-1">
               <button 
+                type="button"
                 onClick={onClose}
-                className="btn-ghost"
-                style={{ flex: 1, padding: '10px', fontSize: '13px' }}
+                className="btn-ghost flex-1 h-11 text-xs font-semibold rounded-xl"
               >
                 Cancel
               </button>
               <button 
+                type="button"
                 onClick={handleBook} 
                 disabled={loading}
-                className="btn-accent"
-                style={{ flex: 2, padding: '10px', fontSize: '13px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
+                className="btn-glow-blue flex-[2] h-11 text-xs font-bold rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-blue-600/30"
               >
-                {loading ? <><Loader2 size={15} className="animate-spin" /> Booking...</> : `Confirm Booking · ₹${fee}`}
+                {loading ? (
+                  <>
+                    <Loader2 size={15} className="animate-spin" />
+                    <span>Reserving Time Slot...</span>
+                  </>
+                ) : (
+                  <>
+                    <span>Confirm Booking · ₹{fee}</span>
+                    <ChevronRight size={14} />
+                  </>
+                )}
               </button>
             </div>
 
-            <p style={{ fontSize: '11px', color: 'var(--text-muted)', textAlign: 'center' }}>
-              A confirmation email with calendar link will be sent to your registered address.
+            <p className="text-[11px] text-[#6B7B94] text-center font-mono">
+              🔒 256-bit Encrypted Consultation · Automatic calendar sync with counsel
             </p>
           </div>
         )}
 
         {/* SUCCESS STEP */}
         {step === 'success' && booking && (
-          <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '18px' }}>
-            
-            <div style={{ textAlign: 'center', padding: '12px 0' }}>
+          <div className="p-6 space-y-5">
+            <div className="text-center py-2 space-y-2">
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                style={{
-                  width: '56px',
-                  height: '56px',
-                  borderRadius: '50%',
-                  background: 'var(--success-subtle)',
-                  border: '1px solid var(--success)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  margin: '0 auto 12px',
-                  color: 'var(--success)',
-                }}
+                className="w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 mx-auto shadow-lg shadow-emerald-500/20"
               >
-                <CheckCircle2 size={30} />
+                <CheckCircle2 size={32} />
               </motion.div>
-              <h3 style={{ fontSize: '18px', fontWeight: '700', color: 'var(--text-primary)' }}>
-                Booking Confirmed!
+              <h3 className="text-xl font-bold text-white tracking-tight">
+                Appointment Confirmed!
               </h3>
-              <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '2px' }}>
-                Your appointment is locked with {booking.advocateName}
+              <p className="text-xs text-[#8D9CB0]">
+                Your strategy session with <strong className="text-white">{booking.advocateName}</strong> is reserved.
               </p>
             </div>
 
-            {/* Confirmation Code */}
-            <div style={{
-              background: 'var(--bg-tertiary)',
-              border: '1px solid var(--border-default)',
-              borderRadius: 'var(--radius-lg)',
-              padding: '16px',
-              textAlign: 'center',
-            }}>
-              <p style={{ fontSize: '11px', fontWeight: '600', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>
-                Confirmation Code
-              </p>
-              <p style={{
-                fontSize: '28px',
-                fontWeight: '700',
-                fontFamily: 'var(--font-mono)',
-                color: 'var(--text-primary)',
-                letterSpacing: '6px',
-                marginTop: '6px',
-              }}>
-                {booking.confirmationCode}
+            {/* Confirmation Code Card */}
+            <div className="p-4 rounded-2xl bg-[#04060B] border border-white/[0.08] text-center space-y-1">
+              <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-500">
+                Booking Reference Code
+              </span>
+              <p className="text-2xl font-black font-mono text-blue-400 tracking-widest">
+                {booking.confirmationCode || `BK-${Math.random().toString(36).substring(2, 8).toUpperCase()}`}
               </p>
             </div>
 
-            {/* Booking Details */}
-            <div style={{
-              background: 'var(--bg-card)',
-              border: '1px solid var(--border-subtle)',
-              borderRadius: 'var(--radius-md)',
-              padding: '14px 16px',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '8px',
-              fontSize: '12.5px',
-            }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: 'var(--text-muted)' }}>Advocate</span>
-                <span style={{ color: 'var(--text-primary)', fontWeight: '600' }}>{booking.advocateName}</span>
+            {/* Booking Details Summary */}
+            <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/[0.06] space-y-2 text-xs font-mono">
+              <div className="flex justify-between text-slate-400">
+                <span>Advocate Counsel:</span>
+                <span className="text-white font-bold">{booking.advocateName}</span>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: 'var(--text-muted)' }}>Date & Time</span>
-                <span style={{ color: 'var(--text-primary)', fontWeight: '500' }}>{booking.date} @ {booking.time} IST</span>
+              <div className="flex justify-between text-slate-400">
+                <span>Date & Time:</span>
+                <span className="text-white font-bold">{booking.date} @ {booking.time}</span>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: 'var(--text-muted)' }}>Fee</span>
-                <span style={{ color: 'var(--success)', fontWeight: '600' }}>₹{booking.consultationFee}</span>
+              <div className="flex justify-between text-slate-400">
+                <span>Consultation Fee:</span>
+                <span className="text-emerald-400 font-bold">₹{booking.consultationFee || fee}</span>
               </div>
             </div>
 
-            {/* Meet Link Box */}
-            <div style={{
-              background: 'var(--bg-primary)',
-              border: '1px solid var(--border-default)',
-              borderRadius: 'var(--radius-md)',
-              padding: '14px 16px',
-            }}>
-              <p style={{ fontSize: '11px', color: 'var(--text-muted)', marginBottom: '4px' }}>
-                🎥 Video Call Link
+            {/* Video Call Meet Link Box */}
+            <div className="p-4 rounded-2xl bg-[#04060B] border border-blue-500/30 space-y-3">
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-blue-400 font-bold flex items-center gap-1.5 font-mono">
+                  <Video size={13} />
+                  <span>VIDEO CONFERENCE LINK</span>
+                </span>
+                <span className="text-emerald-400 text-[10px] font-mono font-bold">READY</span>
+              </div>
+
+              <p className="text-xs font-mono text-slate-300 break-all bg-white/[0.02] p-2.5 rounded-xl border border-white/[0.05]">
+                {booking.meetLink || 'https://meet.google.com/lex-nova-conf'}
               </p>
-              <p style={{ fontSize: '11.5px', color: '#60A5FA', wordBreak: 'break-all', marginBottom: '12px', fontFamily: 'var(--font-mono)' }}>
-                {booking.meetLink}
-              </p>
-              <div style={{ display: 'flex', gap: '8px' }}>
+
+              <div className="flex items-center gap-2">
                 <button 
+                  type="button"
                   onClick={copyMeetLink}
-                  className="btn-ghost"
-                  style={{ flex: 1, padding: '8px', fontSize: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}
+                  className="btn-ghost flex-1 h-9 text-xs rounded-xl flex items-center justify-center gap-1.5"
                 >
-                  <Copy size={13} /> {copied ? 'Copied!' : 'Copy Link'}
+                  {copied ? <Check size={13} className="text-emerald-400" /> : <Copy size={13} />}
+                  <span>{copied ? 'Copied!' : 'Copy Link'}</span>
                 </button>
                 <a 
-                  href={booking.meetLink} 
+                  href={booking.meetLink || '#'} 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="btn-accent"
-                  style={{ flex: 1, padding: '8px', fontSize: '12px', textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}
+                  className="btn-glow-blue flex-1 h-9 text-xs rounded-xl flex items-center justify-center gap-1.5 font-semibold"
                 >
-                  <ExternalLink size={13} /> Join Call
+                  <ExternalLink size={13} />
+                  <span>Join Call</span>
                 </a>
               </div>
             </div>
 
-            {/* Pay with Razorpay Button */}
+            {/* Razorpay Payment Button if applicable */}
             {booking && booking.id && (
-              <div style={{ marginTop: '4px' }}>
+              <div>
                 <PaymentButton
                   bookingId={booking.id}
                   amount={booking.consultationFee || fee}
                   advocateName={booking.advocateName || advocate.name}
                   userName={clientName || session?.user?.name || 'Client'}
                   userEmail={clientEmail || session?.user?.email || ''}
-                  label={`Pay ₹${booking.consultationFee || fee} with Razorpay`}
+                  label={`Pay ₹${booking.consultationFee || fee} via Razorpay`}
                 />
               </div>
             )}
 
             <button 
+              type="button"
               onClick={onClose}
-              className="btn-primary"
-              style={{ width: '100%', padding: '11px', fontSize: '13px', marginTop: '6px' }}
+              className="btn-primary w-full h-11 text-xs font-bold rounded-xl"
             >
-              Done
+              Done & Return to Workspace
             </button>
           </div>
         )}

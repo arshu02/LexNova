@@ -61,17 +61,17 @@ export function Footer() {
               <span>LexNova</span>
             </Link>
             <p className="text-[13.5px] text-[#6B7B94] leading-relaxed max-w-sm">
-              India&apos;s AI Legal Operating System. Instant case analysis, statutory limitation tracking, court-ready notice generation, and verified advocate matching.
+              The Global AI Legal Operating System. Autonomous multi-jurisdictional intelligence across the US, UK, EU, India, and APAC. Multi-currency claim quantification, international arbitration, and verified global counsel matching.
             </p>
 
             {/* Newsletter */}
             <div className="space-y-2 pt-2">
               <p className="text-[12px] font-semibold text-[#8D9CB0] uppercase tracking-wider">
-                Legal updates & precedents
+                Global Legal Briefing & Regulatory Shifts
               </p>
               {subscribed ? (
                 <div className="flex items-center gap-2 text-[13px] text-emerald-400 font-medium py-1">
-                  <CheckCircle2 size={16} /> Subscribed to LexNova Briefing!
+                  <CheckCircle2 size={16} /> Subscribed to Global LexNova Briefing!
                 </div>
               ) : (
                 <form className="flex gap-2" onSubmit={handleSubscribe}>
@@ -79,7 +79,7 @@ export function Footer() {
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="your@email.com"
+                    placeholder="your@company.com"
                     required
                     className="flex-1 bg-[#0A0C10] border border-white/[0.08] rounded-lg px-3 py-2 text-[13.5px] text-white placeholder-[#3D4E5E] focus:border-blue-500/50 focus:outline-none transition-colors min-w-0"
                   />
@@ -116,12 +116,12 @@ export function Footer() {
 
         {/* Bottom bar */}
         <div className="py-6 border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-4 text-[12.5px] text-[#3D4E5E]">
-          <p>© 2026 LexNova Technologies Pvt. Ltd. All rights reserved.</p>
+          <p>© 2026 LexNova Global Technologies Inc. All rights reserved.</p>
           <div className="flex items-center gap-6">
-            <span>Not a law firm · For informational purposes only</span>
+            <span>Global Multi-Jurisdiction Engine · Not a law firm</span>
             <span className="flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              All systems operational
+              US · UK · EU · APAC Nodes Active
             </span>
           </div>
         </div>
@@ -131,3 +131,4 @@ export function Footer() {
 }
 
 export default Footer;
+

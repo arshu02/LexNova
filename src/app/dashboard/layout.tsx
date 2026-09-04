@@ -1,5 +1,11 @@
+import type { Metadata } from 'next';
 import { Sidebar } from '@/components/Sidebar';
 import { DashboardNavbar } from '@/components/DashboardNavbar';
+
+export const metadata: Metadata = {
+  title: 'AI Legal Console',
+  description: 'Autonomous Legal Operations & Strategy Console',
+};
 
 export default function DashboardLayout({
   children,
