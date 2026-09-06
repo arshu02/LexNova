@@ -104,7 +104,6 @@ const nextConfig = {
     return [
       // Legacy route compat — keep old bookmarked links working
       { source: '/chat', destination: '/dashboard/chat', permanent: true },
-      { source: '/app',  destination: '/dashboard/chat', permanent: false },
     ];
   },
 };

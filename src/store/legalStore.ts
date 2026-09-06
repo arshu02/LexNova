@@ -1,15 +1,35 @@
 import { create } from "zustand";
 import { CaseCategory, LegalRoadmap } from "@/lib/mockData";
 import { Lawyer } from "@/components/LawyerCard";
+import { IntakeCaseCategory } from "@/lib/intake-prompts";
+
+// ─── Message Types ────────────────────────────────────────────────────────────
 
 export interface ChatMessage {
     id: string;
-    role: "user" | "ai";
+    role: "user" | "ai" | "ai-question"; // ai-question = Phase 1 clarifying question
     content: string;
     timestamp: Date;
     roadmap?: LegalRoadmap;
     lawyers?: Lawyer[];
+    questionRound?: number; // Which round of clarifying questions (0 = first, 1 = second)
+    contextComplete?: boolean; // AI has enough context to proceed to analysis
 }
+
+// ─── Structured Case Context (gathered during Phase 1) ────────────────────────
+
+export interface CaseContext {
+    category: IntakeCaseCategory;
+    subCategory?: string;
+    urgency?: "LOW" | "MEDIUM" | "HIGH";
+    complexity?: "LOW" | "MEDIUM" | "HIGH";
+    city?: string | null;
+    estimatedClaimValue?: number | null;
+    caseFlags?: string[];
+    lawyerType?: string;
+}
+
+// ─── Session ──────────────────────────────────────────────────────────────────
 
 export interface ChatSession {
     id: string;
@@ -18,7 +38,14 @@ export interface ChatSession {
     createdAt: Date;
     category: CaseCategory;
     city: string | null;
+    // Intake pipeline state
+    intakePhase: "understanding" | "analyzing" | "complete";
+    intakeTurns: number;  // How many clarification rounds have occurred
+    intakeCategory: IntakeCaseCategory;
+    caseContext: CaseContext | null;
 }
+
+// ─── Store Interface ──────────────────────────────────────────────────────────
 
 interface LegalStore {
     sessions: ChatSession[];
@@ -40,7 +67,14 @@ interface LegalStore {
         urgency?: "High" | "Medium" | "Low",
         complexity?: "Standard" | "Complex" | "Highly Complex"
     ) => void;
+    // Intake pipeline actions
+    advanceIntakePhase: (phase: "understanding" | "analyzing" | "complete") => void;
+    incrementIntakeTurns: () => void;
+    setCaseContext: (ctx: CaseContext) => void;
+    setIntakeCategory: (category: IntakeCaseCategory) => void;
 }
+
+// ─── Factory ──────────────────────────────────────────────────────────────────
 
 const createEmptySession = (): ChatSession => ({
     id: Date.now().toString(),
@@ -49,7 +83,13 @@ const createEmptySession = (): ChatSession => ({
     createdAt: new Date(),
     category: "General",
     city: null,
+    intakePhase: "understanding",
+    intakeTurns: 0,
+    intakeCategory: "GENERAL",
+    caseContext: null,
 });
+
+// ─── Store ────────────────────────────────────────────────────────────────────
 
 export const useLegalStore = create<LegalStore>((set, get) => ({
     sessions: [],
@@ -111,6 +151,42 @@ export const useLegalStore = create<LegalStore>((set, get) => ({
             ...(complexity ? { complexity } : {}),
             sessions: state.sessions.map((s) =>
                 s.id === activeSessionId ? { ...s, category, city } : s
+            ),
+        }));
+    },
+
+    advanceIntakePhase: (phase) => {
+        const { activeSessionId } = get();
+        set((state) => ({
+            sessions: state.sessions.map((s) =>
+                s.id === activeSessionId ? { ...s, intakePhase: phase } : s
+            ),
+        }));
+    },
+
+    incrementIntakeTurns: () => {
+        const { activeSessionId } = get();
+        set((state) => ({
+            sessions: state.sessions.map((s) =>
+                s.id === activeSessionId ? { ...s, intakeTurns: s.intakeTurns + 1 } : s
+            ),
+        }));
+    },
+
+    setCaseContext: (ctx) => {
+        const { activeSessionId } = get();
+        set((state) => ({
+            sessions: state.sessions.map((s) =>
+                s.id === activeSessionId ? { ...s, caseContext: ctx } : s
+            ),
+        }));
+    },
+
+    setIntakeCategory: (category) => {
+        const { activeSessionId } = get();
+        set((state) => ({
+            sessions: state.sessions.map((s) =>
+                s.id === activeSessionId ? { ...s, intakeCategory: category } : s
             ),
         }));
     },

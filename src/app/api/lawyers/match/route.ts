@@ -3,9 +3,17 @@ import { getMatchedLawyers } from "@/lib/lawyer-match";
 
 export async function POST(req: Request) {
   try {
-    const { category, lawyerType, city } = await req.json();
+    const { category, lawyerType, city, subCategory, urgency, complexity, estimatedValue, caseFlags } = await req.json();
 
-    const matched = await getMatchedLawyers(category || lawyerType || "", city || null);
+    const matched = await getMatchedLawyers({
+      category: category || lawyerType || "",
+      subCategory,
+      urgency,
+      complexity,
+      estimatedValue,
+      city: city || null,
+      caseFlags,
+    });
 
     return NextResponse.json(matched);
   } catch (error) {

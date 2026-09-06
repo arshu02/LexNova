@@ -17,46 +17,43 @@ const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY || "",
 });
 
+import {
+  detectIntakeCategory,
+  STATIC_FALLBACK_QUESTIONS,
+  IntakeCaseCategory,
+} from "@/lib/intake-prompts";
+
 // ---------------------------------------------------------------------------
-// Intake question sets — shared core + party-specific
+// Intake question sets — domain-specific and perspective-aware
 // ---------------------------------------------------------------------------
-const INTAKE_QUESTIONS_CORE = [
-  "Could you walk me through the **timeline of events**? For example — when did this start, what agreements or deadlines were involved, and what happened most recently?",
-  "**Where did this occur** (city and state)? And who is the opposing party — for example, an employer, landlord, merchant, or family member?",
-  "What **documents or evidence** do you currently have? (e.g. contracts, pay slips, WhatsApp messages, invoices, receipts, notice letters)",
-  "**How urgent** is your situation — do you have a court date or a deadline approaching? And what outcome are you hoping to achieve (e.g. refund, reinstatement, compensation, divorce decree)?",
-];
 
-// Defendants get one extra question about the summons / notice deadline
-const INTAKE_QUESTIONS_DEFENDANT = [
-  ...INTAKE_QUESTIONS_CORE,
-  "Have you received a **legal notice or court summons**? If yes, what is the **response deadline** mentioned in it, and have you already consulted a lawyer about it?",
-];
-
-// Step labels per party
-const STEP_LABELS_PLAINTIFF = [
-  "Timeline & Facts",
-  "Location & Parties",
-  "Evidence & Documents",
-  "Urgency & Outcome",
-];
-
-const STEP_LABELS_DEFENDANT = [
-  "Timeline & Facts",
-  "Location & Parties",
-  "Evidence & Documents",
-  "Urgency & Outcome",
-  "Notice / Summons Details",
-];
+const CATEGORY_STEP_LABELS: Record<IntakeCaseCategory, string[]> = {
+  PROPERTY_TENANCY: ["Dispute Amount & Agreement", "Vacation Date & Location", "Prior Notices & Communications"],
+  LABOUR_EMPLOYMENT: ["Unpaid Dues & Claims", "Termination & Notice Period", "Employment Contract & Location"],
+  CRIMINAL_CYBER: ["Incident & Fraud Details", "Police FIR & Complaint Status", "Evidence & Incident Timelines"],
+  FAMILY_MATRIMONIAL: ["Dispute Nature & Relief", "Children Custody & Dependents", "Existing Petitions & Separation"],
+  CORPORATE_CONTRACT: ["Breach Type & Financial Stake", "Written Contract & Dispute Clause", "Counterparty & Formal Notice"],
+  CONSUMER_GRIEVANCE: ["Defect & Purchase Details", "Compensation & Jurisdiction", "Prior Grievance & Escalation"],
+  GENERAL: ["Timeline & Parties Involved", "Actions Taken & Legal Steps", "Jurisdiction & Evidence"],
+};
 
 type Party = "PLAINTIFF" | "DEFENDANT";
 
-function getIntakeQuestions(party: Party) {
-  return party === "DEFENDANT" ? INTAKE_QUESTIONS_DEFENDANT : INTAKE_QUESTIONS_CORE;
+function getIntakeQuestions(party: Party, category: IntakeCaseCategory = "GENERAL") {
+  const catData = STATIC_FALLBACK_QUESTIONS[category] || STATIC_FALLBACK_QUESTIONS.GENERAL;
+  const questions = [...catData.questions];
+  if (party === "DEFENDANT") {
+    questions.push("Have you received a **legal notice or court summons**? If yes, what is the **response deadline** mentioned in it, and have you already consulted a lawyer about it?");
+  }
+  return questions;
 }
 
-function getStepLabels(party: Party) {
-  return party === "DEFENDANT" ? STEP_LABELS_DEFENDANT : STEP_LABELS_PLAINTIFF;
+function getStepLabels(category: IntakeCaseCategory = "GENERAL", party: Party = "PLAINTIFF") {
+  const labels = [...(CATEGORY_STEP_LABELS[category] || CATEGORY_STEP_LABELS.GENERAL)];
+  if (party === "DEFENDANT") {
+    labels.push("Notice / Summons Details");
+  }
+  return labels;
 }
 
 // ---------------------------------------------------------------------------
@@ -344,13 +341,24 @@ export async function POST(req: Request) {
         },
       });
 
-      const questions = getIntakeQuestions(party);
+      const detectedCat = detectIntakeCategory(effectiveMessage);
+      const questions = getIntakeQuestions(party, detectedCat);
+      const stepLabels = getStepLabels(detectedCat, party);
       const totalSteps = questions.length;
+      const catInfo = STATIC_FALLBACK_QUESTIONS[detectedCat] || STATIC_FALLBACK_QUESTIONS.GENERAL;
 
       await prisma.timelineEvent.create({
         data: {
           title: "Intake Started",
-          description: JSON.stringify({ status: "INTAKE", step: 1, answers: [effectiveMessage], party }),
+          description: JSON.stringify({
+            status: "INTAKE",
+            step: 1,
+            category: detectedCat,
+            questions,
+            stepLabels,
+            answers: [effectiveMessage],
+            party,
+          }),
           date: new Date(),
           matterId: newMatter.id,
         },
@@ -358,12 +366,12 @@ export async function POST(req: Request) {
 
       const introLine =
         party === "DEFENDANT"
-          ? `Thank you for reaching out. I'll guide you through a **${totalSteps}-step structured intake** to understand your situation and build the strongest possible defence for you.`
-          : `Thank you for reaching out. I'll guide you through a **${totalSteps}-step structured intake** to fully understand your situation and match you with the right legal expert.`;
+          ? `${catInfo.acknowledgment}\n\nI will guide you through a **${totalSteps}-step defence assessment** to understand your situation and build the strongest possible legal response.`
+          : `${catInfo.acknowledgment}\n\nI will guide you through a **${totalSteps}-step case assessment** tailored to your situation to map the legal pathway and match you with the right advocate.`;
 
       const finalReply = docAnalysis
-        ? `${docAnalysis}\n\n---\n\n${introLine}\n\n**Step 1 of ${totalSteps} — Timeline & Facts**\n\n${questions[0]}`
-        : `${introLine}\n\n**Step 1 of ${totalSteps} — Timeline & Facts**\n\n${questions[0]}`;
+        ? `${docAnalysis}\n\n---\n\n${introLine}\n\n**Step 1 of ${totalSteps} — ${stepLabels[0]}**\n\n${questions[0]}`
+        : `${introLine}\n\n**Step 1 of ${totalSteps} — ${stepLabels[0]}**\n\n${questions[0]}`;
 
       return NextResponse.json({
         reply: finalReply,
@@ -396,8 +404,10 @@ export async function POST(req: Request) {
     const persistedParty: Party =
       roadmapData.party === "DEFENDANT" ? "DEFENDANT" : (party ?? "PLAINTIFF");
 
-    const questions  = getIntakeQuestions(persistedParty);
-    const stepLabels = getStepLabels(persistedParty);
+    const detectedCat: IntakeCaseCategory =
+      roadmapData.category || detectIntakeCategory(existingMatter.description || "");
+    const questions  = roadmapData.questions || getIntakeQuestions(persistedParty, detectedCat);
+    const stepLabels = roadmapData.stepLabels || getStepLabels(detectedCat, persistedParty);
     const totalSteps = questions.length;
 
     const answers = roadmapData.answers || [existingMatter.description];
@@ -414,7 +424,15 @@ export async function POST(req: Request) {
           where: { id: intakeEvent.id },
           data: {
             title: "Intake Progress",
-            description: JSON.stringify({ status: "INTAKE", step, answers, party: persistedParty }),
+            description: JSON.stringify({
+              status: "INTAKE",
+              step,
+              category: detectedCat,
+              questions,
+              stepLabels,
+              answers,
+              party: persistedParty,
+            }),
           },
         });
       }
@@ -550,7 +568,8 @@ export async function POST(req: Request) {
       userCity = (userObj as any)?.city || null;
     }
 
-    const matchedLawyers = await getMatchedLawyers(profile.category, userCity);
+    const matchedLawyers = await getMatchedLawyers({ category: profile.category, city: userCity });
+
 
     const baseReply = docAnalysis
       ? `${docAnalysis}\n\n---\n\n✅ **Intake complete.** I've analysed your case and uploaded documents using our Indian law database and prepared a detailed legal profile. Based on your situation, I've matched you with the **top ${matchedLawyers.length} advocates** best suited for your matter. Review the analysis below and book a consultation when you're ready.`
