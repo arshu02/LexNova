@@ -160,7 +160,7 @@ export async function POST(req: NextRequest) {
 
 // ─── Static Fallback Analysis (no API key scenario) ───────────────────────────
 
-function buildFallbackAnalysis(category: IntakeCaseCategory, description: string) {
+function buildFallbackAnalysis(category: IntakeCaseCategory, _description: string) {
   const FALLBACK_MAP: Record<IntakeCaseCategory, object> = {
     PROPERTY_TENANCY: {
       category: "PROPERTY_TENANCY",

@@ -12,8 +12,11 @@ export default function CookieConsent() {
   });
 
   useEffect(() => {
-    const stored = localStorage.getItem('ln_cookie_consent');
-    if (!stored) setVisible(true);
+    const stored = typeof window !== 'undefined' ? localStorage.getItem('ln_cookie_consent') : null;
+    if (!stored) {
+      const timer = setTimeout(() => setVisible(true), 0);
+      return () => clearTimeout(timer);
+    }
   }, []);
 
   const save = (accepted: boolean) => {

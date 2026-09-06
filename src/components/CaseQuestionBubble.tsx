@@ -43,7 +43,6 @@ export function CaseQuestionBubble({
   for (const line of lines) {
     const trimmed = line.trim();
     const isNumbered = /^\d+\./.test(trimmed);
-    const isIntroLine = /^to understand|^here are|^i need|^could you|^please|^before i/i.test(trimmed);
 
     if (isNumbered) {
       inQuestions = true;

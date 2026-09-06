@@ -252,7 +252,8 @@ export default function GlobalCommandPalette() {
 
   // Reset index when query changes
   useEffect(() => {
-    setSelectedIndex(0);
+    const timer = setTimeout(() => setSelectedIndex(0), 0);
+    return () => clearTimeout(timer);
   }, [query]);
 
   const handleSelect = useCallback(

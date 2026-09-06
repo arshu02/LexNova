@@ -443,6 +443,79 @@ function AddHearingModal({
   );
 }
 
+// ── Reminder Settings subcomponents (module scope) ───────────────────────────
+const ToggleRow = ({
+  label,
+  desc,
+  active,
+  onToggle,
+  id,
+}: {
+  label: string;
+  desc: string;
+  active: boolean;
+  onToggle: () => void;
+  id: string;
+}) => (
+  <div className="flex items-center justify-between gap-4 py-3">
+    <div>
+      <p className="text-sm font-semibold text-slate-200">{label}</p>
+      <p className="text-xs text-slate-500 mt-0.5">{desc}</p>
+    </div>
+    <button
+      id={id}
+      onClick={onToggle}
+      className="relative w-11 h-6 rounded-full transition-all flex-shrink-0 focus:outline-none"
+      style={{
+        background: active
+          ? "linear-gradient(135deg, #7C3AED, #8B5CF6)"
+          : "rgba(255,255,255,0.08)",
+        boxShadow: active ? "0 0 12px rgba(124,58,237,0.4)" : "none",
+        border: active ? "1px solid rgba(124,58,237,0.5)" : "1px solid rgba(255,255,255,0.1)",
+      }}
+      aria-pressed={active}
+    >
+      <span
+        className="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-all duration-200"
+        style={{ transform: active ? "translateX(20px)" : "translateX(0)" }}
+      />
+    </button>
+  </div>
+);
+
+const ChannelChip = ({
+  active,
+  label,
+  id,
+  onClick,
+}: {
+  active: boolean;
+  label: string;
+  id: string;
+  onClick: () => void;
+}) => (
+  <button
+    id={id}
+    onClick={onClick}
+    className="px-3.5 py-2 rounded-xl text-xs font-bold transition-all"
+    style={
+      active
+        ? {
+            background: "rgba(124,58,237,0.2)",
+            color: "#c4b5fd",
+            border: "1px solid rgba(124,58,237,0.4)",
+          }
+        : {
+            background: "rgba(255,255,255,0.04)",
+            color: "#64748b",
+            border: "1px solid rgba(255,255,255,0.07)",
+          }
+    }
+  >
+    {label}
+  </button>
+);
+
 // ── Reminder Settings panel ──────────────────────────────────────────────────
 function ReminderSettings({
   prefs,
@@ -462,71 +535,6 @@ function ReminderSettings({
         ? prefs.channels.filter((c) => c !== ch)
         : [...prefs.channels, ch],
     });
-  };
-
-  const ToggleRow = ({
-    label,
-    desc,
-    active,
-    onToggle,
-    id,
-  }: {
-    label: string;
-    desc: string;
-    active: boolean;
-    onToggle: () => void;
-    id: string;
-  }) => (
-    <div className="flex items-center justify-between gap-4 py-3">
-      <div>
-        <p className="text-sm font-semibold text-slate-200">{label}</p>
-        <p className="text-xs text-slate-500 mt-0.5">{desc}</p>
-      </div>
-      <button
-        id={id}
-        onClick={onToggle}
-        className="relative w-11 h-6 rounded-full transition-all flex-shrink-0 focus:outline-none"
-        style={{
-          background: active
-            ? "linear-gradient(135deg, #7C3AED, #8B5CF6)"
-            : "rgba(255,255,255,0.08)",
-          boxShadow: active ? "0 0 12px rgba(124,58,237,0.4)" : "none",
-          border: active ? "1px solid rgba(124,58,237,0.5)" : "1px solid rgba(255,255,255,0.1)",
-        }}
-        aria-pressed={active}
-      >
-        <span
-          className="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-all duration-200"
-          style={{ transform: active ? "translateX(20px)" : "translateX(0)" }}
-        />
-      </button>
-    </div>
-  );
-
-  const ChannelChip = ({ ch, label }: { ch: ReminderChannel; label: string }) => {
-    const active = prefs.channels.includes(ch);
-    return (
-      <button
-        id={`channel-${ch.toLowerCase()}`}
-        onClick={() => toggleChannel(ch)}
-        className="px-3.5 py-2 rounded-xl text-xs font-bold transition-all"
-        style={
-          active
-            ? {
-                background: "rgba(124,58,237,0.2)",
-                color: "#c4b5fd",
-                border: "1px solid rgba(124,58,237,0.4)",
-              }
-            : {
-                background: "rgba(255,255,255,0.04)",
-                color: "#64748b",
-                border: "1px solid rgba(255,255,255,0.07)",
-              }
-        }
-      >
-        {label}
-      </button>
-    );
   };
 
   return (
@@ -572,9 +580,24 @@ function ReminderSettings({
           Notify via
         </p>
         <div className="flex gap-2 flex-wrap">
-          <ChannelChip ch="APP" label="📱 App" />
-          <ChannelChip ch="EMAIL" label="✉️ Email" />
-          <ChannelChip ch="WHATSAPP" label="💬 WhatsApp" />
+          <ChannelChip
+            id="channel-app"
+            active={prefs.channels.includes("APP")}
+            label="📱 App"
+            onClick={() => toggleChannel("APP")}
+          />
+          <ChannelChip
+            id="channel-email"
+            active={prefs.channels.includes("EMAIL")}
+            label="✉️ Email"
+            onClick={() => toggleChannel("EMAIL")}
+          />
+          <ChannelChip
+            id="channel-whatsapp"
+            active={prefs.channels.includes("WHATSAPP")}
+            label="💬 WhatsApp"
+            onClick={() => toggleChannel("WHATSAPP")}
+          />
         </div>
       </div>
 

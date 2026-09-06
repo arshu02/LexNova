@@ -68,7 +68,7 @@ export function AnalysisEngine() {
     const hasHandledQueryRef = useRef(false);
 
     const activeSession = sessions.find((s) => s.id === activeSessionId);
-    const messages = activeSession?.messages || [];
+    const messages = React.useMemo(() => activeSession?.messages || [], [activeSession?.messages]);
     const intakePhase = activeSession?.intakePhase || "understanding";
     const intakeTurns = activeSession?.intakeTurns || 0;
     const intakeCategory = activeSession?.intakeCategory || "GENERAL";

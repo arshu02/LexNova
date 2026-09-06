@@ -26,9 +26,10 @@ interface CaseAnalysisCardProps {
 }
 
 export function CaseAnalysisCard({ message }: CaseAnalysisCardProps) {
+    const [copiedNotice, setCopiedNotice] = useState(false);
+
     if (!message.roadmap) return null;
     const { roadmap } = message;
-    const [copiedNotice, setCopiedNotice] = useState(false);
 
     const handleCopyNotice = () => {
         if (!roadmap.draftNotice) return;
