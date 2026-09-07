@@ -33,8 +33,8 @@ const MOCK_ANALYSIS: Analysis = {
   ],
 };
 
-const RISK_COLOR: Record<string, string> = { high: "#ef4444", medium: "#f59e0b", low: "#22c55e" };
-const RISK_BG: Record<string, string> = { high: "rgba(239,68,68,0.08)", medium: "rgba(245,158,11,0.08)", low: "rgba(34,197,94,0.08)" };
+const RISK_COLOR: Record<string, string> = { high: "#DC2626", medium: "#D97706", low: "#059669" };
+const RISK_BG: Record<string, string> = { high: "#FEF2F2", medium: "#FFFBEB", low: "#ECFDF5" };
 
 export default function ContractAnalyzerPage() {
   const [file, setFile] = useState<File | null>(null);
@@ -50,7 +50,7 @@ export default function ContractAnalyzerPage() {
     setAnalysis(null);
     setAnalyzing(true);
     setReviewRequested(false);
-    await new Promise((r) => setTimeout(r, 2800));
+    await new Promise((r) => setTimeout(r, 2000));
     setAnalysis({ ...MOCK_ANALYSIS, fileName: f.name });
     setAnalyzing(false);
   };
@@ -62,21 +62,21 @@ export default function ContractAnalyzerPage() {
   }, []);
 
   const riskBarColor = analysis
-    ? analysis.riskScore >= 70 ? "#ef4444" : analysis.riskScore >= 40 ? "#f59e0b" : "#22c55e"
-    : "#F59E0B";
+    ? analysis.riskScore >= 70 ? "#DC2626" : analysis.riskScore >= 40 ? "#D97706" : "#059669"
+    : "#2563EB";
 
   const requestLawyerReview = async () => {
     setRequestingReview(true);
-    await new Promise((r) => setTimeout(r, 1500));
+    await new Promise((r) => setTimeout(r, 1200));
     setRequestingReview(false);
     setReviewRequested(true);
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
+    <div className="max-w-4xl mx-auto space-y-8 animate-fade-up">
       <div>
-        <h1 className="text-2xl font-black text-white">Contract Analyzer</h1>
-        <p className="text-sm text-slate-500 mt-1">Upload a contract to get AI-powered risk analysis and clause breakdown</p>
+        <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Contract Analyzer</h1>
+        <p className="text-sm text-slate-500 mt-1">Upload an agreement to get AI risk scoring, high-risk clause extraction, and actionable suggestions</p>
       </div>
 
       {/* Upload Zone */}
@@ -85,39 +85,36 @@ export default function ContractAnalyzerPage() {
           onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
           onDragLeave={() => setDragging(false)}
           onDrop={onDrop}
-          className="rounded-2xl border-2 border-dashed p-16 text-center transition-all cursor-pointer"
-          style={{ borderColor: dragging ? "#F59E0B" : "#E5E7EB", background: dragging ? "rgba(37,99,235,0.04)" : "white" }}
+          className="rounded-2xl border-2 border-dashed p-16 text-center transition-all cursor-pointer bg-white shadow-sm"
+          style={{ borderColor: dragging ? "#2563EB" : "#CBD5E1", background: dragging ? "#EFF6FF" : "#FFFFFF" }}
           onClick={() => document.getElementById("contract-upload")?.click()}>
           <input id="contract-upload" type="file" accept=".pdf,.doc,.docx,.txt" hidden
             onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])} />
 
           {analyzing ? (
             <div className="space-y-4">
-              <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto"
-                style={{ background: "rgba(37,99,235,0.1)" }}>
-                <Loader2 className="w-8 h-8 animate-spin" style={{ color: "#F59E0B" }} />
+              <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto bg-blue-50">
+                <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
               </div>
               <div>
-                <p className="font-black text-white text-lg">Analyzing {file?.name}…</p>
-                <p className="text-sm text-slate-500 mt-1">Extracting clauses, scoring risk, generating insights</p>
+                <p className="font-bold text-slate-900 text-lg">Analyzing {file?.name}…</p>
+                <p className="text-sm text-slate-500 mt-1">Extracting legal clauses, calculating liability exposure, cross-referencing statutory norms</p>
               </div>
-              <div className="max-w-xs mx-auto h-1.5 bg-white/5 rounded-full overflow-hidden">
-                <motion.div animate={{ width: ["0%", "100%"] }} transition={{ duration: 2.5, ease: "linear" }}
-                  className="h-full rounded-full" style={{ background: "linear-gradient(90deg,#7C3AED,#F59E0B)" }} />
+              <div className="max-w-xs mx-auto h-2 bg-slate-100 rounded-full overflow-hidden">
+                <motion.div animate={{ width: ["0%", "100%"] }} transition={{ duration: 2.0, ease: "linear" }}
+                  className="h-full rounded-full bg-blue-600" />
               </div>
             </div>
           ) : (
             <div className="space-y-4">
-              <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto"
-                style={{ background: "rgba(37,99,235,0.08)" }}>
-                <Upload className="w-8 h-8" style={{ color: "#F59E0B" }} />
+              <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto bg-blue-50">
+                <Upload className="w-8 h-8 text-blue-600" />
               </div>
               <div>
-                <p className="font-black text-white text-lg">Drop your contract here</p>
-                <p className="text-sm text-slate-500 mt-1">Supports PDF, DOC, DOCX, TXT · Up to 10MB</p>
+                <p className="font-bold text-slate-900 text-lg">Drop your contract here to analyze</p>
+                <p className="text-sm text-slate-500 mt-1">Supports PDF, DOCX, TXT · Encrypted & Private · Up to 25MB</p>
               </div>
-              <button className="px-6 py-2.5 rounded-xl text-sm font-bold text-white transition-all"
-                style={{ background: "linear-gradient(135deg,#1e3a8a,#7C3AED)" }}>
+              <button className="btn-primary px-6 py-2.5 rounded-xl text-sm font-semibold">
                 Browse Files
               </button>
             </div>
@@ -130,34 +127,30 @@ export default function ContractAnalyzerPage() {
         {analysis && (
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
             {/* Score Card */}
-            <div className="bg-[#0D0D18] rounded-2xl border p-8" style={{ borderColor: "#E5E7EB" }}>
+            <div className="bg-white rounded-2xl border border-slate-200 p-8 shadow-sm">
               <div className="flex items-start justify-between mb-6 flex-wrap gap-4">
                 <div>
                   <div className="flex items-center gap-2 mb-1">
-                    <FileText className="w-4 h-4 text-slate-500" />
-                    <p className="text-sm font-bold text-slate-500">{analysis.fileName}</p>
-                    <span className="text-[10px] font-black px-2 py-0.5 rounded-full"
-                      style={{ background: "rgba(34,197,94,0.1)", color: "#16a34a" }}>AI Analyzed</span>
+                    <FileText className="w-4 h-4 text-slate-400" />
+                    <p className="text-sm font-semibold text-slate-600">{analysis.fileName}</p>
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">AI Analyzed</span>
                   </div>
-                  <h2 className="text-xl font-black text-white">Risk Assessment Report</h2>
+                  <h2 className="text-xl font-bold text-slate-900">Risk Assessment Report</h2>
                 </div>
                 <div className="flex gap-3">
                   {!reviewRequested ? (
                     <button onClick={requestLawyerReview} disabled={requestingReview}
-                      className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold text-white transition-all disabled:opacity-60"
-                      style={{ background: "linear-gradient(135deg,#1e3a8a,#7C3AED)" }}>
+                      className="btn-primary flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold disabled:opacity-60">
                       {requestingReview ? <Loader2 className="w-4 h-4 animate-spin" /> : <Shield className="w-4 h-4" />}
                       Request Lawyer Review
                     </button>
                   ) : (
-                    <span className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold"
-                      style={{ background: "rgba(34,197,94,0.1)", color: "#16a34a" }}>
-                      <CheckCircle className="w-4 h-4" /> Lawyer Review Requested
+                    <span className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                      <CheckCircle className="w-4 h-4 text-emerald-600" /> Lawyer Review Requested
                     </span>
                   )}
                   <button onClick={() => { setAnalysis(null); setFile(null); }}
-                    className="px-4 py-2.5 rounded-xl text-sm font-semibold border hover:bg-[#080810] transition-all"
-                    style={{ borderColor: "#E5E7EB", color: "#64748b" }}>
+                    className="btn-ghost px-4 py-2.5 rounded-xl text-sm font-semibold">
                     Analyze New
                   </button>
                 </div>
@@ -166,64 +159,64 @@ export default function ContractAnalyzerPage() {
               {/* Risk Gauge */}
               <div className="grid md:grid-cols-3 gap-6 mb-6">
                 <div className="md:col-span-2">
-                  <div className="flex justify-between text-sm font-bold mb-2">
-                    <span className="text-slate-500">Overall Risk Score</span>
+                  <div className="flex justify-between text-sm font-semibold mb-2">
+                    <span className="text-slate-600">Overall Risk Score</span>
                     <span style={{ color: riskBarColor }}>{analysis.riskScore}/100 — {analysis.riskLevel} Risk</span>
                   </div>
-                  <div className="h-3 bg-white/5 rounded-full overflow-hidden">
+                  <div className="h-3 bg-slate-100 rounded-full overflow-hidden">
                     <motion.div animate={{ width: `${analysis.riskScore}%` }} transition={{ duration: 1, ease: "easeOut" }}
-                      className="h-full rounded-full" style={{ background: `linear-gradient(90deg,#22c55e,${riskBarColor})` }} />
+                      className="h-full rounded-full" style={{ background: `linear-gradient(90deg, #10B981, ${riskBarColor})` }} />
                   </div>
                 </div>
                 <div className="flex gap-4">
-                  {[{ icon: XCircle, color: "#ef4444", label: "High Risk", count: analysis.clauses.filter(c => c.risk === "high").length },
-                    { icon: AlertTriangle, color: "#f59e0b", label: "Medium", count: analysis.clauses.filter(c => c.risk === "medium").length },
-                    { icon: CheckCircle, color: "#22c55e", label: "Low Risk", count: analysis.clauses.filter(c => c.risk === "low").length }
+                  {[{ icon: XCircle, color: "#DC2626", label: "High Risk", count: analysis.clauses.filter(c => c.risk === "high").length },
+                    { icon: AlertTriangle, color: "#D97706", label: "Medium", count: analysis.clauses.filter(c => c.risk === "medium").length },
+                    { icon: CheckCircle, color: "#059669", label: "Low Risk", count: analysis.clauses.filter(c => c.risk === "low").length }
                   ].map((stat) => (
-                    <div key={stat.label} className="text-center">
+                    <div key={stat.label} className="text-center flex-1 bg-slate-50 border border-slate-200 rounded-xl p-3">
                       <stat.icon className="w-5 h-5 mx-auto mb-1" style={{ color: stat.color }} />
-                      <p className="text-lg font-black" style={{ color: stat.color }}>{stat.count}</p>
-                      <p className="text-[10px] font-bold text-slate-500">{stat.label}</p>
+                      <p className="text-lg font-bold" style={{ color: stat.color }}>{stat.count}</p>
+                      <p className="text-[10px] font-semibold text-slate-500">{stat.label}</p>
                     </div>
                   ))}
                 </div>
               </div>
 
-              <p className="text-sm text-slate-300 leading-relaxed bg-[#080810] rounded-xl p-4">{analysis.summary}</p>
+              <p className="text-sm text-slate-700 leading-relaxed bg-slate-50 border border-slate-200 rounded-xl p-4">{analysis.summary}</p>
             </div>
 
             {/* Clause Breakdown */}
-            <div className="bg-[#0D0D18] rounded-2xl border" style={{ borderColor: "#E5E7EB" }}>
-              <div className="p-6 border-b" style={{ borderColor: "#E5E7EB" }}>
-                <h3 className="font-black text-white">Clause Analysis</h3>
-                <p className="text-sm text-slate-500 mt-0.5">Click each clause to see AI suggestions</p>
+            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+              <div className="p-6 border-b border-slate-100">
+                <h3 className="font-bold text-slate-900">Clause Analysis</h3>
+                <p className="text-sm text-slate-500 mt-0.5">Click each clause to see AI suggestions and alternative redlines</p>
               </div>
-              <div className="divide-y" style={{ borderColor: "#F1F5F9" }}>
+              <div className="divide-y divide-slate-100">
                 {analysis.clauses.map((clause, i) => (
-                  <div key={i} className="p-5 cursor-pointer hover:bg-[#080810] transition-all"
+                  <div key={i} className="p-5 cursor-pointer hover:bg-slate-50/70 transition-all"
                     onClick={() => setExpanded(expanded === i ? null : i)}>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
                         <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: RISK_COLOR[clause.risk] }} />
-                        <h4 className="font-bold text-white text-sm">{clause.title}</h4>
-                        <span className="text-[10px] font-black px-2 py-0.5 rounded-full capitalize"
+                        <h4 className="font-semibold text-slate-900 text-sm">{clause.title}</h4>
+                        <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full capitalize"
                           style={{ background: RISK_BG[clause.risk], color: RISK_COLOR[clause.risk] }}>
                           {clause.risk} risk
                         </span>
                       </div>
-                      {expanded === i ? <ChevronUp className="w-4 h-4 text-slate-500" /> : <ChevronDown className="w-4 h-4 text-slate-500" />}
+                      {expanded === i ? <ChevronUp className="w-4 h-4 text-slate-400" /> : <ChevronDown className="w-4 h-4 text-slate-400" />}
                     </div>
                     <AnimatePresence>
                       {expanded === i && (
                         <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }}
                           exit={{ height: 0, opacity: 0 }} className="mt-4 space-y-3 overflow-hidden">
-                          <div className="bg-[#080810] rounded-xl p-3">
-                            <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Excerpt</p>
-                            <p className="text-xs text-slate-300 italic">"{clause.excerpt}"</p>
+                          <div className="bg-slate-50 border border-slate-200 rounded-xl p-3.5">
+                            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Contract Excerpt</p>
+                            <p className="text-xs text-slate-700 italic font-serif">"{clause.excerpt}"</p>
                           </div>
-                          <div className="rounded-xl p-3" style={{ background: RISK_BG[clause.risk] }}>
-                            <p className="text-[10px] font-black uppercase tracking-widest mb-1" style={{ color: RISK_COLOR[clause.risk] }}>AI Suggestion</p>
-                            <p className="text-sm text-slate-300">{clause.suggestion}</p>
+                          <div className="rounded-xl p-3.5 border" style={{ background: RISK_BG[clause.risk], borderColor: RISK_COLOR[clause.risk] + "33" }}>
+                            <p className="text-[10px] font-bold uppercase tracking-wider mb-1" style={{ color: RISK_COLOR[clause.risk] }}>AI Revision Recommendation</p>
+                            <p className="text-sm text-slate-800">{clause.suggestion}</p>
                           </div>
                         </motion.div>
                       )}
@@ -234,20 +227,18 @@ export default function ContractAnalyzerPage() {
             </div>
 
             {/* Recommendations */}
-            <div className="bg-[#0D0D18] rounded-2xl border p-6" style={{ borderColor: "#E5E7EB" }}>
-              <h3 className="font-black text-white mb-4">Recommendations</h3>
+            <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+              <h3 className="font-bold text-slate-900 mb-4">Strategic Recommendations</h3>
               <div className="space-y-3">
                 {analysis.recommendations.map((rec, i) => (
-                  <div key={i} className="flex items-start gap-3 p-3 rounded-xl" style={{ background: "rgba(37,99,235,0.04)" }}>
-                    <span className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-black text-white flex-shrink-0"
-                      style={{ background: "linear-gradient(135deg,#1e3a8a,#7C3AED)" }}>{i + 1}</span>
-                    <p className="text-sm text-slate-300 font-medium">{rec}</p>
+                  <div key={i} className="flex items-start gap-3 p-3.5 rounded-xl bg-slate-50 border border-slate-200">
+                    <span className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white bg-blue-600 flex-shrink-0">{i + 1}</span>
+                    <p className="text-sm text-slate-700 font-medium">{rec}</p>
                   </div>
                 ))}
               </div>
-              <div className="mt-4 p-3 rounded-xl text-xs text-amber-700 font-medium flex items-start gap-2"
-                style={{ background: "rgba(245,158,11,0.08)" }}>
-                <AlertTriangle className="w-3.5 h-3.5 mt-0.5 flex-shrink-0 text-amber-500" />
+              <div className="mt-4 p-3.5 rounded-xl text-xs text-amber-800 font-medium flex items-start gap-2 bg-amber-50 border border-amber-200">
+                <AlertTriangle className="w-4 h-4 mt-0.5 flex-shrink-0 text-amber-600" />
                 AI-assisted analysis only. This report should be reviewed by a licensed lawyer before any legal action is taken.
               </div>
             </div>

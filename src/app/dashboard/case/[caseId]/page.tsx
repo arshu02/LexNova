@@ -186,12 +186,11 @@ function CountdownTimer({ targetDate }: { targetDate: string }) {
       {units.map((u) => (
         <div key={u.label} className="flex flex-col items-center">
           <div
-            className="w-12 h-10 rounded-lg flex items-center justify-center text-base font-black text-white tabular-nums"
-            style={{ background: "rgba(124,58,237,0.2)", border: "1px solid rgba(124,58,237,0.3)" }}
+            className="w-12 h-10 rounded-xl flex items-center justify-center text-base font-extrabold text-blue-700 bg-white border border-blue-200 shadow-xs tabular-nums"
           >
             {String(u.value).padStart(2, "0")}
           </div>
-          <span className="text-[9px] text-slate-600 font-bold uppercase tracking-wider mt-1">
+          <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider mt-1">
             {u.label}
           </span>
         </div>
@@ -221,7 +220,7 @@ function TimelineTab({ hearings }: { hearings: Hearing[] }) {
       {/* Vertical line */}
       <div
         className="absolute left-[19px] top-0 bottom-0 w-px"
-        style={{ background: "rgba(255,255,255,0.06)" }}
+        style={{ background: "#E2E8F0" }}
       />
 
       <div className="space-y-1">
@@ -242,32 +241,32 @@ function TimelineTab({ hearings }: { hearings: Hearing[] }) {
                   className="w-10 h-10 rounded-full flex items-center justify-center z-10 relative"
                   style={{
                     background: isUpcoming
-                      ? "rgba(124,58,237,0.15)"
-                      : "rgba(255,255,255,0.04)",
+                      ? "#EFF6FF"
+                      : "#F8FAFC",
                     border: isUpcoming
-                      ? "2px solid rgba(124,58,237,0.5)"
-                      : "2px solid rgba(255,255,255,0.08)",
+                      ? "2px solid #3B82F6"
+                      : "2px solid #E2E8F0",
                   }}
                 >
-                  <Gavel className={`w-4 h-4 ${isUpcoming ? "text-purple-400" : "text-slate-600"}`} />
+                  <Gavel className={`w-4 h-4 ${isUpcoming ? "text-blue-600" : "text-slate-400"}`} />
                 </div>
               </div>
 
               {/* Content */}
               <div
-                className="flex-1 rounded-xl p-4"
+                className="flex-1 rounded-xl p-4 shadow-xs"
                 style={{
                   background: isUpcoming
-                    ? "rgba(124,58,237,0.05)"
-                    : "rgba(255,255,255,0.02)",
+                    ? "#EFF6FF"
+                    : "#F8FAFC",
                   border: isUpcoming
-                    ? "1px solid rgba(124,58,237,0.2)"
-                    : "1px solid rgba(255,255,255,0.05)",
+                    ? "1px solid #BFDBFE"
+                    : "1px solid #E2E8F0",
                 }}
               >
                 <div className="flex flex-wrap items-start justify-between gap-2 mb-2">
                   <div>
-                    <p className="text-sm font-bold text-white">{purposeLabel(h.purpose)}</p>
+                    <p className="text-sm font-bold text-slate-900">{purposeLabel(h.purpose)}</p>
                     <p className="text-xs text-slate-500 mt-0.5">{fmtDateTime(h.hearingDate, h.hearingTime)}</p>
                   </div>
                   <div className="flex flex-wrap gap-1.5">
@@ -358,33 +357,33 @@ function SharedDocsTab({ docs }: { docs: CourtDoc[] }) {
           initial={{ opacity: 0, y: 6 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: idx * 0.04 }}
-          className="flex items-center gap-3 p-3.5 rounded-xl transition-all hover:bg-white/[0.03]"
-          style={{ border: "1px solid rgba(255,255,255,0.06)" }}
+          className="flex items-center gap-3 p-3.5 rounded-xl transition-all hover:bg-slate-50 shadow-xs"
+          style={{ background: "#FFFFFF", border: "1px solid #E2E8F0" }}
         >
           <div
             className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0"
-            style={{ background: `${iconColor[doc.type] || "#8B5CF6"}15` }}
+            style={{ background: `${iconColor[doc.type] || "#3B82F6"}15` }}
           >
-            <FileCheck className="w-4 h-4" style={{ color: iconColor[doc.type] || "#8B5CF6" }} />
+            <FileCheck className="w-4 h-4" style={{ color: iconColor[doc.type] || "#3B82F6" }} />
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold text-slate-200 truncate">{doc.title}</p>
+            <p className="text-sm font-semibold text-slate-900 truncate">{doc.title}</p>
             <div className="flex items-center gap-2 mt-0.5">
               <span className="text-[10px] text-slate-500 font-medium">
                 {docTypeLabel(doc.type)}
               </span>
-              <span className="w-1 h-1 rounded-full bg-slate-700" />
-              <span className="text-[10px] text-slate-600">
+              <span className="w-1 h-1 rounded-full bg-slate-300" />
+              <span className="text-[10px] text-slate-500">
                 Filed by {doc.filedBy === "COURT" ? "Court" : doc.filedBy.charAt(0) + doc.filedBy.slice(1).toLowerCase()}
               </span>
-              <span className="w-1 h-1 rounded-full bg-slate-700" />
-              <span className="text-[10px] text-slate-600">{fmtDate(doc.filingDate)}</span>
+              <span className="w-1 h-1 rounded-full bg-slate-300" />
+              <span className="text-[10px] text-slate-500">{fmtDate(doc.filingDate)}</span>
             </div>
           </div>
           {doc.exhibitNumber && (
             <span
               className="text-[10px] font-bold px-2 py-0.5 rounded font-mono"
-              style={{ background: "rgba(255,255,255,0.05)", color: "#94a3b8", border: "1px solid rgba(255,255,255,0.08)" }}
+              style={{ background: "#F1F5F9", color: "#475569", border: "1px solid #E2E8F0" }}
             >
               {doc.exhibitNumber}
             </span>
@@ -394,13 +393,13 @@ function SharedDocsTab({ docs }: { docs: CourtDoc[] }) {
               href={doc.fileUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="p-1.5 rounded-lg text-slate-500 hover:text-white hover:bg-white/[0.06] transition-all flex-shrink-0"
+              className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-all flex-shrink-0"
               title="View document"
             >
               <ArrowUpRight className="w-4 h-4" />
             </a>
           ) : (
-            <div className="p-1.5 flex-shrink-0 text-slate-700" title="No file attached">
+            <div className="p-1.5 flex-shrink-0 text-slate-300" title="No file attached">
               <Eye className="w-4 h-4" />
             </div>
           )}
@@ -427,12 +426,11 @@ function PrivateTab({
   return (
     <div className="space-y-4">
       <div
-        className="flex items-center gap-2.5 p-3.5 rounded-xl"
-        style={{ background: "rgba(245,158,11,0.06)", border: "1px solid rgba(245,158,11,0.15)" }}
+        className="flex items-center gap-2.5 p-3.5 rounded-xl bg-amber-50 border border-amber-200"
       >
-        <Lock className="w-4 h-4 text-amber-400 flex-shrink-0" />
-        <p className="text-xs text-amber-300/80 leading-relaxed">
-          <strong className="text-amber-300">Private Workspace</strong> — Only you (
+        <Lock className="w-4 h-4 text-amber-600 flex-shrink-0" />
+        <p className="text-xs text-amber-900 leading-relaxed">
+          <strong className="text-amber-950 font-semibold">Private Workspace</strong> — Only you (
           {partyRole.charAt(0) + partyRole.slice(1).toLowerCase()}) can see these documents. The
           opposing party cannot access them until you choose to share.
         </p>
@@ -440,15 +438,14 @@ function PrivateTab({
 
       {privateDocs.length === 0 ? (
         <div className="flex flex-col items-center gap-3 py-10 text-center">
-          <Shield className="w-9 h-9 text-slate-700" />
+          <Shield className="w-9 h-9 text-slate-300" />
           <p className="text-sm font-semibold text-slate-500">Your private workspace is empty</p>
-          <p className="text-xs text-slate-600 max-w-xs">
+          <p className="text-xs text-slate-400 max-w-xs">
             Documents you draft or upload that are not yet shared with the opposing party will appear
             here.
           </p>
           <button
-            className="mt-2 flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold text-black"
-            style={{ background: "linear-gradient(135deg, #F59E0B, #FBBF24)" }}
+            className="btn-primary mt-2 flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold"
           >
             <Upload className="w-3.5 h-3.5" />
             Upload a Document
@@ -462,17 +459,16 @@ function PrivateTab({
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: idx * 0.04 }}
-              className="flex items-center gap-3 p-3.5 rounded-xl"
-              style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)" }}
+              className="flex items-center gap-3 p-3.5 rounded-xl hover:bg-slate-50 transition-colors shadow-xs"
+              style={{ background: "#FFFFFF", border: "1px solid #E2E8F0" }}
             >
               <div
-                className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
-                style={{ background: "rgba(245,158,11,0.1)" }}
+                className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 bg-amber-50 border border-amber-200"
               >
-                <Lock className="w-4 h-4 text-amber-400" />
+                <Lock className="w-4 h-4 text-amber-600" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-slate-200 truncate">{doc.title}</p>
+                <p className="text-sm font-semibold text-slate-900 truncate">{doc.title}</p>
                 <p className="text-[10px] text-slate-500 mt-0.5">
                   {docTypeLabel(doc.type)} · {fmtDate(doc.filingDate)}
                 </p>
@@ -482,7 +478,7 @@ function PrivateTab({
                   href={doc.fileUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-1.5 rounded-lg text-slate-500 hover:text-white transition-all"
+                  className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-all"
                 >
                   <ArrowUpRight className="w-4 h-4" />
                 </a>
@@ -631,7 +627,7 @@ function CaseRoomPage() {
   const st = statusCfg[caseData.status] || statusCfg.ACTIVE;
 
   return (
-    <div className="max-w-5xl mx-auto space-y-6">
+    <div className="max-w-5xl mx-auto space-y-6 animate-fade-up">
 
       {/* ── Header ─────────────────────────────────────────────────────────── */}
       <div className="flex flex-wrap items-start justify-between gap-3">
@@ -639,14 +635,14 @@ function CaseRoomPage() {
           <div className="flex items-center gap-2 mb-1">
             <Link
               href="/dashboard/user"
-              className="text-xs text-slate-600 hover:text-slate-300 transition-colors"
+              className="text-xs text-slate-500 hover:text-slate-900 transition-colors"
             >
               Dashboard
             </Link>
-            <ChevronRight className="w-3 h-3 text-slate-700" />
-            <span className="text-xs text-slate-400">Case Room</span>
+            <ChevronRight className="w-3 h-3 text-slate-400" />
+            <span className="text-xs text-slate-700 font-medium">Case Room</span>
           </div>
-          <h1 className="text-xl md:text-2xl font-black text-white leading-tight">
+          <h1 className="text-xl md:text-2xl font-black text-slate-900 leading-tight">
             {caseData.title}
           </h1>
           <div className="flex flex-wrap items-center gap-2 mt-2">
@@ -659,8 +655,7 @@ function CaseRoomPage() {
             </span>
             {caseData.caseNumber && (
               <span
-                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-mono text-slate-400"
-                style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}
+                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-mono text-slate-700 bg-slate-100 border border-slate-200"
               >
                 <Hash className="w-3 h-3" />
                 {caseData.caseNumber}
@@ -675,15 +670,13 @@ function CaseRoomPage() {
           <button
             id="case-refresh-btn"
             onClick={fetchCase}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition-all hover:bg-white/[0.05]"
-            style={{ border: "1px solid rgba(255,255,255,0.07)" }}
+            className="btn-ghost flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold"
           >
             Refresh
           </button>
           <button
             id="case-notify-btn"
-            className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold text-white transition-all"
-            style={{ background: "rgba(124,58,237,0.2)", border: "1px solid rgba(124,58,237,0.3)" }}
+            className="btn-primary flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold"
           >
             <Bell className="w-3.5 h-3.5" />
             Notifications
@@ -696,40 +689,35 @@ function CaseRoomPage() {
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          className="rounded-2xl p-5"
-          style={{
-            background: "linear-gradient(135deg, rgba(124,58,237,0.1), rgba(139,92,246,0.05))",
-            border: "1px solid rgba(124,58,237,0.25)",
-            boxShadow: "0 0 40px rgba(124,58,237,0.08)",
-          }}
+          className="rounded-2xl p-5 bg-gradient-to-br from-indigo-50/80 via-blue-50/40 to-white border border-indigo-200 shadow-sm"
         >
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
               <div className="flex items-center gap-2 mb-1">
-                <Timer className="w-4 h-4 text-purple-400" />
-                <span className="text-xs font-bold text-purple-400 uppercase tracking-wider">
+                <Timer className="w-4 h-4 text-blue-600" />
+                <span className="text-xs font-bold text-blue-700 uppercase tracking-wider">
                   Next Hearing
                 </span>
                 {daysToHearing !== null && daysToHearing <= 7 && (
                   <span
                     className="text-[10px] font-bold px-2 py-0.5 rounded-full"
                     style={{
-                      background: daysToHearing <= 1 ? "rgba(239,68,68,0.15)" : "rgba(245,158,11,0.15)",
-                      color: daysToHearing <= 1 ? "#f87171" : "#fbbf24",
-                      border: `1px solid ${daysToHearing <= 1 ? "rgba(239,68,68,0.3)" : "rgba(245,158,11,0.3)"}`,
+                      background: daysToHearing <= 1 ? "#FEF2F2" : "#FFFBEB",
+                      color: daysToHearing <= 1 ? "#DC2626" : "#D97706",
+                      border: `1px solid ${daysToHearing <= 1 ? "#FCA5A5" : "#FDE68A"}`,
                     }}
                   >
                     {daysToHearing === 0 ? "Today!" : `${daysToHearing}d away`}
                   </span>
                 )}
               </div>
-              <p className="text-base font-bold text-white">
+              <p className="text-base font-bold text-slate-900">
                 {purposeLabel(upcomingHearing.purpose)}
               </p>
-              <p className="text-xs text-slate-400 mt-0.5">
+              <p className="text-xs text-slate-500 mt-0.5">
                 {fmtDateTime(upcomingHearing.hearingDate, upcomingHearing.hearingTime)}
               </p>
-              <div className="flex items-center gap-3 mt-1.5 text-xs text-slate-500">
+              <div className="flex items-center gap-3 mt-1.5 text-xs text-slate-600">
                 <span className="flex items-center gap-1">
                   <Building2 className="w-3 h-3" />
                   {upcomingHearing.courtName}
@@ -870,10 +858,9 @@ function CaseRoomPage() {
 
         {/* Case meta */}
         <div
-          className="md:col-span-1 rounded-2xl p-5 space-y-3"
-          style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}
+          className="md:col-span-1 rounded-2xl p-5 space-y-3 bg-white border border-slate-200 shadow-sm"
         >
-          <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Case Details</p>
+          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Case Details</p>
           {[
             { label: "Jurisdiction", value: caseData.jurisdiction, icon: MapPin },
             { label: "Category", value: caseData.category || "—", icon: Briefcase },
@@ -882,10 +869,10 @@ function CaseRoomPage() {
             { label: "Court Case No.", value: caseData.courtCaseNum || "—", icon: Hash },
           ].map(({ label, value, icon: Icon }) => (
             <div key={label} className="flex items-start gap-2.5">
-              <Icon className="w-3.5 h-3.5 text-slate-600 mt-0.5 flex-shrink-0" />
+              <Icon className="w-3.5 h-3.5 text-slate-400 mt-0.5 flex-shrink-0" />
               <div>
-                <p className="text-[9px] font-bold text-slate-600 uppercase tracking-wider">{label}</p>
-                <p className="text-xs font-semibold text-slate-300 mt-0.5">{value}</p>
+                <p className="text-[9px] font-bold text-slate-500 uppercase tracking-wider">{label}</p>
+                <p className="text-xs font-semibold text-slate-900 mt-0.5">{value}</p>
               </div>
             </div>
           ))}
@@ -895,23 +882,21 @@ function CaseRoomPage() {
         <div className="md:col-span-2 grid sm:grid-cols-2 gap-3">
           {/* Plaintiff */}
           <div
-            className="rounded-2xl p-4 space-y-3"
-            style={{ background: "rgba(239,68,68,0.04)", border: "1px solid rgba(239,68,68,0.15)" }}
+            className="rounded-2xl p-4 space-y-3 bg-red-50/50 border border-red-200 shadow-sm"
           >
             <div className="flex items-center gap-2">
               <span
-                className="text-[10px] font-black px-2 py-0.5 rounded"
-                style={{ background: "rgba(239,68,68,0.12)", color: "#f87171" }}
+                className="text-[10px] font-bold px-2 py-0.5 rounded bg-red-100 text-red-700 border border-red-200"
               >
                 PLAINTIFF
               </span>
             </div>
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center text-xs font-bold text-white flex-shrink-0">
+              <div className="w-8 h-8 rounded-full bg-red-600 flex items-center justify-center text-xs font-bold text-white flex-shrink-0 shadow-xs">
                 {(plaintiff.user?.name || plaintiff.user?.email || "P")[0].toUpperCase()}
               </div>
               <div>
-                <p className="text-sm font-bold text-white">
+                <p className="text-sm font-bold text-slate-900">
                   {plaintiff.user?.name || plaintiff.user?.email?.split("@")[0] || "Plaintiff"}
                 </p>
                 <p className="text-[10px] text-slate-500">{plaintiff.user?.email}</p>
@@ -919,13 +904,12 @@ function CaseRoomPage() {
             </div>
             {plaintiff.lawyer && (
               <div
-                className="rounded-xl p-2.5"
-                style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}
+                className="rounded-xl p-2.5 bg-white border border-red-100"
               >
-                <p className="text-[9px] font-bold text-slate-600 uppercase tracking-wider mb-1">
+                <p className="text-[9px] font-bold text-slate-500 uppercase tracking-wider mb-1">
                   Represented by
                 </p>
-                <p className="text-xs font-semibold text-slate-300">{plaintiff.lawyer.name}</p>
+                <p className="text-xs font-semibold text-slate-900">{plaintiff.lawyer.name}</p>
                 <p className="text-[10px] text-slate-500">{plaintiff.lawyer.specialization}</p>
               </div>
             )}
@@ -933,13 +917,11 @@ function CaseRoomPage() {
 
           {/* Defendant */}
           <div
-            className="rounded-2xl p-4 space-y-3"
-            style={{ background: "rgba(124,58,237,0.04)", border: "1px solid rgba(124,58,237,0.15)" }}
+            className="rounded-2xl p-4 space-y-3 bg-purple-50/50 border border-purple-200 shadow-sm"
           >
             <div className="flex items-center gap-2">
               <span
-                className="text-[10px] font-black px-2 py-0.5 rounded"
-                style={{ background: "rgba(124,58,237,0.12)", color: "#a78bfa" }}
+                className="text-[10px] font-bold px-2 py-0.5 rounded bg-purple-100 text-purple-700 border border-purple-200"
               >
                 DEFENDANT
               </span>
@@ -947,11 +929,11 @@ function CaseRoomPage() {
             {defendant ? (
               <>
                 <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-violet-600 flex items-center justify-center text-xs font-bold text-white flex-shrink-0">
+                  <div className="w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center text-xs font-bold text-white flex-shrink-0 shadow-xs">
                     {(defendant.user?.name || defendant.user?.email || "D")[0].toUpperCase()}
                   </div>
                   <div>
-                    <p className="text-sm font-bold text-white">
+                    <p className="text-sm font-bold text-slate-900">
                       {defendant.user?.name || defendant.user?.email?.split("@")[0] || "Defendant"}
                     </p>
                     <p className="text-[10px] text-slate-500">{defendant.user?.email}</p>
@@ -959,22 +941,21 @@ function CaseRoomPage() {
                 </div>
                 {defendant.lawyer && (
                   <div
-                    className="rounded-xl p-2.5"
-                    style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}
+                    className="rounded-xl p-2.5 bg-white border border-purple-100"
                   >
-                    <p className="text-[9px] font-bold text-slate-600 uppercase tracking-wider mb-1">
+                    <p className="text-[9px] font-bold text-slate-500 uppercase tracking-wider mb-1">
                       Represented by
                     </p>
-                    <p className="text-xs font-semibold text-slate-300">{defendant.lawyer.name}</p>
+                    <p className="text-xs font-semibold text-slate-900">{defendant.lawyer.name}</p>
                     <p className="text-[10px] text-slate-500">{defendant.lawyer.specialization}</p>
                   </div>
                 )}
               </>
             ) : (
               <div className="flex flex-col items-center gap-2 py-3 text-center">
-                <User className="w-7 h-7 text-slate-700" />
+                <User className="w-7 h-7 text-slate-300" />
                 <p className="text-xs text-slate-500">Awaiting defendant</p>
-                <p className="text-[10px] text-slate-600">Invite not yet accepted</p>
+                <p className="text-[10px] text-slate-400">Invite not yet accepted</p>
               </div>
             )}
           </div>
@@ -985,8 +966,7 @@ function CaseRoomPage() {
       <div>
         {/* Tab bar */}
         <div
-          className="flex gap-1 p-1 rounded-xl mb-4"
-          style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}
+          className="flex gap-1 p-1 rounded-xl mb-4 bg-slate-100 border border-slate-200"
         >
           {tabs.map((tab) => {
             const active = activeTab === tab.id;
@@ -999,11 +979,12 @@ function CaseRoomPage() {
                 style={
                   active
                     ? {
-                        background: "rgba(124,58,237,0.2)",
-                        color: "#c4b5fd",
-                        border: "1px solid rgba(124,58,237,0.3)",
+                        background: "#FFFFFF",
+                        color: "#2563EB",
+                        border: "1px solid #E2E8F0",
+                        boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
                       }
-                    : { color: "#64748b" }
+                    : { color: "#64748B" }
                 }
               >
                 <tab.icon className="w-3.5 h-3.5" />
@@ -1013,8 +994,8 @@ function CaseRoomPage() {
                     className="ml-1 px-1.5 py-0.5 rounded-full text-[10px] font-bold"
                     style={
                       active
-                        ? { background: "rgba(124,58,237,0.3)", color: "#c4b5fd" }
-                        : { background: "rgba(255,255,255,0.07)", color: "#94a3b8" }
+                        ? { background: "#EFF6FF", color: "#1D4ED8" }
+                        : { background: "#E2E8F0", color: "#64748B" }
                     }
                   >
                     {tab.count}
@@ -1027,8 +1008,7 @@ function CaseRoomPage() {
 
         {/* Tab content */}
         <div
-          className="rounded-2xl p-5"
-          style={{ background: "rgba(255,255,255,0.015)", border: "1px solid rgba(255,255,255,0.06)" }}
+          className="rounded-2xl p-5 bg-white border border-slate-200 shadow-sm"
         >
           <AnimatePresence mode="wait">
             {activeTab === "timeline" && (

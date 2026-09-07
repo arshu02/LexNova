@@ -269,7 +269,7 @@ export default function BookingsPage() {
             >
               {tab.label}
               {isActive && (
-                <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: "2px", background: "white" }} />
+                <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: "2px", background: "#2563EB" }} />
               )}
             </button>
           );

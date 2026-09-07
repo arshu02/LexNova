@@ -6,8 +6,8 @@ import { signIn } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  Loader2, Mail, Lock, AlertCircle, CheckCircle2, Scale,
-  User, Briefcase, ShieldCheck, ArrowRight
+  Loader2, Mail, Lock, AlertCircle, Scale,
+  User, ShieldCheck, ArrowRight
 } from 'lucide-react';
 import { supabase } from '@/lib/supabaseClient';
 
@@ -39,7 +39,6 @@ function LoginForm() {
         const session = await sessionRes.json();
         const userRole = session?.user?.role || role;
         
-        // Segregated routing based on user vs advocate role
         if (userRole === "ADVOCATE" || role === "ADVOCATE") {
           router.push("/dashboard/advocate");
         } else {
@@ -79,34 +78,28 @@ function LoginForm() {
   };
 
   return (
-    <div className="min-h-screen bg-[#050508] flex flex-col justify-center items-center px-4 py-12 relative overflow-hidden">
-      {/* Background glow */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-blue-600/[0.06] rounded-full blur-[140px]" />
-      </div>
-
+    <div className="min-h-screen bg-[#FBF9F5] text-[#141413] flex flex-col justify-center items-center px-4 py-12 relative">
       {/* Brand Header */}
-      <div className="text-center mb-8 relative z-10">
-        <Link href="/" className="inline-flex items-center gap-2.5 text-white font-bold text-[22px] tracking-tight mb-2">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-blue-500/20">
-            <Scale size={18} />
-          </div>
-          <span>LexNova</span>
+      <div className="text-center mb-8">
+        <Link href="/" className="inline-flex items-center gap-2 mb-2">
+          <span className="font-mono text-[22px] font-extrabold tracking-[0.18em] text-[#141413]">
+            LEXNOV\A
+          </span>
         </Link>
-        <p className="text-[13.5px] text-[#7A8A9E] mt-1">
-          India&apos;s AI Legal Operating System · Enterprise Workspace
+        <p className="text-[13.5px] text-[#636059]">
+          Global Autonomous Legal Operating System
         </p>
       </div>
 
       {/* Role Selector */}
-      <div className="w-full max-w-[420px] mb-4 bg-[#0A0C12] p-1 rounded-2xl border border-white/[0.08] flex relative z-10">
+      <div className="w-full max-w-[420px] mb-4 bg-[#F7F4EE] p-1 rounded-2xl border border-[#E8E4DA] flex">
         <button
           type="button"
           onClick={() => setRole('USER')}
-          className={`flex-1 py-2.5 rounded-xl text-[13px] font-semibold flex items-center justify-center gap-2 transition-all ${
+          className={`flex-1 py-2.5 rounded-xl text-[13px] font-medium flex items-center justify-center gap-2 transition-all ${
             role === 'USER'
-              ? 'bg-white text-black shadow-md'
-              : 'text-[#8D9CB0] hover:text-white'
+              ? 'bg-white text-[#141413] shadow-xs border border-[#DED9CE]'
+              : 'text-[#636059] hover:text-[#141413]'
           }`}
         >
           <User size={15} /> Citizen & Business
@@ -114,10 +107,10 @@ function LoginForm() {
         <button
           type="button"
           onClick={() => setRole('ADVOCATE')}
-          className={`flex-1 py-2.5 rounded-xl text-[13px] font-semibold flex items-center justify-center gap-2 transition-all ${
+          className={`flex-1 py-2.5 rounded-xl text-[13px] font-medium flex items-center justify-center gap-2 transition-all ${
             role === 'ADVOCATE'
-              ? 'bg-white text-black shadow-md'
-              : 'text-[#8D9CB0] hover:text-white'
+              ? 'bg-white text-[#141413] shadow-xs border border-[#DED9CE]'
+              : 'text-[#636059] hover:text-[#141413]'
           }`}
         >
           <ShieldCheck size={15} /> Legal Advocate
@@ -126,15 +119,15 @@ function LoginForm() {
 
       {/* Main Card */}
       <motion.div
-        initial={{ opacity: 0, y: 15 }}
+        initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-[420px] bg-[#0A0C12] border border-white/[0.08] rounded-3xl p-7 shadow-2xl relative z-10 space-y-6"
+        className="w-full max-w-[420px] bg-white border border-[#E8E4DA] rounded-3xl p-8 shadow-sm space-y-6"
       >
         <div className="flex items-center justify-between">
-          <span className="text-[11px] font-bold tracking-[0.1em] uppercase text-[#6B7B94]">
-            Authentication Workspace
+          <span className="text-[11px] font-mono font-bold tracking-[0.1em] uppercase text-[#87837B]">
+            Authentication
           </span>
-          <span className="text-[11px] font-semibold text-blue-400 bg-blue-500/10 border border-blue-500/20 px-2.5 py-0.5 rounded-full">
+          <span className="text-[11px] font-mono font-medium text-[#141413] bg-[#F7F4EE] border border-[#E8E4DA] px-2.5 py-0.5 rounded-full">
             {role === 'USER' ? 'Client Portal' : 'Advocate Console'}
           </span>
         </div>
@@ -146,9 +139,9 @@ function LoginForm() {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className="p-3.5 rounded-xl bg-red-500/10 border border-red-500/30 text-red-300 text-[13px] flex items-center gap-2.5"
+              className="p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-[13px] flex items-center gap-2.5"
             >
-              <AlertCircle size={16} className="shrink-0" />
+              <AlertCircle size={16} className="shrink-0 text-red-600" />
               <span>{error}</span>
             </motion.div>
           )}
@@ -156,40 +149,40 @@ function LoginForm() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="text-[12px] font-semibold text-[#8D9CB0] block mb-1.5">
+            <label className="text-[12.5px] font-medium text-[#42403B] block mb-1.5">
               Account Email
             </label>
             <div className="relative">
-              <Mail size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#4E5D70]" />
+              <Mail size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#87837B]" />
               <input
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="advocate@lawfirm.in or client@gmail.com"
-                className="w-full bg-[#07090E] border border-white/[0.1] rounded-xl pl-10 pr-3.5 py-2.5 text-[14px] text-white placeholder-[#4E5D70] focus:border-blue-500 focus:outline-none transition-colors"
+                placeholder="name@company.com"
+                className="w-full bg-white border border-[#DED9CE] rounded-xl pl-10 pr-3.5 py-2.5 text-[14px] text-[#141413] placeholder-[#87837B] focus:border-[#141413] focus:outline-none transition-colors"
               />
             </div>
           </div>
 
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <label className="text-[12px] font-semibold text-[#8D9CB0]">
+              <label className="text-[12.5px] font-medium text-[#42403B]">
                 Password
               </label>
-              <Link href="/auth/forgot-password" className="text-[11.5px] text-blue-400 hover:underline font-medium">
+              <Link href="/auth/forgot-password" className="text-[11.5px] text-[#141413] hover:underline font-medium">
                 Forgot?
               </Link>
             </div>
             <div className="relative">
-              <Lock size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#4E5D70]" />
+              <Lock size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#87837B]" />
               <input
                 type="password"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full bg-[#07090E] border border-white/[0.1] rounded-xl pl-10 pr-3.5 py-2.5 text-[14px] text-white placeholder-[#4E5D70] focus:border-blue-500 focus:outline-none transition-colors"
+                className="w-full bg-white border border-[#DED9CE] rounded-xl pl-10 pr-3.5 py-2.5 text-[14px] text-[#141413] placeholder-[#87837B] focus:border-[#141413] focus:outline-none transition-colors"
               />
             </div>
           </div>
@@ -197,10 +190,10 @@ function LoginForm() {
           <button
             type="submit"
             disabled={loading}
-            className="btn-primary w-full text-[14.5px] font-semibold py-3 rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-blue-600/25 mt-2"
+            className="w-full bg-[#141413] hover:bg-black text-white text-[14px] font-medium py-3 rounded-xl flex items-center justify-center gap-2 shadow-xs transition-all mt-2"
           >
             {loading ? (
-              <Loader2 size={16} className="animate-spin" />
+              <Loader2 size={16} className="animate-spin text-white" />
             ) : (
               <>
                 <span>Sign in to {role === 'USER' ? 'Client Portal' : 'Advocate Console'}</span>
@@ -213,16 +206,16 @@ function LoginForm() {
         {/* Google OAuth */}
         <div className="space-y-3 pt-2">
           <div className="flex items-center gap-3">
-            <div className="flex-1 h-px bg-white/[0.08]" />
-            <span className="text-[11.5px] text-[#55667E] uppercase tracking-wider font-semibold">Or continue with</span>
-            <div className="flex-1 h-px bg-white/[0.08]" />
+            <div className="flex-1 h-px bg-[#E8E4DA]" />
+            <span className="text-[11px] text-[#87837B] uppercase tracking-wider font-mono">Or continue with</span>
+            <div className="flex-1 h-px bg-[#E8E4DA]" />
           </div>
 
           <button
             type="button"
             onClick={handleGoogleSignIn}
             disabled={loading}
-            className="w-full flex items-center justify-center gap-3 py-2.5 rounded-xl border border-white/[0.1] bg-[#07090E] hover:bg-[#101420] text-[#CBD5E1] text-[13.5px] font-medium transition-colors"
+            className="w-full flex items-center justify-center gap-3 py-2.5 rounded-xl border border-[#DED9CE] bg-white hover:bg-[#F7F4EE] text-[#141413] text-[13.5px] font-medium transition-colors"
           >
             <svg className="w-4 h-4" viewBox="0 0 24 24">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -235,22 +228,21 @@ function LoginForm() {
         </div>
 
         {/* Footer Link */}
-        <div className="text-center text-[13px] text-[#7A8A9E] pt-1">
+        <div className="text-center text-[13px] text-[#636059] pt-1">
           Don&apos;t have an account?{' '}
-          <Link href="/auth/signup" className="text-white hover:underline font-semibold">
+          <Link href="/auth/signup" className="text-[#141413] hover:underline font-semibold">
             Sign up
           </Link>
         </div>
 
       </motion.div>
-
     </div>
   );
 }
 
 export default function LoginPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-[#050508]" />}>
+    <Suspense fallback={<div className="min-h-screen bg-[#FBF9F5]" />}>
       <LoginForm />
     </Suspense>
   );

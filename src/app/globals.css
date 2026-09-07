@@ -1,37 +1,41 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+.font-serif, .font-editorial {
+  font-family: 'Newsreader', 'Georgia', 'Iowan Old Style', 'Apple Garamond', 'Baskerville', 'Times New Roman', serif !important;
+}
+
 :root {
-  /* ── Deep Obsidian & Space Matrix ─────────────────────────── */
-  --bg-page:        #000000;
-  --bg-surface:     #05070C;
-  --bg-secondary:   #090D17;
-  --bg-elevated:    #0E1424;
-  --bg-input:       #060913;
-  --bg-active:      #121A30;
+  /* ── Clean White Foundation with Subtle Warm Ivory Accents ────────────────────── */
+  --bg-page:        #FFFFFF;
+  --bg-surface:     #FFFFFF;
+  --bg-secondary:   #FAF8F5;
+  --bg-elevated:    #FFFFFF;
+  --bg-input:       #FFFFFF;
+  --bg-active:      #F4EFEA;
 
-  /* ── Ultra-Fine Laser Borders ─────────────────────────────── */
-  --border-subtle:  rgba(255, 255, 255, 0.06);
-  --border-default: rgba(255, 255, 255, 0.10);
-  --border-strong:  rgba(255, 255, 255, 0.20);
-  --border-laser:   #3B82F6;
+  /* ── Warm Subtle Organic Borders ───────────────────────────────────── */
+  --border-subtle:  #F2EFEB;
+  --border-default: #E8E5DE;
+  --border-strong:  #DDD9D0;
+  --border-laser:   #141413;
 
-  /* ── High-Contrast Typography ───────────────────────────── */
-  --text-primary:   #FFFFFF;
-  --text-secondary: #CBD5E1;
-  --text-muted:     #8D9CB0;
-  --text-dim:       #55667E;
+  /* ── High-Contrast Deep Charcoal Typography ───────────────────────────── */
+  --text-primary:   #141413;
+  --text-secondary: #42403B;
+  --text-muted:     #636059;
+  --text-dim:       #87837B;
 
-  /* ── Aerospace & Stripe Accents ─────────────────────────── */
-  --accent:         #2563EB;
-  --accent-cyan:    #06B6D4;
-  --accent-purple:  #8B5CF6;
-  --success:        #10B981;
-  --warning:        #F59E0B;
-  --danger:         #EF4444;
+  /* ── Accents ─────────────────────────── */
+  --accent:         #141413;
+  --accent-cyan:    #0284C7;
+  --accent-purple:  #7C3AED;
+  --success:        #059669;
+  --warning:        #D97706;
+  --danger:         #DC2626;
 }
 
 * {
@@ -42,12 +46,12 @@
 
 html {
   scroll-behavior: smooth;
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 body {
-  background: var(--bg-page);
-  color: var(--text-primary);
+  background: #FFFFFF;
+  color: #141413;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   font-size: 15px;
   line-height: 1.6;
@@ -59,18 +63,18 @@ body {
 
 /* ── Custom Scrollbar ─────────────────────────────────────────── */
 ::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #000000;
+  background: #F8FAFC;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.15);
+  background: #CBD5E1;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: #94A3B8;
 }
 
 /* ── Monospaced Telemetry Font ────────────────────────────────── */
@@ -81,13 +85,13 @@ body {
 
 /* ── High-Impact Text Gradients ───────────────────────────────── */
 .text-gradient {
-  background: linear-gradient(180deg, #FFFFFF 0%, rgba(255, 255, 255, 0.85) 45%, rgba(255, 255, 255, 0.45) 100%);
+  background: linear-gradient(180deg, #0F172A 0%, #1E293B 45%, #475569 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .text-gradient-stripe {
-  background: linear-gradient(135deg, #60A5FA 0%, #A78BFA 50%, #06B6D4 100%);
+  background: linear-gradient(135deg, #2563EB 0%, #7C3AED 50%, #0284C7 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -151,25 +155,25 @@ body {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  background: #FFFFFF;
-  color: #000000 !important;
-  font-size: 14.5px;
+  background: #2563EB;
+  color: #FFFFFF !important;
+  font-size: 14px;
   font-weight: 600;
-  height: 46px;
-  padding: 0 22px;
+  height: 42px;
+  padding: 0 20px;
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.95);
+  border: 1px solid #1D4ED8;
   cursor: pointer;
   text-decoration: none;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5), 0 0 25px rgba(255, 255, 255, 0.2);
+  box-shadow: 0 1px 3px rgba(37, 99, 235, 0.25);
   white-space: nowrap;
 }
 
 .btn-primary:hover {
-  background: #F1F5F9;
+  background: #1D4ED8;
   transform: translateY(-1.5px);
-  box-shadow: 0 6px 25px rgba(255, 255, 255, 0.35);
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
 }
 
 .btn-primary:active {
@@ -206,19 +210,49 @@ body {
   transform: scale(0.98);
 }
 
+.btn-glow-emerald {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  color: #FFFFFF !important;
+  font-size: 14.5px;
+  font-weight: 600;
+  height: 46px;
+  padding: 0 24px;
+  border-radius: 12px;
+  border: 1px solid rgba(52, 211, 153, 0.5);
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 2px 14px rgba(16, 185, 129, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  white-space: nowrap;
+}
+
+.btn-glow-emerald:hover {
+  background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+  transform: translateY(-1.5px);
+  box-shadow: 0 8px 30px rgba(16, 185, 129, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+
+.btn-glow-emerald:active {
+  transform: scale(0.98);
+}
+
 .btn-ghost {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  background: rgba(255, 255, 255, 0.03);
-  color: #CBD5E1 !important;
-  font-size: 14.5px;
+  background: #F8FAFC;
+  color: #334155 !important;
+  font-size: 14px;
   font-weight: 500;
-  height: 46px;
-  padding: 0 22px;
+  height: 42px;
+  padding: 0 20px;
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid #E2E8F0;
   cursor: pointer;
   text-decoration: none;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
@@ -226,9 +260,9 @@ body {
 }
 
 .btn-ghost:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.2);
-  color: #FFFFFF !important;
+  background: #F1F5F9;
+  border-color: #CBD5E1;
+  color: #0F172A !important;
   transform: translateY(-1.5px);
 }
 

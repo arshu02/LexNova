@@ -12,33 +12,32 @@ const LAST_UPDATED = 'August 31, 2026';
 
 export default function TermsOfService() {
   return (
-    <div className="min-h-screen bg-[#050508] text-[#F0F2F5]">
+    <div className="min-h-screen bg-[#FBF9F5] text-[#141413]">
       <Navbar />
-      <main className="max-w-4xl mx-auto px-6 py-24">
+      <main className="max-w-4xl mx-auto px-6 pt-36 pb-24">
         <div className="mb-12">
-          <div className="inline-flex items-center gap-2 text-[12px] font-bold text-purple-400 tracking-[0.1em] uppercase mb-4">
-            Legal Documents
+          <div className="inline-flex items-center gap-2 text-[12px] font-mono font-bold text-[#87837B] tracking-[0.1em] uppercase mb-3">
+            Legal Framework
           </div>
-          <h1 className="text-[40px] sm:text-[52px] font-bold text-white tracking-tight leading-tight mb-4">
+          <h1 className="text-4xl sm:text-5xl font-bold text-[#141413] tracking-tight leading-tight mb-3">
             Terms of Service
           </h1>
-          <p className="text-[#8D9CB0]">
-            Last updated: <strong className="text-white">{LAST_UPDATED}</strong>
+          <p className="text-[#636059]">
+            Last updated: <strong className="text-[#141413]">{LAST_UPDATED}</strong>
           </p>
 
           {/* Critical disclaimer */}
-          <div className="mt-6 p-5 bg-amber-500/10 border-2 border-amber-500/30 rounded-2xl">
-            <div className="text-[15px] font-bold text-amber-300 mb-2">
-              ⚠️ IMPORTANT LEGAL DISCLAIMER — Please Read Carefully
+          <div className="mt-6 p-5 bg-white border border-[#E8E4DA] rounded-2xl shadow-xs">
+            <div className="text-[14.5px] font-bold text-[#141413] mb-1.5">
+              LEGAL DISCLAIMER & STATUTORY NOTICE
             </div>
-            <p className="text-[13.5px] text-amber-200/80 leading-relaxed">
-              <strong>LexNova is NOT a law firm and does NOT provide legal advice.</strong> We are an AI legal technology platform that provides general legal information, document templates, and advocate matching services. The AI-generated analysis on this platform constitutes <strong>legal information only</strong> — not legal advice specific to your situation.<br /><br />
-              The only legal advice you can receive through LexNova is from the independent, Bar Council of India enrolled advocate you book a paid consultation with. That consultation creates an advocate-client relationship solely between you and that advocate — not with LexNova.
+            <p className="text-[13.5px] text-[#5A5752] leading-relaxed">
+              <strong>LexNova is an AI technology platform and is not a law firm.</strong> The AI-generated analysis on this platform constitutes statutory information and pre-action protocol drafts — not personal legal advice. Advocate-client privilege and formal advice are established exclusively upon booking and engaging with Bar-enrolled practitioners.
             </p>
           </div>
         </div>
 
-        <div className="space-y-10 text-[15px] leading-relaxed text-[#C5D0DC]">
+        <div className="space-y-10 text-[15px] leading-relaxed text-[#42403B]">
 
           <section>
             <h2 className="text-[24px] font-bold text-white mb-4">1. Acceptance of Terms</h2>

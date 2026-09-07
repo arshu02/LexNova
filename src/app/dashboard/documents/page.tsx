@@ -265,7 +265,7 @@ export default function DocumentStudioPage() {
         display: "flex",
         alignItems: "flex-end",
         justifyContent: "space-between",
-        borderBottom: "1px solid #263142",
+        borderBottom: "1px solid #E2E8F0",
         paddingBottom: "20px",
         flexWrap: "wrap",
         gap: "14px",
@@ -277,17 +277,17 @@ export default function DocumentStudioPage() {
             gap: "7px",
             fontSize: "12px",
             fontWeight: "700",
-            color: "#60A5FA",
+            color: "#2563EB",
             textTransform: "uppercase",
             letterSpacing: "0.08em",
             marginBottom: "6px",
           }}>
             <Sparkles size={14} /> Automated Indian Law Drafting
           </div>
-          <h1 style={{ fontSize: "32px", fontWeight: "700", color: "#FFFFFF", letterSpacing: "-0.03em" }}>
+          <h1 style={{ fontSize: "32px", fontWeight: "700", color: "#0F172A", letterSpacing: "-0.03em" }}>
             Document Studio
           </h1>
-          <p style={{ fontSize: "15px", color: "#D7DCE5", marginTop: "4px" }}>
+          <p style={{ fontSize: "15px", color: "#64748B", marginTop: "4px" }}>
             Generate court-ready legal notices, consumer complaints, and demand letters with statutory section citations.
           </p>
         </div>
@@ -297,7 +297,7 @@ export default function DocumentStudioPage() {
           className="btn-ghost"
           style={{ fontSize: "13.5px", display: "flex", alignItems: "center", gap: "6px", height: "42px" }}
         >
-          <UserCheck size={15} color="#60A5FA" /> Have an Advocate Review This Draft
+          <UserCheck size={15} color="#2563EB" /> Have an Advocate Review This Draft
         </button>
       </div>
 
@@ -307,7 +307,7 @@ export default function DocumentStudioPage() {
         {/* Left Side: Template Selector & Dynamic Form */}
         <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
           
-          <div style={{ fontSize: "12px", fontWeight: "700", color: "#9AA5B5", textTransform: "uppercase", letterSpacing: "0.08em" }}>
+          <div style={{ fontSize: "12px", fontWeight: "700", color: "#64748B", textTransform: "uppercase", letterSpacing: "0.08em" }}>
             1. Select Document Template
           </div>
 
@@ -319,8 +319,8 @@ export default function DocumentStudioPage() {
                   key={doc.id}
                   onClick={() => handleSelectTemplate(doc)}
                   style={{
-                    background: isSelected ? "#171E29" : "#121823",
-                    border: isSelected ? "1px solid #3B82F6" : "1px solid #263142",
+                    background: isSelected ? "#EFF6FF" : "#FFFFFF",
+                    border: isSelected ? "1px solid #3B82F6" : "1px solid #E2E8F0",
                     borderRadius: "14px",
                     padding: "16px",
                     cursor: "pointer",
@@ -328,18 +328,19 @@ export default function DocumentStudioPage() {
                     display: "flex",
                     alignItems: "flex-start",
                     gap: "12px",
+                    boxShadow: "0 1px 3px rgba(0,0,0,0.03)",
                   }}
                 >
                   <span style={{ fontSize: "22px", flexShrink: 0 }}>{doc.icon}</span>
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontSize: "14px", fontWeight: "600", color: "#FFFFFF" }}>
+                    <div style={{ fontSize: "14px", fontWeight: "600", color: "#0F172A" }}>
                       {doc.title}
                     </div>
-                    <div style={{ fontSize: "12.5px", color: "#9AA5B5", marginTop: "3px", lineHeight: "1.4" }}>
+                    <div style={{ fontSize: "12.5px", color: "#64748B", marginTop: "3px", lineHeight: "1.4" }}>
                       {doc.desc}
                     </div>
                   </div>
-                  {isSelected && <CheckCircle2 size={18} color="#22C55E" style={{ flexShrink: 0 }} />}
+                  {isSelected && <CheckCircle2 size={18} color="#059669" style={{ flexShrink: 0 }} />}
                 </div>
               );
             })}
@@ -347,20 +348,21 @@ export default function DocumentStudioPage() {
 
           {/* Form Fields */}
           <div style={{
-            background: "#121823",
-            border: "1px solid #263142",
+            background: "#FFFFFF",
+            border: "1px solid #E2E8F0",
             borderRadius: "16px",
             padding: "20px",
             marginTop: "6px",
+            boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
           }}>
-            <div style={{ fontSize: "13px", fontWeight: "700", color: "#FFFFFF", marginBottom: "16px", display: "flex", alignItems: "center", gap: "6px" }}>
-              <Edit3 size={15} color="#60A5FA" /> 2. Customize Notice Facts
+            <div style={{ fontSize: "13px", fontWeight: "700", color: "#0F172A", marginBottom: "16px", display: "flex", alignItems: "center", gap: "6px" }}>
+              <Edit3 size={15} color="#2563EB" /> 2. Customize Notice Facts
             </div>
 
             <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
               {selectedDoc.fields.map((field) => (
                 <div key={field.id} style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-                  <label style={{ fontSize: "12.5px", fontWeight: "600", color: "#D7DCE5" }}>
+                  <label style={{ fontSize: "12.5px", fontWeight: "600", color: "#334155" }}>
                     {field.label}
                   </label>
                   <input
@@ -369,12 +371,12 @@ export default function DocumentStudioPage() {
                     onChange={(e) => handleFieldChange(field.id, e.target.value)}
                     placeholder={field.placeholder}
                     style={{
-                      background: "#171E29",
-                      border: "1px solid #263142",
+                      background: "#F8FAFC",
+                      border: "1px solid #E2E8F0",
                       borderRadius: "10px",
                       padding: "8px 12px",
                       fontSize: "13.5px",
-                      color: "#FFFFFF",
+                      color: "#0F172A",
                       outline: "none",
                     }}
                   />
@@ -387,13 +389,13 @@ export default function DocumentStudioPage() {
 
         {/* Right Side: Monospace Legal Paper Preview */}
         <div style={{
-          background: "#121823",
-          border: "1px solid #263142",
+          background: "#FFFFFF",
+          border: "1px solid #E2E8F0",
           borderRadius: "16px",
           display: "flex",
           flexDirection: "column",
           overflow: "hidden",
-          boxShadow: "0 10px 40px rgba(0, 0, 0, 0.4)",
+          boxShadow: "0 4px 20px rgba(0, 0, 0, 0.05)",
         }}>
           
           {/* Paper Toolbar */}
@@ -402,14 +404,14 @@ export default function DocumentStudioPage() {
             alignItems: "center",
             justifyContent: "space-between",
             padding: "14px 20px",
-            background: "#0D1118",
-            borderBottom: "1px solid #263142",
+            background: "#F8FAFC",
+            borderBottom: "1px solid #E2E8F0",
             flexWrap: "wrap",
             gap: "10px",
           }}>
             <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-              <FileText size={16} color="#60A5FA" />
-              <span style={{ fontSize: "14px", fontWeight: "700", color: "#FFFFFF" }}>
+              <FileText size={16} color="#2563EB" />
+              <span style={{ fontSize: "14px", fontWeight: "700", color: "#0F172A" }}>
                 {selectedDoc.title} · Live Draft
               </span>
             </div>
@@ -420,7 +422,7 @@ export default function DocumentStudioPage() {
                 className="btn-ghost"
                 style={{ fontSize: "12.5px", padding: "6px 12px", height: "34px", display: "flex", alignItems: "center", gap: "5px" }}
               >
-                {copied ? <Check size={13} color="#22C55E" /> : <Copy size={13} />}
+                {copied ? <Check size={13} color="#059669" /> : <Copy size={13} />}
                 {copied ? "Copied Text" : "Copy Text"}
               </button>
 
@@ -437,7 +439,7 @@ export default function DocumentStudioPage() {
           {/* Legal Notice Paper */}
           <div style={{
             padding: "28px",
-            background: "#07090D",
+            background: "#FFFFFF",
             minHeight: "560px",
             overflowX: "auto",
           }}>
@@ -445,7 +447,7 @@ export default function DocumentStudioPage() {
               fontFamily: "var(--font-mono)",
               fontSize: "13.5px",
               lineHeight: "1.75",
-              color: "#D7DCE5",
+              color: "#1E293B",
               whiteSpace: "pre-wrap",
             }}>
               {generatedDoc}
@@ -455,18 +457,18 @@ export default function DocumentStudioPage() {
           {/* Bottom Bar: Court Admissibility */}
           <div style={{
             padding: "14px 20px",
-            background: "#0D1118",
-            borderTop: "1px solid #263142",
+            background: "#F8FAFC",
+            borderTop: "1px solid #E2E8F0",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
             fontSize: "12.5px",
-            color: "#9AA5B5",
+            color: "#64748B",
             flexWrap: "wrap",
             gap: "10px",
           }}>
             <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-              <ShieldCheck size={15} color="#22C55E" />
+              <ShieldCheck size={15} color="#059669" />
               <span>Complies with Section 106 Transfer of Property Act / Section 15 Payment of Wages Act</span>
             </div>
 
@@ -475,7 +477,7 @@ export default function DocumentStudioPage() {
               style={{
                 background: "none",
                 border: "none",
-                color: "#60A5FA",
+                color: "#2563EB",
                 fontWeight: "600",
                 cursor: "pointer",
                 display: "flex",

@@ -74,7 +74,7 @@ export default function AdvocateConsolePage() {
         display: "flex",
         alignItems: "flex-end",
         justifyContent: "space-between",
-        borderBottom: "1px solid #263142",
+        borderBottom: "1px solid #E2E8F0",
         paddingBottom: "20px",
         flexWrap: "wrap",
         gap: "14px",
@@ -86,17 +86,17 @@ export default function AdvocateConsolePage() {
             gap: "7px",
             fontSize: "12px",
             fontWeight: "700",
-            color: "#22C55E",
+            color: "#059669",
             textTransform: "uppercase",
             letterSpacing: "0.08em",
             marginBottom: "6px",
           }}>
-            <ShieldCheck size={15} color="#22C55E" /> Bar Council Verified Advocate Console
+            <ShieldCheck size={15} color="#059669" /> Bar Council Verified Advocate Console
           </div>
-          <h1 style={{ fontSize: "32px", fontWeight: "700", color: "#FFFFFF", letterSpacing: "-0.03em" }}>
+          <h1 style={{ fontSize: "32px", fontWeight: "700", color: "#0F172A", letterSpacing: "-0.03em" }}>
             Advocate Practice Console
           </h1>
-          <p style={{ fontSize: "15px", color: "#D7DCE5", marginTop: "4px" }}>
+          <p style={{ fontSize: "15px", color: "#64748B", marginTop: "4px" }}>
             Review incoming AI case briefs, conduct video consultations, and approve drafted legal notices for clients.
           </p>
         </div>
@@ -107,13 +107,13 @@ export default function AdvocateConsolePage() {
           gap: "8px",
           padding: "7px 16px",
           borderRadius: "9999px",
-          background: "rgba(59, 130, 246, 0.16)",
-          border: "1px solid rgba(59, 130, 246, 0.3)",
+          background: "#EFF6FF",
+          border: "1px solid #BFDBFE",
           fontSize: "13px",
           fontWeight: "600",
-          color: "#60A5FA",
+          color: "#2563EB",
         }}>
-          <span>Bar Enrollment: <strong style={{ color: "#FFFFFF" }}>MAH/8832/2012</strong></span>
+          <span>Bar Enrollment: <strong style={{ color: "#1D4ED8" }}>MAH/8832/2012</strong></span>
         </div>
       </div>
 
@@ -123,28 +123,28 @@ export default function AdvocateConsolePage() {
         gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
         gap: "16px",
       }}>
-        <div style={{ background: "#121823", border: "1px solid #263142", borderRadius: "16px", padding: "20px" }}>
-          <div style={{ fontSize: "12px", color: "#9AA5B5", fontWeight: "700", textTransform: "uppercase", letterSpacing: "0.06em" }}>Today's Consultations</div>
-          <div style={{ fontSize: "32px", fontWeight: "700", color: "#FFFFFF", marginTop: "6px" }}>1 Scheduled</div>
-          <div style={{ fontSize: "12.5px", color: "#22C55E", marginTop: "4px" }}>04:30 PM (HD Video)</div>
+        <div style={{ background: "#FFFFFF", border: "1px solid #E2E8F0", borderRadius: "16px", padding: "20px", boxShadow: "0 1px 3px rgba(0,0,0,0.03)" }}>
+          <div style={{ fontSize: "12px", color: "#64748B", fontWeight: "700", textTransform: "uppercase", letterSpacing: "0.06em" }}>Today's Consultations</div>
+          <div style={{ fontSize: "32px", fontWeight: "700", color: "#0F172A", marginTop: "6px" }}>1 Scheduled</div>
+          <div style={{ fontSize: "12.5px", color: "#059669", marginTop: "4px", fontWeight: "600" }}>04:30 PM (HD Video)</div>
         </div>
 
-        <div style={{ background: "#121823", border: "1px solid #263142", borderRadius: "16px", padding: "20px" }}>
-          <div style={{ fontSize: "12px", color: "#9AA5B5", fontWeight: "700", textTransform: "uppercase", letterSpacing: "0.06em" }}>Pending Client Briefs</div>
-          <div style={{ fontSize: "32px", fontWeight: "700", color: "#F59E0B", marginTop: "6px" }}>2 Matters</div>
-          <div style={{ fontSize: "12.5px", color: "#9AA5B5", marginTop: "4px" }}>Awaiting Notice Sign-off</div>
+        <div style={{ background: "#FFFFFF", border: "1px solid #E2E8F0", borderRadius: "16px", padding: "20px", boxShadow: "0 1px 3px rgba(0,0,0,0.03)" }}>
+          <div style={{ fontSize: "12px", color: "#64748B", fontWeight: "700", textTransform: "uppercase", letterSpacing: "0.06em" }}>Pending Client Briefs</div>
+          <div style={{ fontSize: "32px", fontWeight: "700", color: "#D97706", marginTop: "6px" }}>2 Matters</div>
+          <div style={{ fontSize: "12.5px", color: "#64748B", marginTop: "4px" }}>Awaiting Notice Sign-off</div>
         </div>
 
-        <div style={{ background: "#121823", border: "1px solid #263142", borderRadius: "16px", padding: "20px" }}>
-          <div style={{ fontSize: "12px", color: "#9AA5B5", fontWeight: "700", textTransform: "uppercase", letterSpacing: "0.06em" }}>Earnings (This Month)</div>
-          <div style={{ fontSize: "32px", fontWeight: "700", color: "#22C55E", marginTop: "6px" }}>₹42,500</div>
-          <div style={{ fontSize: "12.5px", color: "#9AA5B5", marginTop: "4px" }}>Direct Bank Settlement</div>
+        <div style={{ background: "#FFFFFF", border: "1px solid #E2E8F0", borderRadius: "16px", padding: "20px", boxShadow: "0 1px 3px rgba(0,0,0,0.03)" }}>
+          <div style={{ fontSize: "12px", color: "#64748B", fontWeight: "700", textTransform: "uppercase", letterSpacing: "0.06em" }}>Earnings (This Month)</div>
+          <div style={{ fontSize: "32px", fontWeight: "700", color: "#059669", marginTop: "6px" }}>₹42,500</div>
+          <div style={{ fontSize: "12.5px", color: "#64748B", marginTop: "4px" }}>Direct Bank Settlement</div>
         </div>
 
-        <div style={{ background: "#121823", border: "1px solid #263142", borderRadius: "16px", padding: "20px" }}>
-          <div style={{ fontSize: "12px", color: "#9AA5B5", fontWeight: "700", textTransform: "uppercase", letterSpacing: "0.06em" }}>Practice Rating</div>
-          <div style={{ fontSize: "32px", fontWeight: "700", color: "#F59E0B", marginTop: "6px" }}>★ 4.9</div>
-          <div style={{ fontSize: "12.5px", color: "#9AA5B5", marginTop: "4px" }}>210 Verified Client Reviews</div>
+        <div style={{ background: "#FFFFFF", border: "1px solid #E2E8F0", borderRadius: "16px", padding: "20px", boxShadow: "0 1px 3px rgba(0,0,0,0.03)" }}>
+          <div style={{ fontSize: "12px", color: "#64748B", fontWeight: "700", textTransform: "uppercase", letterSpacing: "0.06em" }}>Practice Rating</div>
+          <div style={{ fontSize: "32px", fontWeight: "700", color: "#D97706", marginTop: "6px" }}>★ 4.9</div>
+          <div style={{ fontSize: "12.5px", color: "#64748B", marginTop: "4px" }}>210 Verified Client Reviews</div>
         </div>
       </div>
 
@@ -153,16 +153,17 @@ export default function AdvocateConsolePage() {
         
         {/* Left: Consultations with 60s Brief */}
         <div style={{
-          background: "#121823",
-          border: "1px solid #263142",
+          background: "#FFFFFF",
+          border: "1px solid #E2E8F0",
           borderRadius: "16px",
           padding: "24px",
           display: "flex",
           flexDirection: "column",
           gap: "16px",
+          boxShadow: "0 1px 3px rgba(0,0,0,0.03)",
         }}>
-          <div style={{ fontSize: "16px", fontWeight: "700", color: "#FFFFFF", display: "flex", alignItems: "center", gap: "8px" }}>
-            <Calendar size={17} color="#60A5FA" /> Scheduled Client Appointments
+          <div style={{ fontSize: "16px", fontWeight: "700", color: "#0F172A", display: "flex", alignItems: "center", gap: "8px" }}>
+            <Calendar size={17} color="#2563EB" /> Scheduled Client Appointments
           </div>
 
           <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
@@ -170,8 +171,8 @@ export default function AdvocateConsolePage() {
               <div
                 key={booking.id}
                 style={{
-                  background: "#171E29",
-                  border: "1px solid #263142",
+                  background: "#F8FAFC",
+                  border: "1px solid #E2E8F0",
                   borderRadius: "14px",
                   padding: "20px",
                   display: "flex",
@@ -182,33 +183,33 @@ export default function AdvocateConsolePage() {
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "10px" }}>
                   <div>
                     <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                      <span style={{ fontSize: "16px", fontWeight: "700", color: "#FFFFFF" }}>{booking.clientName}</span>
-                      <span style={{ fontSize: "11.5px", color: "#60A5FA", background: "rgba(59, 130, 246, 0.16)", border: "1px solid rgba(59, 130, 246, 0.3)", padding: "2px 7px", borderRadius: "4px", fontFamily: "var(--font-mono)", fontWeight: "700" }}>
+                      <span style={{ fontSize: "16px", fontWeight: "700", color: "#0F172A" }}>{booking.clientName}</span>
+                      <span style={{ fontSize: "11.5px", color: "#2563EB", background: "#EFF6FF", border: "1px solid #BFDBFE", padding: "2px 7px", borderRadius: "4px", fontFamily: "var(--font-mono)", fontWeight: "700" }}>
                         {booking.matterId}
                       </span>
                     </div>
-                    <div style={{ fontSize: "13px", color: "#D7DCE5", marginTop: "2px" }}>
+                    <div style={{ fontSize: "13px", color: "#475569", marginTop: "2px" }}>
                       {booking.matterTitle}
                     </div>
                   </div>
 
                   <div style={{ textAlign: "right" }}>
-                    <div style={{ fontSize: "14px", fontWeight: "700", color: "#F59E0B" }}>{booking.time}</div>
-                    <div style={{ fontSize: "12px", color: "#9AA5B5" }}>{booking.date}</div>
+                    <div style={{ fontSize: "14px", fontWeight: "700", color: "#D97706" }}>{booking.time}</div>
+                    <div style={{ fontSize: "12px", color: "#64748B" }}>{booking.date}</div>
                   </div>
                 </div>
 
                 {/* 60-Second AI Brief for Advocate */}
                 <div style={{
-                  background: "#0D1118",
-                  border: "1px solid #263142",
+                  background: "#EFF6FF",
+                  border: "1px solid #DBEAFE",
                   borderRadius: "10px",
                   padding: "12px 16px",
                   fontSize: "13px",
-                  color: "#D7DCE5",
+                  color: "#1E293B",
                   lineHeight: "1.6",
                 }}>
-                  <div style={{ fontSize: "11.5px", fontWeight: "700", color: "#60A5FA", textTransform: "uppercase", marginBottom: "4px", letterSpacing: "0.06em" }}>
+                  <div style={{ fontSize: "11.5px", fontWeight: "700", color: "#2563EB", textTransform: "uppercase", marginBottom: "4px", letterSpacing: "0.06em" }}>
                     ⚡ 60-Second AI Case Brief:
                   </div>
                   {booking.aiBrief}
@@ -239,16 +240,17 @@ export default function AdvocateConsolePage() {
 
         {/* Right: Document Sign-Off Queue */}
         <div style={{
-          background: "#121823",
-          border: "1px solid #263142",
+          background: "#FFFFFF",
+          border: "1px solid #E2E8F0",
           borderRadius: "16px",
           padding: "24px",
           display: "flex",
           flexDirection: "column",
           gap: "16px",
+          boxShadow: "0 1px 3px rgba(0,0,0,0.03)",
         }}>
-          <div style={{ fontSize: "16px", fontWeight: "700", color: "#FFFFFF", display: "flex", alignItems: "center", gap: "8px" }}>
-            <FileText size={17} color="#22C55E" /> Document Review Queue
+          <div style={{ fontSize: "16px", fontWeight: "700", color: "#0F172A", display: "flex", alignItems: "center", gap: "8px" }}>
+            <FileText size={17} color="#059669" /> Document Review Queue
           </div>
 
           <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
@@ -258,8 +260,8 @@ export default function AdvocateConsolePage() {
                 <div
                   key={doc.id}
                   style={{
-                    background: "#171E29",
-                    border: "1px solid #263142",
+                    background: "#F8FAFC",
+                    border: "1px solid #E2E8F0",
                     borderRadius: "14px",
                     padding: "16px",
                     display: "flex",
@@ -268,16 +270,16 @@ export default function AdvocateConsolePage() {
                   }}
                 >
                   <div>
-                    <div style={{ fontSize: "14.5px", fontWeight: "600", color: "#FFFFFF" }}>{doc.title}</div>
-                    <div style={{ fontSize: "12.5px", color: "#9AA5B5", marginTop: "2px" }}>
-                      Client: <strong style={{ color: "#FFFFFF" }}>{doc.client}</strong> · {doc.statute}
+                    <div style={{ fontSize: "14.5px", fontWeight: "600", color: "#0F172A" }}>{doc.title}</div>
+                    <div style={{ fontSize: "12.5px", color: "#64748B", marginTop: "2px" }}>
+                      Client: <strong style={{ color: "#0F172A" }}>{doc.client}</strong> · {doc.statute}
                     </div>
                   </div>
 
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px solid #263142", paddingTop: "10px" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px solid #E2E8F0", paddingTop: "10px" }}>
                     <Link
                       href="/dashboard/documents"
-                      style={{ fontSize: "12.5px", color: "#60A5FA", textDecoration: "none", fontWeight: "600" }}
+                      style={{ fontSize: "12.5px", color: "#2563EB", textDecoration: "none", fontWeight: "600" }}
                     >
                       View Draft →
                     </Link>
@@ -288,7 +290,7 @@ export default function AdvocateConsolePage() {
                       className={isApproved ? "btn-ghost" : "btn-primary"}
                       style={{ fontSize: "12px", padding: "4px 12px", height: "32px", display: "flex", alignItems: "center", gap: "5px" }}
                     >
-                      {isApproved ? <Check size={13} color="#22C55E" /> : null}
+                      {isApproved ? <Check size={13} color="#059669" /> : null}
                       {isApproved ? "Approved & Signed" : "Approve & Sign"}
                     </button>
                   </div>

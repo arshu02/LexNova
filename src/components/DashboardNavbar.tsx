@@ -47,10 +47,11 @@ export function DashboardNavbar() {
   return (
     <header style={{
       height: '60px',
-      background: 'rgba(13, 17, 24, 0.95)',
+      background: '#FFFFFF',
       backdropFilter: 'blur(16px)',
       WebkitBackdropFilter: 'blur(16px)',
-      borderBottom: '1px solid #263142',
+      borderBottom: '1px solid #E2E8F0',
+      boxShadow: '0 1px 2px rgba(0, 0, 0, 0.03)',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',
@@ -71,8 +72,8 @@ export function DashboardNavbar() {
           display: 'flex',
           alignItems: 'center',
           gap: '10px',
-          background: '#121823',
-          border: '1px solid #263142',
+          background: '#F8FAFC',
+          border: '1px solid #E2E8F0',
           borderRadius: '10px',
           padding: '8px 14px',
           width: '400px',
@@ -81,18 +82,18 @@ export function DashboardNavbar() {
           textAlign: 'left',
         }}
       >
-        <Search size={15} color="#F59E0B" style={{ flexShrink: 0 }} />
-        <span style={{ fontSize: '13px', color: '#9AA5B5', flex: 1 }}>
+        <Search size={15} color="#2563EB" style={{ flexShrink: 0 }} />
+        <span style={{ fontSize: '13px', color: '#64748B', flex: 1 }}>
           Quick search cases, statutes, advocates...
         </span>
         <div style={{
           fontSize: '10px',
           fontWeight: '700',
-          color: '#F59E0B',
-          background: 'rgba(245, 158, 11, 0.1)',
+          color: '#475569',
+          background: '#E2E8F0',
           padding: '2px 6px',
           borderRadius: '4px',
-          border: '1px solid rgba(245, 158, 11, 0.25)',
+          border: '1px solid #CBD5E1',
           fontFamily: 'var(--font-mono)',
         }}>
           ⌘K
@@ -128,23 +129,25 @@ export function DashboardNavbar() {
               width: '38px',
               height: '38px',
               borderRadius: '10px',
-              background: '#121823',
-              border: '1px solid #263142',
+              background: '#F8FAFC',
+              border: '1px solid #E2E8F0',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               cursor: 'pointer',
-              color: '#D7DCE5',
+              color: '#475569',
               position: 'relative',
               transition: 'all 0.15s ease',
             }}
             onMouseEnter={(e) => {
-              (e.currentTarget as HTMLElement).style.borderColor = '#38475C';
-              (e.currentTarget as HTMLElement).style.color = '#FFFFFF';
+              (e.currentTarget as HTMLElement).style.borderColor = '#CBD5E1';
+              (e.currentTarget as HTMLElement).style.color = '#0F172A';
+              (e.currentTarget as HTMLElement).style.background = '#F1F5F9';
             }}
             onMouseLeave={(e) => {
-              (e.currentTarget as HTMLElement).style.borderColor = '#263142';
-              (e.currentTarget as HTMLElement).style.color = '#D7DCE5';
+              (e.currentTarget as HTMLElement).style.borderColor = '#E2E8F0';
+              (e.currentTarget as HTMLElement).style.color = '#475569';
+              (e.currentTarget as HTMLElement).style.background = '#F8FAFC';
             }}
             title="Notifications"
           >
@@ -156,8 +159,8 @@ export function DashboardNavbar() {
               width: '7px',
               height: '7px',
               borderRadius: '50%',
-              background: '#22C55E',
-              boxShadow: '0 0 6px #22C55E',
+              background: '#10B981',
+              boxShadow: '0 0 4px #10B981',
             }} />
           </button>
 
@@ -168,32 +171,32 @@ export function DashboardNavbar() {
               top: '46px',
               right: 0,
               width: '340px',
-              background: '#0D1118',
-              border: '1px solid #38475C',
+              background: '#FFFFFF',
+              border: '1px solid #E2E8F0',
               borderRadius: '14px',
               padding: '16px',
-              boxShadow: '0 16px 40px rgba(0, 0, 0, 0.7)',
+              boxShadow: '0 16px 36px rgba(0, 0, 0, 0.1)',
               zIndex: 50,
               display: 'flex',
               flexDirection: 'column',
               gap: '12px',
             }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #263142', paddingBottom: '10px' }}>
-                <span style={{ fontSize: '14px', fontWeight: '700', color: '#FFFFFF' }}>Notifications</span>
-                <span style={{ fontSize: '11px', color: '#22C55E', background: 'rgba(34, 197, 94, 0.14)', padding: '2px 7px', borderRadius: '9999px', fontWeight: '600' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #F1F5F9', paddingBottom: '10px' }}>
+                <span style={{ fontSize: '14px', fontWeight: '700', color: '#0F172A' }}>Notifications</span>
+                <span style={{ fontSize: '11px', color: '#059669', background: '#ECFDF5', border: '1px solid #A7F3D0', padding: '2px 7px', borderRadius: '9999px', fontWeight: '600' }}>
                   2 New
                 </span>
               </div>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                <div style={{ background: '#121823', border: '1px solid #263142', borderRadius: '10px', padding: '10px 12px' }}>
-                  <div style={{ fontSize: '13px', fontWeight: '600', color: '#FFFFFF' }}>Video Call Scheduled Today</div>
-                  <div style={{ fontSize: '11.5px', color: '#9AA5B5', marginTop: '2px' }}>Advocate Rajesh Sharma at 04:30 PM</div>
+                <div style={{ background: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: '10px', padding: '10px 12px' }}>
+                  <div style={{ fontSize: '13px', fontWeight: '600', color: '#0F172A' }}>Video Call Scheduled Today</div>
+                  <div style={{ fontSize: '11.5px', color: '#64748B', marginTop: '2px' }}>Advocate Rajesh Sharma at 04:30 PM</div>
                 </div>
 
-                <div style={{ background: '#121823', border: '1px solid #263142', borderRadius: '10px', padding: '10px 12px' }}>
-                  <div style={{ fontSize: '13px', fontWeight: '600', color: '#FFFFFF' }}>Limitation Alert (MAT-1044)</div>
-                  <div style={{ fontSize: '11.5px', color: '#F59E0B', marginTop: '2px' }}>4 Days Remaining for Consumer Petition</div>
+                <div style={{ background: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: '10px', padding: '10px 12px' }}>
+                  <div style={{ fontSize: '13px', fontWeight: '600', color: '#0F172A' }}>Limitation Alert (MAT-1044)</div>
+                  <div style={{ fontSize: '11.5px', color: '#D97706', marginTop: '2px' }}>4 Days Remaining for Consumer Petition</div>
                 </div>
               </div>
             </div>
@@ -208,7 +211,7 @@ export function DashboardNavbar() {
               width: '38px',
               height: '38px',
               borderRadius: '10px',
-              background: 'linear-gradient(135deg, #3B82F6, #1D4ED8)',
+              background: 'linear-gradient(135deg, #2563EB, #1D4ED8)',
               border: '1px solid rgba(255, 255, 255, 0.2)',
               display: 'flex',
               alignItems: 'center',
@@ -217,7 +220,7 @@ export function DashboardNavbar() {
               fontWeight: '700',
               color: '#FFFFFF',
               cursor: 'pointer',
-              boxShadow: '0 2px 8px rgba(59, 130, 246, 0.3)',
+              boxShadow: '0 2px 6px rgba(37, 99, 235, 0.25)',
             }}
           >
             {initial}
@@ -229,19 +232,19 @@ export function DashboardNavbar() {
               top: '46px',
               right: 0,
               width: '240px',
-              background: '#0D1118',
-              border: '1px solid #38475C',
+              background: '#FFFFFF',
+              border: '1px solid #E2E8F0',
               borderRadius: '14px',
               padding: '14px',
-              boxShadow: '0 16px 40px rgba(0, 0, 0, 0.7)',
+              boxShadow: '0 16px 36px rgba(0, 0, 0, 0.1)',
               zIndex: 50,
               display: 'flex',
               flexDirection: 'column',
               gap: '10px',
             }}>
-              <div style={{ borderBottom: '1px solid #263142', paddingBottom: '10px' }}>
-                <div style={{ fontSize: '14px', fontWeight: '700', color: '#FFFFFF' }}>{session?.user?.name || session?.user?.email?.split('@')[0] || 'User'}</div>
-                <div style={{ fontSize: '12px', color: '#9AA5B5', marginTop: '1px' }}>{session?.user?.email || ''}</div>
+              <div style={{ borderBottom: '1px solid #F1F5F9', paddingBottom: '10px' }}>
+                <div style={{ fontSize: '14px', fontWeight: '700', color: '#0F172A' }}>{session?.user?.name || session?.user?.email?.split('@')[0] || 'User'}</div>
+                <div style={{ fontSize: '12px', color: '#64748B', marginTop: '1px' }}>{session?.user?.email || ''}</div>
               </div>
 
               {(session?.user as any)?.role === 'ADMIN' && (
@@ -254,15 +257,15 @@ export function DashboardNavbar() {
                     alignItems: 'center',
                     gap: '8px',
                     fontSize: '13.5px',
-                    color: '#F59E0B',
+                    color: '#D97706',
                     fontWeight: '700',
                     padding: '6px 8px',
                     borderRadius: '8px',
-                    background: 'rgba(245, 158, 11, 0.1)',
-                    border: '1px solid rgba(245, 158, 11, 0.25)',
+                    background: '#FEF3C7',
+                    border: '1px solid #FDE68A',
                   }}
                 >
-                  <FileText size={15} color="#F59E0B" /> Institutional Admin
+                  <FileText size={15} color="#D97706" /> Institutional Admin
                 </Link>
               )}
 
@@ -275,7 +278,7 @@ export function DashboardNavbar() {
                   alignItems: 'center',
                   gap: '8px',
                   fontSize: '13.5px',
-                  color: '#D7DCE5',
+                  color: '#334155',
                   padding: '6px 8px',
                   borderRadius: '8px',
                 }}
@@ -292,7 +295,7 @@ export function DashboardNavbar() {
                   alignItems: 'center',
                   gap: '8px',
                   fontSize: '13.5px',
-                  color: '#EF4444',
+                  color: '#DC2626',
                   padding: '6px 8px',
                   borderRadius: '8px',
                   cursor: 'pointer',

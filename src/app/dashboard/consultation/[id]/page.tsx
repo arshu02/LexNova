@@ -92,8 +92,8 @@ export default function ConsultationRoomPage() {
       
       {/* Top Consultation Room Bar */}
       <div style={{
-        background: "#0D1118",
-        border: "1px solid #263142",
+        background: "#FFFFFF",
+        border: "1px solid #E2E8F0",
         borderRadius: "14px",
         padding: "14px 22px",
         display: "flex",
@@ -101,6 +101,7 @@ export default function ConsultationRoomPage() {
         justifyContent: "space-between",
         flexWrap: "wrap",
         gap: "12px",
+        boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
           <button
@@ -110,18 +111,18 @@ export default function ConsultationRoomPage() {
           >
             <ArrowLeft size={14} /> Back
           </button>
-          <span style={{ color: "#6B7A90" }}>/</span>
+          <span style={{ color: "#CBD5E1" }}>/</span>
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-              <h2 style={{ fontSize: "17px", fontWeight: "700", color: "#FFFFFF" }}>
+              <h2 style={{ fontSize: "17px", fontWeight: "700", color: "#0F172A" }}>
                 Consultation Room · {caseId}
               </h2>
-              <span style={{ fontSize: "12px", color: "#22C55E", background: "rgba(34, 197, 94, 0.14)", border: "1px solid rgba(34, 197, 94, 0.3)", padding: "2px 8px", borderRadius: "6px", fontWeight: "600" }}>
+              <span style={{ fontSize: "12px", color: "#059669", background: "#ECFDF5", border: "1px solid #A7F3D0", padding: "2px 8px", borderRadius: "6px", fontWeight: "600" }}>
                 ● Active Secure Call
               </span>
             </div>
-            <p style={{ fontSize: "12.5px", color: "#9AA5B5" }}>
-              Advocate Rajesh Sharma · Employment Dispute · AES-256 Encrypted
+            <p style={{ fontSize: "12.5px", color: "#64748B" }}>
+              Advocate Rajesh Sharma · Employment Dispute · End-to-End Encrypted
             </p>
           </div>
         </div>
@@ -152,38 +153,39 @@ export default function ConsultationRoomPage() {
         
         {/* Left Column: 60-Second Brief & Key Facts */}
         <div style={{
-          background: "#121823",
-          border: "1px solid #263142",
+          background: "#FFFFFF",
+          border: "1px solid #E2E8F0",
           borderRadius: "16px",
           padding: "20px",
           display: "flex",
           flexDirection: "column",
           gap: "16px",
           overflowY: "auto",
+          boxShadow: "0 1px 3px rgba(0,0,0,0.03)",
         }}>
-          <div style={{ fontSize: "12px", fontWeight: "700", color: "#60A5FA", textTransform: "uppercase", letterSpacing: "0.08em", display: "flex", alignItems: "center", gap: "6px" }}>
+          <div style={{ fontSize: "12px", fontWeight: "700", color: "#2563EB", textTransform: "uppercase", letterSpacing: "0.08em", display: "flex", alignItems: "center", gap: "6px" }}>
             <Sparkles size={15} /> 60-Second Case Brief
           </div>
 
-          <div style={{ background: "#171E29", border: "1px solid #263142", borderRadius: "12px", padding: "14px", fontSize: "13px", color: "#D7DCE5", lineHeight: "1.55" }}>
-            <strong style={{ color: "#FFFFFF" }}>Client:</strong> {session?.user?.name || session?.user?.email?.split('@')[0] || "Client"}<br />
-            <strong style={{ color: "#FFFFFF" }}>Opposing:</strong> TechCorp Solutions<br />
-            <strong style={{ color: "#FFFFFF" }}>Claim:</strong> ₹95,000 Unpaid Salary<br />
-            <strong style={{ color: "#FFFFFF" }}>Statute:</strong> Payment of Wages Act §15
+          <div style={{ background: "#EFF6FF", border: "1px solid #DBEAFE", borderRadius: "12px", padding: "14px", fontSize: "13px", color: "#1E293B", lineHeight: "1.55" }}>
+            <strong style={{ color: "#0F172A" }}>Client:</strong> {session?.user?.name || session?.user?.email?.split('@')[0] || "Client"}<br />
+            <strong style={{ color: "#0F172A" }}>Opposing:</strong> TechCorp Solutions<br />
+            <strong style={{ color: "#0F172A" }}>Claim:</strong> ₹95,000 Unpaid Salary<br />
+            <strong style={{ color: "#0F172A" }}>Statute:</strong> Payment of Wages Act §15
           </div>
 
-          <div style={{ fontSize: "12px", fontWeight: "700", color: "#9AA5B5", textTransform: "uppercase", letterSpacing: "0.06em" }}>
+          <div style={{ fontSize: "12px", fontWeight: "700", color: "#64748B", textTransform: "uppercase", letterSpacing: "0.06em" }}>
             Key Discussion Items
           </div>
 
-          <ul style={{ paddingLeft: "18px", fontSize: "13px", color: "#D7DCE5", lineHeight: "1.65" }}>
+          <ul style={{ paddingLeft: "18px", fontSize: "13px", color: "#475569", lineHeight: "1.65" }}>
             <li>Verify 30-day resignation notice service.</li>
             <li>Confirm bank statements for non-credit of salary.</li>
             <li>Approve RPAD notice draft to directors.</li>
             <li>Establish 15-day deadline for response.</li>
           </ul>
 
-          <div style={{ marginTop: "auto", paddingTop: "14px", borderTop: "1px solid #263142" }}>
+          <div style={{ marginTop: "auto", paddingTop: "14px", borderTop: "1px solid #E2E8F0" }}>
             <Link
               href={`/dashboard/matters/${caseId}`}
               className="btn-ghost w-full justify-center text-[13px] py-2"
@@ -195,19 +197,20 @@ export default function ConsultationRoomPage() {
 
         {/* Center Column: Embedded Video & Chat */}
         <div style={{
-          background: "#121823",
-          border: "1px solid #263142",
+          background: "#FFFFFF",
+          border: "1px solid #E2E8F0",
           borderRadius: "16px",
           display: "flex",
           flexDirection: "column",
           overflow: "hidden",
+          boxShadow: "0 1px 3px rgba(0,0,0,0.03)",
         }}>
           
           {/* Jitsi Video Preview / Frame */}
           <div style={{
-            height: "280px",
-            background: "#07090D",
-            borderBottom: "1px solid #263142",
+            height: "260px",
+            background: "#F8FAFC",
+            borderBottom: "1px solid #E2E8F0",
             position: "relative",
             display: "flex",
             alignItems: "center",
@@ -215,21 +218,21 @@ export default function ConsultationRoomPage() {
           }}>
             <div style={{ textAlign: "center", padding: "20px" }}>
               <div style={{
-                width: "58px", height: "58px",
+                width: "56px", height: "56px",
                 borderRadius: "50%",
-                background: "rgba(59, 130, 246, 0.16)",
-                border: "1px solid rgba(59, 130, 246, 0.4)",
+                background: "#EFF6FF",
+                border: "1px solid #BFDBFE",
                 display: "flex", alignItems: "center", justifyContent: "center",
                 margin: "0 auto 12px",
-                color: "#60A5FA",
+                color: "#2563EB",
               }}>
-                <Video size={26} />
+                <Video size={24} />
               </div>
-              <h3 style={{ fontSize: "16px", fontWeight: "700", color: "#FFFFFF" }}>
+              <h3 style={{ fontSize: "16px", fontWeight: "700", color: "#0F172A" }}>
                 HD Video Room Connected
               </h3>
-              <p style={{ fontSize: "13px", color: "#9AA5B5", marginTop: "2px", marginBottom: "14px" }}>
-                Advocate Rajesh Sharma is in this room.
+              <p style={{ fontSize: "13px", color: "#64748B", marginTop: "2px", marginBottom: "14px" }}>
+                Advocate Rajesh Sharma is currently in this consultation room.
               </p>
               <a
                 href={meetLink}
@@ -244,7 +247,7 @@ export default function ConsultationRoomPage() {
           </div>
 
           {/* Real-time Client-Lawyer Chat Stream */}
-          <div style={{ flex: 1, overflowY: "auto", padding: "18px", display: "flex", flexDirection: "column", gap: "12px" }}>
+          <div style={{ flex: 1, overflowY: "auto", padding: "18px", display: "flex", flexDirection: "column", gap: "12px", background: "#FFFFFF" }}>
             {messages.map((m) => {
               const isMe = m.sender === "client";
               const isAi = m.sender === "ai";
@@ -254,15 +257,16 @@ export default function ConsultationRoomPage() {
                   style={{
                     alignSelf: isMe ? "flex-end" : isAi ? "center" : "flex-start",
                     maxWidth: isAi ? "90%" : "75%",
-                    background: isMe ? "#FFFFFF" : isAi ? "rgba(59, 130, 246, 0.14)" : "#171E29",
-                    color: isMe ? "#07090D" : isAi ? "#93C5FD" : "#FFFFFF",
-                    border: isAi ? "1px solid rgba(59, 130, 246, 0.3)" : isMe ? "none" : "1px solid #263142",
+                    background: isMe ? "#2563EB" : isAi ? "#EFF6FF" : "#F1F5F9",
+                    color: isMe ? "#FFFFFF" : isAi ? "#1E40AF" : "#0F172A",
+                    border: isAi ? "1px solid #BFDBFE" : isMe ? "none" : "1px solid #E2E8F0",
                     borderRadius: isMe ? "14px 14px 2px 14px" : "14px 14px 14px 2px",
                     padding: "12px 16px",
                     fontSize: "13.5px",
+                    boxShadow: "0 1px 2px rgba(0,0,0,0.04)",
                   }}
                 >
-                  <div style={{ fontSize: "11px", fontWeight: "700", opacity: 0.75, marginBottom: "3px" }}>
+                  <div style={{ fontSize: "11px", fontWeight: "700", opacity: 0.8, marginBottom: "3px" }}>
                     {m.senderName} · {m.time}
                   </div>
                   <div style={{ lineHeight: "1.5" }}>{m.text}</div>
@@ -277,8 +281,8 @@ export default function ConsultationRoomPage() {
             onSubmit={handleSendMessage}
             style={{
               padding: "12px 18px",
-              background: "#0D1118",
-              borderTop: "1px solid #263142",
+              background: "#F8FAFC",
+              borderTop: "1px solid #E2E8F0",
               display: "flex",
               alignItems: "center",
               gap: "10px",
@@ -291,12 +295,12 @@ export default function ConsultationRoomPage() {
               placeholder="Message Advocate Rajesh Sharma or ask AI assistant..."
               style={{
                 flex: 1,
-                background: "#171E29",
-                border: "1px solid #263142",
+                background: "#FFFFFF",
+                border: "1px solid #CBD5E1",
                 borderRadius: "10px",
                 padding: "9px 16px",
                 fontSize: "13.5px",
-                color: "#FFFFFF",
+                color: "#0F172A",
                 outline: "none",
               }}
             />
@@ -313,42 +317,43 @@ export default function ConsultationRoomPage() {
 
         {/* Right Column: Shared Documents & Action Items */}
         <div style={{
-          background: "#121823",
-          border: "1px solid #263142",
+          background: "#FFFFFF",
+          border: "1px solid #E2E8F0",
           borderRadius: "16px",
           padding: "20px",
           display: "flex",
           flexDirection: "column",
           gap: "16px",
           overflowY: "auto",
+          boxShadow: "0 1px 3px rgba(0,0,0,0.03)",
         }}>
-          <div style={{ fontSize: "12px", fontWeight: "700", color: "#22C55E", textTransform: "uppercase", letterSpacing: "0.08em", display: "flex", alignItems: "center", gap: "6px" }}>
+          <div style={{ fontSize: "12px", fontWeight: "700", color: "#059669", textTransform: "uppercase", letterSpacing: "0.08em", display: "flex", alignItems: "center", gap: "6px" }}>
             <FileText size={15} /> Matter Documents
           </div>
 
           <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-            <div style={{ background: "#171E29", border: "1px solid #263142", borderRadius: "10px", padding: "12px" }}>
-              <div style={{ fontSize: "13.5px", fontWeight: "600", color: "#FFFFFF" }}>RPAD Legal Notice Draft</div>
-              <div style={{ fontSize: "11.5px", color: "#9AA5B5", marginTop: "2px" }}>Generated · Ready for Signature</div>
+            <div style={{ background: "#F8FAFC", border: "1px solid #E2E8F0", borderRadius: "10px", padding: "12px" }}>
+              <div style={{ fontSize: "13.5px", fontWeight: "600", color: "#0F172A" }}>RPAD Legal Notice Draft</div>
+              <div style={{ fontSize: "11.5px", color: "#64748B", marginTop: "2px" }}>Generated · Ready for Signature</div>
             </div>
 
-            <div style={{ background: "#171E29", border: "1px solid #263142", borderRadius: "10px", padding: "12px" }}>
-              <div style={{ fontSize: "13.5px", fontWeight: "600", color: "#FFFFFF" }}>Employment Agreement (PDF)</div>
-              <div style={{ fontSize: "11.5px", color: "#9AA5B5", marginTop: "2px" }}>Uploaded Exhibit P-1</div>
+            <div style={{ background: "#F8FAFC", border: "1px solid #E2E8F0", borderRadius: "10px", padding: "12px" }}>
+              <div style={{ fontSize: "13.5px", fontWeight: "600", color: "#0F172A" }}>Employment Agreement (PDF)</div>
+              <div style={{ fontSize: "11.5px", color: "#64748B", marginTop: "2px" }}>Uploaded Exhibit P-1</div>
             </div>
           </div>
 
-          <div style={{ fontSize: "12px", fontWeight: "700", color: "#9AA5B5", textTransform: "uppercase", letterSpacing: "0.08em", marginTop: "8px" }}>
+          <div style={{ fontSize: "12px", fontWeight: "700", color: "#64748B", textTransform: "uppercase", letterSpacing: "0.08em", marginTop: "8px" }}>
             Agreed Action Items
           </div>
 
           <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-            <div style={{ fontSize: "13px", color: "#D7DCE5", display: "flex", alignItems: "flex-start", gap: "8px" }}>
-              <CheckCircle2 size={16} color="#22C55E" style={{ flexShrink: 0, marginTop: "2px" }} />
+            <div style={{ fontSize: "13px", color: "#334155", display: "flex", alignItems: "flex-start", gap: "8px" }}>
+              <CheckCircle2 size={16} color="#059669" style={{ flexShrink: 0, marginTop: "2px" }} />
               <span>Advocate signs notice under Bar Council seal.</span>
             </div>
-            <div style={{ fontSize: "13px", color: "#D7DCE5", display: "flex", alignItems: "flex-start", gap: "8px" }}>
-              <CheckCircle2 size={16} color="#22C55E" style={{ flexShrink: 0, marginTop: "2px" }} />
+            <div style={{ fontSize: "13px", color: "#334155", display: "flex", alignItems: "flex-start", gap: "8px" }}>
+              <CheckCircle2 size={16} color="#059669" style={{ flexShrink: 0, marginTop: "2px" }} />
               <span>Client dispatches via Registered Post (RPAD).</span>
             </div>
           </div>

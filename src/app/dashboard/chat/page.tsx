@@ -309,34 +309,34 @@ function ChatContent() {
     return lines.map((line, i) => {
       if (line.startsWith("### ")) {
         return (
-          <h3 key={i} className="text-[15.5px] font-bold text-white mt-4 mb-2 tracking-tight">
+          <h3 key={i} className="text-[15.5px] font-bold text-slate-900 mt-4 mb-2 tracking-tight">
             {line.replace("### ", "")}
           </h3>
         );
       }
       if (line.startsWith("## ")) {
         return (
-          <h2 key={i} className="text-[17px] font-bold text-white mt-5 mb-2.5 tracking-tight border-b border-white/[0.06] pb-1.5">
+          <h2 key={i} className="text-[17px] font-bold text-slate-900 mt-5 mb-2.5 tracking-tight border-b border-slate-200 pb-1.5">
             {line.replace("## ", "")}
           </h2>
         );
       }
       if (line.startsWith("⏳") || line.toLowerCase().includes("limitation")) {
         return (
-          <div key={i} className="my-3 p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/25 text-amber-300 text-[13.5px] flex items-start gap-2.5 leading-relaxed">
-            <Clock size={16} className="shrink-0 mt-0.5 text-amber-400" />
+          <div key={i} className="my-3 p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-[13.5px] flex items-start gap-2.5 leading-relaxed">
+            <Clock size={16} className="shrink-0 mt-0.5 text-amber-600" />
             <span>{line.replace(/^[⏳⚠️🚨]\s*/, "")}</span>
           </div>
         );
       }
       if (line.trim() === "---") {
-        return <hr key={i} className="border-white/[0.08] my-4" />;
+        return <hr key={i} className="border-slate-200 my-4" />;
       }
-      const bold = line.replace(/\*\*([^*]+)\*\*/g, "<strong class='text-white font-semibold'>$1</strong>");
+      const bold = line.replace(/\*\*([^*]+)\*\*/g, "<strong class='text-slate-900 font-bold'>$1</strong>");
       return (
         <p
           key={i}
-          className="text-[14.5px] leading-relaxed text-[#CBD5E1] mb-2"
+          className="text-[14.5px] leading-relaxed text-slate-700 mb-2"
           dangerouslySetInnerHTML={{ __html: bold }}
         />
       );
@@ -344,25 +344,22 @@ function ChatContent() {
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-112px)] max-w-5xl mx-auto rounded-3xl border border-white/[0.08] bg-[#070A12]/95 backdrop-blur-2xl shadow-2xl overflow-hidden relative">
+    <div className="flex flex-col h-[calc(100vh-112px)] max-w-5xl mx-auto rounded-3xl border border-slate-200 bg-white shadow-sm overflow-hidden relative">
       
-      {/* Sleek Ambient Glow */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[220px] bg-gradient-to-b from-blue-600/[0.09] to-transparent rounded-full blur-[110px] pointer-events-none" />
-
       {/* Top Header */}
-      <div className="flex items-center justify-between px-6 py-3.5 border-b border-white/[0.06] bg-[#0A0D18]/90 backdrop-blur-md relative z-10">
+      <div className="flex items-center justify-between px-6 py-3.5 border-b border-slate-100 bg-white relative z-10">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-blue-500/25">
+          <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center text-white shadow-sm">
             <Scale size={16} />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-[14.5px] font-bold text-white tracking-tight">LexNova AI Legal Intelligence</span>
-              <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
+              <span className="text-[14.5px] font-bold text-slate-900 tracking-tight">LexNova AI Legal Intelligence</span>
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 border border-emerald-200 text-emerald-700">
                 Live RAG
               </span>
             </div>
-            <p className="text-[11px] text-[#6B7B94]">
+            <p className="text-[11px] text-slate-500">
               {caseId ? `Active Docket: LN-${caseId.slice(-6).toUpperCase()}` : "Supreme Court Precedents · Limitation Act 1963 · Indian Statutory Code"}
             </p>
           </div>
@@ -370,13 +367,13 @@ function ChatContent() {
 
         <div className="flex items-center gap-2">
           {/* Language Selector */}
-          <div className="flex items-center bg-white/[0.04] border border-white/[0.08] rounded-xl p-1 text-[11px] font-medium text-[#8D9CB0]">
+          <div className="flex items-center bg-slate-100 border border-slate-200 rounded-xl p-1 text-[11px] font-medium text-slate-600">
             {(['EN', 'HI', 'TA'] as const).map((lang) => (
               <button
                 key={lang}
                 onClick={() => setSelectedLang(lang)}
                 className={`px-2.5 py-0.5 rounded-lg transition-all ${
-                  selectedLang === lang ? 'bg-blue-600 text-white font-semibold shadow-sm' : 'hover:text-white'
+                  selectedLang === lang ? 'bg-white text-blue-600 font-bold shadow-xs' : 'hover:text-slate-900'
                 }`}
               >
                 {lang === 'EN' ? 'English' : lang === 'HI' ? 'हिंदी' : 'தமிழ்'}
@@ -386,7 +383,7 @@ function ChatContent() {
 
           <button
             onClick={resetChat}
-            className="p-1.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-[#8D9CB0] hover:text-white transition-all cursor-pointer"
+            className="p-1.5 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 hover:text-slate-900 transition-all cursor-pointer"
             title="Start Fresh Inquiry"
           >
             <RefreshCw size={13} />
@@ -395,20 +392,20 @@ function ChatContent() {
       </div>
 
       {/* Messages Stream / Empty State */}
-      <div className="flex-1 overflow-y-auto px-6 py-4 space-y-5 relative z-10 scrollbar-thin scrollbar-thumb-white/10 flex flex-col justify-center">
+      <div className="flex-1 overflow-y-auto px-6 py-4 space-y-5 relative z-10 scrollbar-thin scrollbar-thumb-slate-200 flex flex-col justify-center">
         {messages.length === 0 && (
           <div className="max-w-3xl mx-auto text-center space-y-4 animate-fade-in w-full my-auto">
             
             {/* Hero Prompt Headline */}
             <div className="space-y-2">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[11.5px] font-medium shadow-sm">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-[11.5px] font-medium shadow-xs">
                 <Sparkles size={12} />
                 <span>Instant Legal Assessment & Notice Preparation</span>
               </div>
-              <h2 className="text-[24px] sm:text-[27px] font-bold text-white tracking-tight">
+              <h2 className="text-[24px] sm:text-[27px] font-bold text-slate-900 tracking-tight">
                 How can LexNova assist your legal matter today?
               </h2>
-              <p className="text-[13.5px] text-[#8D9CB0] max-w-lg mx-auto leading-relaxed">
+              <p className="text-[13.5px] text-slate-600 max-w-lg mx-auto leading-relaxed">
                 Describe your situation in plain words. Our neural engine maps Indian statutes, calculates court limitation deadlines, and drafts court-compliant demand notices.
               </p>
             </div>
@@ -422,22 +419,22 @@ function ChatContent() {
                     key={idx}
                     onClick={() => send(item.query)}
                     whileHover={{ y: -2 }}
-                    className="p-3.5 rounded-2xl bg-[#090C16]/90 hover:bg-[#0E1424] border border-white/[0.08] hover:border-blue-500/40 text-left transition-all duration-200 group cursor-pointer shadow-lg shadow-black/30 flex items-start gap-3"
+                    className="p-3.5 rounded-2xl bg-white hover:bg-blue-50/40 border border-slate-200 hover:border-blue-300 text-left transition-all duration-200 group cursor-pointer shadow-xs hover:shadow-sm flex items-start gap-3"
                   >
-                    <div className="w-8 h-8 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 group-hover:scale-105 transition-transform shrink-0 mt-0.5">
+                    <div className="w-8 h-8 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 group-hover:scale-105 transition-transform shrink-0 mt-0.5">
                       <Icon size={14} />
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between gap-1 mb-0.5">
-                        <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider group-hover:text-blue-400 transition-colors">
+                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider group-hover:text-blue-600 transition-colors">
                           {item.tag}
                         </span>
-                        <ChevronRight size={12} className="text-slate-600 group-hover:text-blue-400 group-hover:translate-x-0.5 transition-all shrink-0" />
+                        <ChevronRight size={12} className="text-slate-400 group-hover:text-blue-600 group-hover:translate-x-0.5 transition-all shrink-0" />
                       </div>
-                      <h4 className="text-[13.5px] font-bold text-white group-hover:text-blue-200 transition-colors truncate">
+                      <h4 className="text-[13.5px] font-bold text-slate-900 group-hover:text-blue-700 transition-colors truncate">
                         {item.title}
                       </h4>
-                      <p className="text-[11px] text-[#7A8A9E] truncate mt-0.5">
+                      <p className="text-[11px] text-slate-500 truncate mt-0.5">
                         {item.description}
                       </p>
                     </div>
@@ -488,21 +485,21 @@ function ChatContent() {
                       <Scale size={15} />
                     </div>
 
-                    <div className="flex-1 rounded-2xl p-6 bg-gradient-to-b from-[#0D1222]/95 to-[#080B16]/95 border border-white/[0.08] text-[#E2E8F0] shadow-2xl rounded-tl-xs relative overflow-hidden backdrop-blur-xl">
+                    <div className="flex-1 rounded-2xl p-6 bg-slate-50 border border-slate-200 text-slate-800 shadow-xs rounded-tl-xs relative overflow-hidden">
                       {/* Top ambient highlight line */}
-                      <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-blue-500/40 to-transparent" />
+                      <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-blue-500/30 to-transparent" />
 
                       {renderContent(msg.content)}
 
                       {/* Recommended Advocates */}
                       {msg.lawyers && msg.lawyers.length > 0 && (
-                        <div className="mt-6 pt-5 border-t border-white/[0.08] space-y-4">
+                        <div className="mt-6 pt-5 border-t border-slate-200 space-y-4">
                           <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-2 text-[12px] font-bold text-blue-400 uppercase tracking-wider">
+                            <div className="flex items-center gap-2 text-[12px] font-bold text-blue-600 uppercase tracking-wider">
                               <Users size={14} />
                               <span>Bar Council Verified Counsel On Record</span>
                             </div>
-                            <span className="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                            <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full flex items-center gap-1">
                               <ShieldCheck size={11} /> Verified Roster
                             </span>
                           </div>
@@ -518,7 +515,7 @@ function ChatContent() {
                               return (
                                 <div
                                   key={adv.id}
-                                  className="p-4 rounded-2xl bg-gradient-to-b from-[#0E1322] to-[#0A0D17] border border-white/[0.08] hover:border-blue-500/40 flex flex-col justify-between gap-3.5 transition-all shadow-xl group relative overflow-hidden"
+                                  className="p-4 rounded-2xl bg-white border border-slate-200 hover:border-blue-300 flex flex-col justify-between gap-3.5 transition-all shadow-xs hover:shadow-sm group relative overflow-hidden"
                                 >
                                   {/* Top accent line */}
                                   <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-blue-500/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -527,7 +524,7 @@ function ChatContent() {
                                     {/* Avatar & Header */}
                                     <div className="flex items-start gap-3 mb-2.5">
                                       <div className="relative shrink-0">
-                                        <div className="w-12 h-12 rounded-xl overflow-hidden border border-white/10 relative bg-slate-800 shadow-md">
+                                        <div className="w-12 h-12 rounded-xl overflow-hidden border border-slate-200 relative bg-slate-100 shadow-xs">
                                           <Image
                                             src={photo}
                                             alt={adv.name}
@@ -536,51 +533,51 @@ function ChatContent() {
                                             className="object-cover object-top group-hover:scale-105 transition-transform duration-300"
                                           />
                                         </div>
-                                        <span className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-[#0E1322] flex items-center justify-center">
-                                          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                                        <span className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-white flex items-center justify-center shadow-xs">
+                                          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                                         </span>
                                       </div>
 
                                       <div className="flex-1 min-w-0">
                                         <div className="flex items-center justify-between gap-1">
-                                          <h4 className="text-[14px] font-bold text-white group-hover:text-blue-200 transition-colors truncate">
+                                          <h4 className="text-[14px] font-bold text-slate-900 group-hover:text-blue-700 transition-colors truncate">
                                             {adv.name}
                                           </h4>
-                                          <span className="text-[9.5px] font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.5 rounded flex items-center gap-1 shrink-0">
+                                          <span className="text-[9.5px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 rounded flex items-center gap-1 shrink-0">
                                             <CheckCircle size={10} /> Verified
                                           </span>
                                         </div>
 
-                                        <p className="text-[11.5px] text-[#8D9CB0] truncate mt-0.5">
+                                        <p className="text-[11.5px] text-slate-500 truncate mt-0.5">
                                           {court}
                                         </p>
 
-                                        <div className="flex items-center gap-2 mt-1 text-[11px] text-slate-400">
-                                          <span className="flex items-center gap-1 text-amber-400 font-bold">
+                                        <div className="flex items-center gap-2 mt-1 text-[11px] text-slate-500">
+                                          <span className="flex items-center gap-1 text-amber-500 font-bold">
                                             <Star size={11} fill="currentColor" /> {adv.rating || '4.9'}
                                           </span>
-                                          <span className="text-slate-600">·</span>
+                                          <span className="text-slate-300">·</span>
                                           <span>{experience} Yrs Bar</span>
-                                          <span className="text-slate-600">·</span>
-                                          <span className="font-mono text-[10px] text-blue-300">{barNo}</span>
+                                          <span className="text-slate-300">·</span>
+                                          <span className="font-mono text-[10px] text-blue-600">{barNo}</span>
                                         </div>
                                       </div>
                                     </div>
 
                                     {/* Specialization tag */}
-                                    <div className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white/[0.04] border border-white/[0.06] text-[11px] font-medium text-slate-300">
-                                      <Briefcase size={11} className="text-blue-400" />
+                                    <div className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-100 border border-slate-200 text-[11px] font-medium text-slate-700">
+                                      <Briefcase size={11} className="text-blue-600" />
                                       <span>{formattedSpec}</span>
                                     </div>
                                   </div>
 
                                   {/* Fee & Deploy Call CTA */}
-                                  <div className="pt-3 border-t border-white/[0.06] flex items-center justify-between gap-3">
+                                  <div className="pt-3 border-t border-slate-100 flex items-center justify-between gap-3">
                                     <div>
-                                      <div className="text-[9px] uppercase font-bold text-slate-500 tracking-wider">
+                                      <div className="text-[9px] uppercase font-bold text-slate-400 tracking-wider">
                                         Retainer / Session
                                       </div>
-                                      <div className="text-[14px] font-extrabold text-white">
+                                      <div className="text-[14px] font-extrabold text-slate-900">
                                         ₹{adv.consultationFee || 999}
                                       </div>
                                     </div>
@@ -590,7 +587,7 @@ function ChatContent() {
                                         setSelectedLawyer(adv);
                                         setBookingOpen(true);
                                       }}
-                                      className="py-2 px-3.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-[12px] font-bold transition-all shadow-md shadow-blue-600/30 hover:shadow-blue-600/50 flex items-center gap-1.5 cursor-pointer active:scale-95"
+                                      className="py-2 px-3.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-[12px] font-bold transition-all shadow-xs flex items-center gap-1.5 cursor-pointer active:scale-95"
                                     >
                                       <span>Deploy Session</span>
                                       <ChevronRight size={13} />
@@ -611,8 +608,8 @@ function ChatContent() {
         </AnimatePresence>
 
         {loading && (
-          <div className="flex items-center gap-3 text-[#8D9CB0] text-[13px] pl-11">
-            <Loader2 size={16} className="animate-spin text-blue-400" />
+          <div className="flex items-center gap-3 text-slate-500 text-[13px] pl-11">
+            <Loader2 size={16} className="animate-spin text-blue-600" />
             <span>Cross-referencing statutory databases & limitation clock...</span>
           </div>
         )}
@@ -620,8 +617,8 @@ function ChatContent() {
         <div ref={bottomRef} />
       </div>
 
-      {/* Gold-Standard Floating Command Console (Claude / ChatGPT 4o grade with Attachments) */}
-      <div className="p-4 sm:p-5 border-t border-white/[0.06] bg-gradient-to-t from-[#070A12] via-[#070A12]/95 to-transparent relative z-20">
+      {/* Gold-Standard Floating Command Console */}
+      <div className="p-4 sm:p-5 border-t border-slate-100 bg-white relative z-20">
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -648,38 +645,35 @@ function ChatContent() {
             onChange={handleFileUpload}
           />
 
-          {/* Reactive Ambient Glow */}
-          <div className="absolute -inset-0.5 rounded-[26px] bg-gradient-to-r from-blue-600/25 via-indigo-600/20 to-blue-500/25 blur-lg opacity-40 group-focus-within:opacity-80 transition duration-500 pointer-events-none" />
-
           {/* Luxury Floating Pill Console Body */}
-          <div className="relative rounded-[24px] bg-[#0C101D]/95 border border-white/[0.12] group-focus-within:border-blue-500/50 shadow-[0_12px_45px_rgba(0,0,0,0.6)] backdrop-blur-2xl transition-all duration-300 p-3">
+          <div className="relative rounded-[24px] bg-slate-50/90 border border-slate-200 group-focus-within:border-blue-500 group-focus-within:bg-white shadow-sm transition-all duration-200 p-3">
             
             {/* Attachment Preview Tray */}
             {attachments.length > 0 && (
-              <div className="flex flex-wrap gap-2 pb-2.5 pt-0.5 px-2 border-b border-white/[0.06]">
+              <div className="flex flex-wrap gap-2 pb-2.5 pt-0.5 px-2 border-b border-slate-200">
                 {attachments.map((file, idx) => {
                   const isPdf = file.type.includes('pdf') || /\.pdf$/i.test(file.name);
                   const isImg = file.type.includes('image') || /\.(png|jpe?g|webp)$/i.test(file.name);
                   return (
                     <div
                       key={idx}
-                      className="inline-flex items-center gap-2 px-2.5 py-1 rounded-xl bg-blue-500/10 border border-blue-500/25 text-blue-200 text-[11.5px] shadow-sm animate-fade-in"
+                      className="inline-flex items-center gap-2 px-2.5 py-1 rounded-xl bg-blue-50 border border-blue-200 text-blue-700 text-[11.5px] shadow-xs animate-fade-in"
                     >
                       {isPdf ? (
-                        <FileText size={13} className="text-red-400 shrink-0" />
+                        <FileText size={13} className="text-red-500 shrink-0" />
                       ) : isImg ? (
-                        <ImageIcon size={13} className="text-purple-400 shrink-0" />
+                        <ImageIcon size={13} className="text-purple-500 shrink-0" />
                       ) : (
-                        <FileCheck size={13} className="text-emerald-400 shrink-0" />
+                        <FileCheck size={13} className="text-emerald-500 shrink-0" />
                       )}
                       <span className="max-w-[140px] truncate font-medium">{file.name}</span>
-                      <span className="text-[10px] text-blue-400/80 font-mono">
+                      <span className="text-[10px] text-blue-600/80 font-mono">
                         {(file.size / 1024).toFixed(0)} KB
                       </span>
                       <button
                         type="button"
                         onClick={() => removeAttachment(idx)}
-                        className="p-0.5 rounded-md hover:bg-white/10 text-blue-300 hover:text-white transition-colors cursor-pointer"
+                        className="p-0.5 rounded-md hover:bg-slate-200 text-slate-500 hover:text-slate-800 transition-colors cursor-pointer"
                         title="Remove attachment"
                       >
                         <X size={12} />
@@ -702,7 +696,7 @@ function ChatContent() {
                 }
               }}
               placeholder={attachments.length > 0 ? "Add questions about your attached files (or press Enter to analyze)..." : "Ask anything, or attach agreements, cheques & notices for instant AI analysis..."}
-              className="w-full bg-transparent border-none text-white text-[14.5px] leading-relaxed placeholder:text-[#52627A] focus:outline-none resize-none px-2 pt-1"
+              className="w-full bg-transparent border-none text-slate-900 text-[14.5px] leading-relaxed placeholder:text-slate-400 focus:outline-none resize-none px-2 pt-1"
             />
 
             {/* Bottom Controls Row inside the Pill */}
@@ -712,10 +706,10 @@ function ChatContent() {
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
-                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/[0.05] hover:bg-white/[0.1] border border-white/[0.1] text-slate-300 hover:text-white text-[11px] font-medium transition-all cursor-pointer group/att"
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 text-[11px] font-medium transition-all cursor-pointer group/att shadow-xs"
                   title="Attach agreements, notices, cheques, or photos (PDF, PNG, JPG, DOCX)"
                 >
-                  <Paperclip size={13} className="text-blue-400 group-hover/att:rotate-45 transition-transform" />
+                  <Paperclip size={13} className="text-blue-600 group-hover/att:rotate-45 transition-transform" />
                   <span>Attach</span>
                   {attachments.length > 0 && (
                     <span className="w-4 h-4 rounded-full bg-blue-600 text-white text-[9.5px] font-bold flex items-center justify-center">
@@ -724,27 +718,27 @@ function ChatContent() {
                   )}
                 </button>
 
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-300 text-[11px] font-medium">
-                  <Scale size={12} className="text-blue-400" />
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-[11px] font-medium">
+                  <Scale size={12} className="text-blue-600" />
                   <span className="hidden sm:inline">Supreme Court & High Courts Live RAG</span>
                   <span className="sm:hidden">Live RAG</span>
                 </span>
 
-                <span className="hidden md:inline-flex items-center gap-1 text-[11px] text-slate-500">
-                  <ShieldCheck size={11} className="text-emerald-400" />
+                <span className="hidden md:inline-flex items-center gap-1 text-[11px] text-slate-400">
+                  <ShieldCheck size={11} className="text-emerald-500" />
                   <span>256-Bit DPDPA</span>
                 </span>
               </div>
 
               <div className="flex items-center gap-2.5">
-                <span className="text-[10.5px] text-slate-500 hidden sm:inline font-mono">
+                <span className="text-[10.5px] text-slate-400 hidden sm:inline font-mono">
                   Enter ↵
                 </span>
 
                 <button
                   type="submit"
                   disabled={(!input.trim() && attachments.length === 0) || loading}
-                  className="w-9 h-9 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 disabled:opacity-30 disabled:hover:from-blue-600 disabled:hover:to-indigo-600 text-white flex items-center justify-center transition-all shadow-lg shadow-blue-600/30 hover:scale-105 active:scale-95 cursor-pointer disabled:cursor-not-allowed shrink-0"
+                  className="w-9 h-9 rounded-full bg-blue-600 hover:bg-blue-700 disabled:opacity-30 text-white flex items-center justify-center transition-all shadow-sm hover:scale-105 active:scale-95 cursor-pointer disabled:cursor-not-allowed shrink-0"
                   aria-label="Execute legal inquiry"
                 >
                   {loading ? (

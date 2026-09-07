@@ -77,7 +77,7 @@ export default function MattersWorkspaceHub() {
         display: "flex",
         alignItems: "flex-end",
         justifyContent: "space-between",
-        borderBottom: "1px solid #263142",
+        borderBottom: "1px solid #E2E8F0",
         paddingBottom: "20px",
         flexWrap: "wrap",
         gap: "14px",
@@ -89,17 +89,17 @@ export default function MattersWorkspaceHub() {
             gap: "7px",
             fontSize: "12px",
             fontWeight: "700",
-            color: "#60A5FA",
+            color: "#2563EB",
             textTransform: "uppercase",
             letterSpacing: "0.08em",
             marginBottom: "6px",
           }}>
             <Sparkles size={14} /> Multi-Matter Portfolio
           </div>
-          <h1 style={{ fontSize: "32px", fontWeight: "700", color: "#FFFFFF", letterSpacing: "-0.03em" }}>
+          <h1 style={{ fontSize: "32px", fontWeight: "700", color: "#0F172A", letterSpacing: "-0.03em" }}>
             Legal Matters Workspace
           </h1>
-          <p style={{ fontSize: "15px", color: "#D7DCE5", marginTop: "4px" }}>
+          <p style={{ fontSize: "15px", color: "#64748B", marginTop: "4px" }}>
             Real-time docket management, statutory limitation deadlines, court pleadings, and advocate coordination.
           </p>
         </div>
@@ -127,7 +127,7 @@ export default function MattersWorkspaceHub() {
           minWidth: "280px",
           maxWidth: "460px",
         }}>
-          <Search size={16} style={{ position: "absolute", left: "14px", top: "50%", transform: "translateY(-50%)", color: "#9AA5B5" }} />
+          <Search size={16} style={{ position: "absolute", left: "14px", top: "50%", transform: "translateY(-50%)", color: "#64748B" }} />
           <input
             type="text"
             placeholder="Search by case title, matter ID, statute, or jurisdiction..."
@@ -135,12 +135,12 @@ export default function MattersWorkspaceHub() {
             onChange={(e) => setSearch(e.target.value)}
             style={{
               width: "100%",
-              background: "#121823",
-              border: "1px solid #263142",
+              background: "#FFFFFF",
+              border: "1px solid #E2E8F0",
               borderRadius: "12px",
               padding: "10px 14px 10px 40px",
               fontSize: "13.5px",
-              color: "#FFFFFF",
+              color: "#0F172A",
               outline: "none",
             }}
           />
@@ -152,9 +152,9 @@ export default function MattersWorkspaceHub() {
               key={st}
               onClick={() => setStatusFilter(st)}
               style={{
-                background: statusFilter === st ? "rgba(59, 130, 246, 0.2)" : "#121823",
-                color: statusFilter === st ? "#60A5FA" : "#9AA5B5",
-                border: `1px solid ${statusFilter === st ? "#3B82F6" : "#263142"}`,
+                background: statusFilter === st ? "#EFF6FF" : "#FFFFFF",
+                color: statusFilter === st ? "#2563EB" : "#64748B",
+                border: `1px solid ${statusFilter === st ? "#3B82F6" : "#E2E8F0"}`,
                 borderRadius: "10px",
                 padding: "8px 14px",
                 fontSize: "12.5px",
@@ -171,14 +171,14 @@ export default function MattersWorkspaceHub() {
 
       {/* Matters List */}
       {loading ? (
-        <div style={{ padding: "60px 0", textAlign: "center", color: "#9AA5B5" }}>
-          <Loader2 size={28} className="animate-spin" style={{ margin: "0 auto 12px auto", color: "#3B82F6" }} />
+        <div style={{ padding: "60px 0", textAlign: "center", color: "#64748B" }}>
+          <Loader2 size={28} className="animate-spin" style={{ margin: "0 auto 12px auto", color: "#2563EB" }} />
           <p style={{ fontSize: "14px" }}>Loading your legal matters...</p>
         </div>
       ) : filteredMatters.length === 0 ? (
         <div style={{
-          background: "#121823",
-          border: "1px dashed #263142",
+          background: "#FFFFFF",
+          border: "1px dashed #CBD5E1",
           borderRadius: "16px",
           padding: "60px 20px",
           textAlign: "center",
@@ -186,25 +186,26 @@ export default function MattersWorkspaceHub() {
           flexDirection: "column",
           alignItems: "center",
           gap: "14px",
+          boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
         }}>
           <div style={{
             width: "56px",
             height: "56px",
             borderRadius: "14px",
-            background: "rgba(59, 130, 246, 0.1)",
-            border: "1px solid rgba(59, 130, 246, 0.25)",
+            background: "rgba(37, 99, 235, 0.08)",
+            border: "1px solid rgba(37, 99, 235, 0.2)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            color: "#60A5FA",
+            color: "#2563EB",
           }}>
             <Briefcase size={26} />
           </div>
           <div>
-            <h3 style={{ fontSize: "18px", fontWeight: "700", color: "#FFFFFF", marginBottom: "6px" }}>
+            <h3 style={{ fontSize: "18px", fontWeight: "700", color: "#0F172A", marginBottom: "6px" }}>
               {search || statusFilter !== 'ALL' ? 'No Matching Legal Matters' : 'No Open Legal Matters'}
             </h3>
-            <p style={{ fontSize: "14px", color: "#9AA5B5", maxWidth: "440px", margin: "0 auto" }}>
+            <p style={{ fontSize: "14px", color: "#64748B", maxWidth: "440px", margin: "0 auto" }}>
               {search || statusFilter !== 'ALL'
                 ? 'Try adjusting your search query or filter criteria.'
                 : 'You have not submitted any legal disputes yet. Launch our AI Case Intake to evaluate merits and generate court-ready notices.'}
@@ -226,35 +227,36 @@ export default function MattersWorkspaceHub() {
               href={`/dashboard/matters/${matter.id}`}
               style={{
                 textDecoration: "none",
-                background: "#121823",
-                border: "1px solid #263142",
+                background: "#FFFFFF",
+                border: "1px solid #E2E8F0",
                 borderRadius: "16px",
                 padding: "20px 24px",
                 display: "flex",
                 flexDirection: "column",
                 gap: "12px",
                 transition: "all 0.15s ease",
+                boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
               }}
               onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.borderColor = "#38475C";
-                (e.currentTarget as HTMLElement).style.background = "#171E29";
+                (e.currentTarget as HTMLElement).style.borderColor = "#CBD5E1";
+                (e.currentTarget as HTMLElement).style.background = "#F8FAFC";
               }}
               onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.borderColor = "#263142";
-                (e.currentTarget as HTMLElement).style.background = "#121823";
+                (e.currentTarget as HTMLElement).style.borderColor = "#E2E8F0";
+                (e.currentTarget as HTMLElement).style.background = "#FFFFFF";
               }}
             >
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "10px" }}>
                 <div>
                   <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "4px" }}>
-                    <span style={{ fontFamily: "var(--font-mono)", fontSize: "12px", color: "#60A5FA", fontWeight: "700", background: "rgba(59, 130, 246, 0.16)", padding: "2px 8px", borderRadius: "6px" }}>
+                    <span style={{ fontFamily: "var(--font-mono)", fontSize: "12px", color: "#2563EB", fontWeight: "700", background: "rgba(37, 99, 235, 0.1)", padding: "2px 8px", borderRadius: "6px" }}>
                       {matter.id.slice(0, 10)}
                     </span>
-                    <span style={{ fontSize: "12px", color: "#9AA5B5", fontWeight: "600" }}>
+                    <span style={{ fontSize: "12px", color: "#64748B", fontWeight: "600" }}>
                       {matter.jurisdiction || 'India'}
                     </span>
                   </div>
-                  <h3 style={{ fontSize: "18px", fontWeight: "700", color: "#FFFFFF", margin: 0 }}>
+                  <h3 style={{ fontSize: "18px", fontWeight: "700", color: "#0F172A", margin: 0 }}>
                     {matter.title}
                   </h3>
                 </div>
@@ -264,19 +266,19 @@ export default function MattersWorkspaceHub() {
                   fontWeight: "700",
                   padding: "4px 10px",
                   borderRadius: "8px",
-                  background: matter.status === 'ACTIVE' ? 'rgba(59, 130, 246, 0.15)' : 'rgba(34, 197, 94, 0.15)',
-                  color: matter.status === 'ACTIVE' ? '#60A5FA' : '#22C55E',
-                  border: `1px solid ${matter.status === 'ACTIVE' ? 'rgba(59, 130, 246, 0.3)' : 'rgba(34, 197, 94, 0.3)'}`,
+                  background: matter.status === 'ACTIVE' ? 'rgba(37, 99, 235, 0.1)' : 'rgba(5, 150, 105, 0.1)',
+                  color: matter.status === 'ACTIVE' ? '#2563EB' : '#059669',
+                  border: `1px solid ${matter.status === 'ACTIVE' ? 'rgba(37, 99, 235, 0.25)' : 'rgba(5, 150, 105, 0.25)'}`,
                 }}>
                   {matter.status}
                 </span>
               </div>
 
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px solid #1C2433", paddingTop: "12px", fontSize: "13px", color: "#9AA5B5" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px solid #F1F5F9", paddingTop: "12px", fontSize: "13px", color: "#64748B" }}>
                 <div>
-                  Counsel: <strong style={{ color: "#FFFFFF" }}>{matter.advocate?.name || 'Assigned Counsel'}</strong>
+                  Counsel: <strong style={{ color: "#0F172A" }}>{matter.advocate?.name || 'Assigned Counsel'}</strong>
                 </div>
-                <div style={{ color: "#60A5FA", fontWeight: "600", display: "flex", alignItems: "center", gap: "4px" }}>
+                <div style={{ color: "#2563EB", fontWeight: "600", display: "flex", alignItems: "center", gap: "4px" }}>
                   Open Docket <ChevronRight size={14} />
                 </div>
               </div>

@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -15,13 +14,10 @@ import {
   Code2, Copy, Play, RefreshCw, Sliders, Activity, Database,
   Calendar, AlertTriangle, TrendingUp, Send, FileSignature,
   BookmarkCheck, Eye, HelpCircle, Radio, Compass, ExternalLink,
-  ChevronDown, DollarSign
+  ChevronDown, DollarSign, UserCheck, X, PhoneCall
 } from 'lucide-react';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
-
-const LegalScales3D = dynamic(() => import('@/components/LegalScales3D'), { ssr: false });
-
 
 // ── Global Cross-Border Dispute Scenarios ─────────────────────
 interface GlobalScenario {
@@ -140,7 +136,7 @@ const GLOBAL_LIMITATION_DATA = [
     jurisdiction: 'United States (Delaware / NY)',
     flag: '🇺🇸',
     cause: 'Breach of Commercial Contract (UCC)',
-    maxDays: 1460, // 4 years
+    maxDays: 1460,
     statute: 'UCC §2-725 / NY CPLR 213',
     riskWindow: '4-Year Federal / State UCC Period',
   },
@@ -148,7 +144,7 @@ const GLOBAL_LIMITATION_DATA = [
     jurisdiction: 'United Kingdom (England & Wales)',
     flag: '🇬🇧',
     cause: 'Simple Contract & Commercial Debt',
-    maxDays: 2190, // 6 years
+    maxDays: 2190,
     statute: 'Limitation Act 1980 Section 5',
     riskWindow: '6-Year High Court Statutory Clock',
   },
@@ -156,7 +152,7 @@ const GLOBAL_LIMITATION_DATA = [
     jurisdiction: 'European Union (Germany / France)',
     flag: '🇪🇺',
     cause: 'Commercial Claims & B2B Obligations',
-    maxDays: 1095, // 3 years standard BGB
+    maxDays: 1095,
     statute: 'Bürgerliches Gesetzbuch (BGB) §195',
     riskWindow: '3-Year End-of-Year Prescription',
   },
@@ -164,7 +160,7 @@ const GLOBAL_LIMITATION_DATA = [
     jurisdiction: 'Singapore (SIAC & Common Law)',
     flag: '🇸🇬',
     cause: 'Cross-Border Contract & Tort',
-    maxDays: 2190, // 6 years
+    maxDays: 2190,
     statute: 'Limitation Act (Cap. 163) Section 6',
     riskWindow: '6-Year Commonwealth Limit',
   },
@@ -172,109 +168,512 @@ const GLOBAL_LIMITATION_DATA = [
     jurisdiction: 'India & South Asia',
     flag: '🇮🇳',
     cause: 'Recovery of Money & Breach of Contract',
-    maxDays: 1095, // 3 years
+    maxDays: 1095,
     statute: 'Limitation Act 1963 Article 55/113',
     riskWindow: '3-Year Strict Extinction Clock',
   },
 ];
 
-const GLOBAL_ADVOCATES = [
+export interface GlobalAdvocateItem {
+  id: string;
+  name: string;
+  title: string;
+  countryCode: 'US' | 'GB' | 'EU' | 'SG' | 'IN';
+  countryName: string;
+  jurisdiction: string;
+  credentials: string;
+  focus: string;
+  tags: string[];
+  rating: string;
+  reviewsCount: number;
+  fee: string;
+  feeNumeric: number;
+  currency: string;
+  flag: string;
+  verifiedCases: string;
+  photo: string;
+  availability: string;
+  responseTime: string;
+  nextSlot: string;
+  barLicenseId: string;
+  languages: string[];
+}
+
+const GLOBAL_ADVOCATES: GlobalAdvocateItem[] = [
   {
+    id: 'sarah-jenkins',
     name: 'Sarah Jenkins, Esq.',
     title: 'Partner, Commercial & Tech Litigation',
+    countryCode: 'US',
+    countryName: 'United States',
     jurisdiction: 'New York & Delaware Bar (US)',
-    credentials: 'NY Bar #4891024 · Admitted S.D.N.Y.',
-    focus: 'Cross-Border SaaS, UCC Contracts, Delaware Chancery',
+    credentials: 'NY Bar #4891024 · S.D.N.Y. & DE Chancery',
+    focus: 'Cross-Border SaaS, UCC §2-708 Contracts, Delaware Chancery',
+    tags: ['Delaware Chancery', 'UCC §2-708', 'Enterprise SaaS', 'Series B-D Disputes'],
     rating: '5.0',
+    reviewsCount: 164,
     fee: '$350/hr',
+    feeNumeric: 350,
+    currency: 'USD',
     flag: '🇺🇸',
     verifiedCases: '280+ Cross-Border Resolves',
+    photo: '/images/advocate-sarah.jpg',
+    availability: 'Available Today',
+    responseTime: '< 15 mins',
+    nextSlot: 'Today, 4:30 PM EST',
+    barLicenseId: 'NY-4891024-SDNY',
+    languages: ['English'],
   },
   {
+    id: 'david-alistair',
     name: 'David Alistair-Smith, KC',
-    title: 'Solicitor Advocate, Commercial Court',
+    title: 'King’s Counsel & Solicitor Advocate',
+    countryCode: 'GB',
+    countryName: 'United Kingdom',
     jurisdiction: 'England & Wales (High Court of Justice)',
     credentials: 'SRA ID #598210 · Rolls Building Admitted',
-    focus: 'UK CPR Pre-Action Claims, High Court Debt Recovery',
+    focus: 'UK CPR Pre-Action Claims, High Court Commercial Debt Recovery',
+    tags: ['CPR Debt Claims', 'Rolls Building', 'High Court Enforcement', 'Statutory Interest'],
     rating: '4.9',
+    reviewsCount: 198,
     fee: '£295/hr',
+    feeNumeric: 295,
+    currency: 'GBP',
     flag: '🇬🇧',
     verifiedCases: '340+ Commercial Disputes',
+    photo: '/images/advocate-david.jpg',
+    availability: 'Available Today',
+    responseTime: '< 20 mins',
+    nextSlot: 'Today, 5:00 PM GMT',
+    barLicenseId: 'SRA-598210-KC',
+    languages: ['English', 'French'],
   },
   {
+    id: 'helene-moreau',
     name: 'Dr. Hélène Moreau',
     title: 'Avocat au Barreau & European Regulatory Counsel',
+    countryCode: 'EU',
+    countryName: 'European Union',
     jurisdiction: 'Paris & Frankfurt Bar (EU)',
-    credentials: 'Barreau de Paris #B1948 · DAV Member',
-    focus: 'EU Late Payment Directive, GDPR Art. 82, Cross-Border EOP',
+    credentials: 'Barreau de Paris #B1948 · DAV Frankfurt Member',
+    focus: 'EU Late Payment Directive 2011/7/EU, GDPR Art. 82, Cross-Border EOP',
+    tags: ['EU Directive 2011/7', 'GDPR Art. 82', 'European Payment Orders', 'BGB §286'],
     rating: '4.9',
+    reviewsCount: 142,
     fee: '€275/hr',
+    feeNumeric: 275,
+    currency: 'EUR',
     flag: '🇪🇺',
     verifiedCases: '190+ EU Enforcement Matters',
+    photo: '/images/advocate-helene.jpg',
+    availability: 'Available Today',
+    responseTime: '< 30 mins',
+    nextSlot: 'Today, 6:15 PM CET',
+    barLicenseId: 'PARIS-B1948-EU',
+    languages: ['French', 'German', 'English'],
   },
   {
+    id: 'kenneth-tan',
     name: 'Kenneth Tan, FCIArb',
     title: 'Fellow, Chartered Institute of Arbitrators',
+    countryCode: 'SG',
+    countryName: 'Singapore & APAC',
     jurisdiction: 'Singapore (SIAC) & Hong Kong (HKIAC)',
-    credentials: 'Law Society of Singapore #2012/S89',
-    focus: 'International Arbitration, New York Convention Enforcement',
+    credentials: 'Law Society of Singapore #2012/S89 · SIAC Panel',
+    focus: 'International Arbitration, New York Convention 1958 Enforcement',
+    tags: ['SIAC Expedited Rules', 'NY Convention 1958', 'Maxwell Chambers', 'Cross-Border Port'],
     rating: '4.9',
+    reviewsCount: 176,
     fee: 'S$380/hr',
+    feeNumeric: 380,
+    currency: 'SGD',
     flag: '🇸🇬',
     verifiedCases: '220+ Cross-Border Awards',
+    photo: '/images/advocate-kenneth.jpg',
+    availability: 'Available Today',
+    responseTime: '< 25 mins',
+    nextSlot: 'Tomorrow, 9:30 AM SGT',
+    barLicenseId: 'SG-2012/S89-FCIARB',
+    languages: ['English', 'Mandarin'],
+  },
+  {
+    id: 'priya-mehta',
+    name: 'Advocate Priya Mehta',
+    title: 'Senior Commercial Litigator & Dispute Counsel',
+    countryCode: 'IN',
+    countryName: 'India',
+    jurisdiction: 'High Court of Delhi & Supreme Court of India',
+    credentials: 'Bar Council of Delhi #D/1942/2012 · NLSIU Alumni',
+    focus: 'Commercial Courts Act 2015, Contractual Breach, Section 9 Injunctions',
+    tags: ['Commercial Courts Act', 'Section 9 Arbitration', 'High Court of Delhi', 'Vendor Recovery'],
+    rating: '5.0',
+    reviewsCount: 210,
+    fee: '₹14,500/hr',
+    feeNumeric: 175,
+    currency: 'INR',
+    flag: '🇮🇳',
+    verifiedCases: '310+ Resolved Claims',
+    photo: '/advocate-priya.jpg',
+    availability: 'Available Today',
+    responseTime: '< 10 mins',
+    nextSlot: 'Today, 7:00 PM IST',
+    barLicenseId: 'BCD-1942-2012',
+    languages: ['English', 'Hindi'],
+  },
+  {
+    id: 'rajesh-sharma',
+    name: 'Advocate Rajesh Sharma',
+    title: 'Corporate Dispute Counsel & Sec 138 Specialist',
+    countryCode: 'IN',
+    countryName: 'India',
+    jurisdiction: 'High Court of Bombay & Commercial Courts',
+    credentials: 'Bar Council of Maharashtra & Goa #MAH/3081/2010',
+    focus: 'Cheque Bouncing (Sec 138 NI Act), Summary Suits (Order 37 CPC), BNS §318',
+    tags: ['Sec 138 NI Act', 'Order 37 CPC', 'Bombay High Court', 'Criminal Cheating BNS'],
+    rating: '4.9',
+    reviewsCount: 254,
+    fee: '₹12,000/hr',
+    feeNumeric: 145,
+    currency: 'INR',
+    flag: '🇮🇳',
+    verifiedCases: '480+ Recovery Matters',
+    photo: '/advocate-rajesh.jpg',
+    availability: 'Available Today',
+    responseTime: '< 15 mins',
+    nextSlot: 'Today, 8:30 PM IST',
+    barLicenseId: 'BCM-3081-2010',
+    languages: ['English', 'Hindi', 'Marathi'],
   },
 ];
 
-const CODE_EXAMPLES = {
-  curl: `curl -X POST https://api.lexnova.ai/v1/cases/intake \\
-  -H "Authorization: Bearer ln_global_live_8f91a2e7c4" \\
+interface ApiPreset {
+  id: 'us' | 'uk' | 'eu' | 'sg';
+  label: string;
+  flag: string;
+  badge: string;
+  jurisdiction: string;
+  claimAmount: string;
+  endpoint: string;
+  reqPayload: Record<string, any>;
+  resPayload: Record<string, any>;
+  codeSnippets: {
+    curl: string;
+    typescript: string;
+    python: string;
+  };
+}
+
+const API_PRESETS: Record<'us' | 'uk' | 'eu' | 'sg', ApiPreset> = {
+  us: {
+    id: 'us',
+    label: 'US Delaware SaaS Default ($140k)',
+    flag: '🇺🇸',
+    badge: 'UCC & DELAWARE CHANCERY',
+    jurisdiction: 'US_DELAWARE',
+    claimAmount: '$140,000 USD',
+    endpoint: 'POST /v1/cases/intake',
+    reqPayload: {
+      jurisdiction: 'US_DELAWARE',
+      claim_currency: 'USD',
+      claim_amount: 140000,
+      dispute_type: 'CROSS_BORDER_CONTRACT_BREACH',
+      description: 'Counterparty in Munich defaulted on Master Services Agreement §8.2 under Delaware choice-of-law clause.',
+      auto_generate_pre_action_notice: true
+    },
+    resPayload: {
+      status: 'success',
+      code: 201,
+      case_id: 'cas_us_del_88192a',
+      timestamp: '2026-09-07T11:34:21Z',
+      governing_statutes: [
+        'Uniform Commercial Code (UCC) § 2-708',
+        'Delaware General Corporation Law § 382',
+        'Delaware Court of Chancery Rule 12'
+      ],
+      limitation_analysis: {
+        total_statutory_days: 1460,
+        days_elapsed: 420,
+        days_remaining: 1040,
+        risk_level: 'LOW',
+        statute_of_limitations_deadline: '2028-09-15'
+      },
+      recommended_forum: 'Delaware Commercial Court / AAA Expedited Rules',
+      pre_action_protocol: {
+        cure_period_days: 30,
+        statutory_interest_rate: '18.0% p.a.',
+        notice_generated: true,
+        court_admissible_pdf: 'https://vault.lexnova.ai/notices/delaware_breach_demand_88192a.pdf'
+      },
+      escrow_guarantee: 'Active (Zero-Knowledge Audit #LN-SEC-491)'
+    },
+    codeSnippets: {
+      curl: `curl -X POST https://api.lexnova.ai/v1/cases/intake \\
+  -H "Authorization: Bearer ln_live_99a8b1c4e7" \\
   -H "Content-Type: application/json" \\
   -d '{
     "jurisdiction": "US_DELAWARE",
     "claim_currency": "USD",
     "claim_amount": 140000,
     "dispute_type": "CROSS_BORDER_CONTRACT_BREACH",
-    "description": "Counterparty in Munich failed to deliver enterprise software license under Delaware choice-of-law clause.",
+    "description": "Counterparty in Munich defaulted on MSA §8.2 under Delaware choice-of-law clause.",
     "auto_generate_pre_action_notice": true
   }'`,
-  typescript: `import { LexNovaGlobalClient } from '@lexnova/sdk';
+      typescript: `import { LexNova } from '@lexnova/sdk';
 
-const lexnova = new LexNovaGlobalClient({
-  apiKey: process.env.LEXNOVA_API_KEY,
-  defaultJurisdiction: 'US_DELAWARE' // 'UK_ENGLAND_WALES' | 'EU_GERMANY' | 'SG_SIAC' | 'INDIA'
+const lexnova = new LexNova({ apiKey: process.env.LEXNOVA_API_KEY });
+
+const result = await lexnova.cases.intake({
+  jurisdiction: 'US_DELAWARE',
+  claim: { amount: 140000, currency: 'USD' },
+  disputeType: 'CROSS_BORDER_CONTRACT_BREACH',
+  choiceOfLaw: 'DELAWARE_UCC',
+  generateCourtNotice: true
 });
 
-// Autonomous Multi-Jurisdiction Cross-Referencing
-const intake = await lexnova.cases.analyze({
-  title: "Cross-Border SaaS Contract Default",
-  principalClaim: { amount: 140000, currency: "USD" },
-  parties: {
-    claimantJurisdiction: "US_DELAWARE",
-    respondentJurisdiction: "EU_GERMANY"
-  },
-  choiceOfLaw: "DELAWARE_GENERAL_CORP_LAW"
-});
+console.log(result.limitationAnalysis.daysRemaining); // 1,040 days
+console.log(result.preActionProtocol.courtAdmissiblePdf);`,
+      python: `from lexnova import LexNovaClient
 
-console.log(intake.statuteCitations); 
-// ["UCC §2-708", "Delaware Chancery Court Rules Rule 12"]
-console.log(intake.statuteOfLimitationsDeadline); 
-// "2028-09-15 (1,040 days remaining)"
-console.log(intake.enforceablePreActionNoticePdfUrl);`,
-  python: `from lexnova import LexNovaGlobal
+client = LexNovaClient(api_key="ln_live_99a8b1c4e7")
 
-client = LexNovaGlobal(api_key="ln_global_live_8f91a2e7c4")
-
-# Cross-Border Pre-Action Notice & Statutory Interest Computation
-analysis = client.disputes.intake(
-    jurisdiction="UK_ENGLAND_WALES",
-    claim_amount=65000,
-    currency="GBP",
-    dispute_classification="COMMERCIAL_DEBT",
-    apply_statutory_interest=True # Computes Bank of England + 8% under 1998 Act
+case = client.cases.intake(
+    jurisdiction="US_DELAWARE",
+    claim_amount=140000,
+    claim_currency="USD",
+    dispute_type="CROSS_BORDER_CONTRACT_BREACH",
+    auto_generate_pre_action_notice=True
 )
 
-print(f"Limitation Clock: {analysis.limitation_clock.days_remaining} days")
-print(f"Pre-Action Protocol Notice: {analysis.court_admissible_notice_url}")`,
+print(f"Limitation Days Left: {case.limitation_analysis.days_remaining}")
+print(f"Notice Document URL: {case.pre_action_protocol.court_admissible_pdf}")`
+    }
+  },
+  uk: {
+    id: 'uk',
+    label: 'UK Commercial Debt (£65k)',
+    flag: '🇬🇧',
+    badge: 'UK CPR PRE-ACTION PROTOCOL',
+    jurisdiction: 'UK_ENGLAND_WALES',
+    claimAmount: '£65,000 GBP',
+    endpoint: 'POST /v1/cases/intake',
+    reqPayload: {
+      jurisdiction: 'UK_ENGLAND_WALES',
+      claim_currency: 'GBP',
+      claim_amount: 65000,
+      dispute_type: 'COMMERCIAL_DEBT_RECOVERY',
+      description: 'Unpaid milestone invoices under UK Late Payment of Commercial Debts Act 1998.',
+      auto_generate_pre_action_notice: true
+    },
+    resPayload: {
+      status: 'success',
+      code: 201,
+      case_id: 'cas_uk_cpr_55021f',
+      timestamp: '2026-09-07T11:34:21Z',
+      governing_statutes: [
+        'Late Payment of Commercial Debts (Interest) Act 1998',
+        'Limitation Act 1980 Section 5',
+        'CPR Practice Direction - Pre-Action Protocol for Debt Claims'
+      ],
+      limitation_analysis: {
+        total_statutory_days: 2190,
+        days_elapsed: 370,
+        days_remaining: 1820,
+        risk_level: 'LOW',
+        statute_of_limitations_deadline: '2030-08-20'
+      },
+      recommended_forum: 'Rolls Building (Commercial Court, King’s Bench Division)',
+      pre_action_protocol: {
+        cure_period_days: 30,
+        statutory_interest_rate: '8.0% + Bank of England Base Rate',
+        notice_generated: true,
+        court_admissible_pdf: 'https://vault.lexnova.ai/notices/uk_cpr_letter_of_claim_55021f.pdf'
+      },
+      escrow_guarantee: 'Active (SRA Regulatory Safeguards Assured)'
+    },
+    codeSnippets: {
+      curl: `curl -X POST https://api.lexnova.ai/v1/cases/intake \\
+  -H "Authorization: Bearer ln_live_99a8b1c4e7" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "jurisdiction": "UK_ENGLAND_WALES",
+    "claim_currency": "GBP",
+    "claim_amount": 65000,
+    "dispute_type": "COMMERCIAL_DEBT_RECOVERY",
+    "description": "Unpaid milestone invoices under UK Late Payment of Commercial Debts Act 1998.",
+    "auto_generate_pre_action_notice": true
+  }'`,
+      typescript: `import { LexNova } from '@lexnova/sdk';
+
+const lexnova = new LexNova({ apiKey: process.env.LEXNOVA_API_KEY });
+
+const result = await lexnova.cases.intake({
+  jurisdiction: 'UK_ENGLAND_WALES',
+  claim: { amount: 65000, currency: 'GBP' },
+  disputeType: 'COMMERCIAL_DEBT_RECOVERY',
+  applyStatutoryInterest: true
+});
+
+console.log(result.preActionProtocol.courtAdmissiblePdf);`,
+      python: `from lexnova import LexNovaClient
+
+client = LexNovaClient(api_key="ln_live_99a8b1c4e7")
+
+case = client.cases.intake(
+    jurisdiction="UK_ENGLAND_WALES",
+    claim_amount=65000,
+    claim_currency="GBP",
+    apply_statutory_interest=True
+)
+
+print(f"Limitation Days Left: {case.limitation_analysis.days_remaining}")`
+    }
+  },
+  eu: {
+    id: 'eu',
+    label: 'EU GDPR / Mahnung (€95k)',
+    flag: '🇪🇺',
+    badge: 'EU DIRECTIVE & GDPR ART. 82',
+    jurisdiction: 'EU_GERMANY_FRANCE',
+    claimAmount: '€95,000 EUR',
+    endpoint: 'POST /v1/cases/intake',
+    reqPayload: {
+      jurisdiction: 'EU_GERMANY_FRANCE',
+      claim_currency: 'EUR',
+      claim_amount: 95000,
+      dispute_type: 'EU_PAYMENT_DIRECTIVE_AND_DATA_BREACH',
+      description: 'Counterparty defaulted under EU Late Payment Directive 2011/7/EU and unauthorized scraping.',
+      auto_generate_pre_action_notice: true
+    },
+    resPayload: {
+      status: 'success',
+      code: 201,
+      case_id: 'cas_eu_mhn_33812d',
+      timestamp: '2026-09-07T11:34:21Z',
+      governing_statutes: [
+        'EU Directive 2011/7/EU on Combating Late Payment in Commercial Transactions',
+        'GDPR Article 82 (Right to Compensation)',
+        'Bürgerliches Gesetzbuch (BGB) § 286 Verzug'
+      ],
+      limitation_analysis: {
+        total_statutory_days: 1095,
+        days_elapsed: 315,
+        days_remaining: 780,
+        risk_level: 'MEDIUM',
+        statute_of_limitations_deadline: '2027-12-31'
+      },
+      recommended_forum: 'Frankfurt Regional Court (Landgericht) / European Order for Payment (EOP)',
+      pre_action_protocol: {
+        cure_period_days: 14,
+        statutory_interest_rate: '9.0% above ECB Base Rate',
+        notice_generated: true,
+        court_admissible_pdf: 'https://vault.lexnova.ai/notices/eu_mahnschreiben_33812d.pdf'
+      },
+      escrow_guarantee: 'Active (GDPR Article 32 Compliant)'
+    },
+    codeSnippets: {
+      curl: `curl -X POST https://api.lexnova.ai/v1/cases/intake \\
+  -H "Authorization: Bearer ln_live_99a8b1c4e7" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "jurisdiction": "EU_GERMANY_FRANCE",
+    "claim_currency": "EUR",
+    "claim_amount": 95000,
+    "dispute_type": "EU_PAYMENT_DIRECTIVE_AND_DATA_BREACH",
+    "auto_generate_pre_action_notice": true
+  }'`,
+      typescript: `import { LexNova } from '@lexnova/sdk';
+
+const lexnova = new LexNova({ apiKey: process.env.LEXNOVA_API_KEY });
+
+const result = await lexnova.cases.intake({
+  jurisdiction: 'EU_GERMANY_FRANCE',
+  claim: { amount: 95000, currency: 'EUR' },
+  disputeType: 'EU_PAYMENT_DIRECTIVE_AND_DATA_BREACH'
+});`,
+      python: `from lexnova import LexNovaClient
+
+client = LexNovaClient(api_key="ln_live_99a8b1c4e7")
+
+case = client.cases.intake(
+    jurisdiction="EU_GERMANY_FRANCE",
+    claim_amount=95000,
+    claim_currency="EUR"
+)`
+    }
+  },
+  sg: {
+    id: 'sg',
+    label: 'Singapore SIAC Arbitration ($350k)',
+    flag: '🇸🇬',
+    badge: '1958 NEW YORK CONVENTION & SIAC',
+    jurisdiction: 'SG_SIAC_APAC',
+    claimAmount: '$350,000 USD',
+    endpoint: 'POST /v1/cases/intake',
+    reqPayload: {
+      jurisdiction: 'SG_SIAC_APAC',
+      claim_currency: 'USD',
+      claim_amount: 350000,
+      dispute_type: 'INTERNATIONAL_COMMERCIAL_ARBITRATION',
+      description: 'Breach of APAC semiconductor consignment contract governed by SIAC arbitration rules.',
+      auto_generate_pre_action_notice: true
+    },
+    resPayload: {
+      status: 'success',
+      code: 201,
+      case_id: 'cas_sg_siac_10928k',
+      timestamp: '2026-09-07T11:34:21Z',
+      governing_statutes: [
+        'Singapore International Arbitration Act (Cap. 143A)',
+        '1958 New York Convention on Recognition of Arbitral Awards (172 contracting states)',
+        'SIAC Rules 2024 Expedited Procedure'
+      ],
+      limitation_analysis: {
+        total_statutory_days: 2190,
+        days_elapsed: 740,
+        days_remaining: 1450,
+        risk_level: 'LOW',
+        statute_of_limitations_deadline: '2029-07-14'
+      },
+      recommended_forum: 'Maxwell Chambers, Singapore / SIAC Emergency Arbitrator',
+      pre_action_protocol: {
+        cure_period_days: 21,
+        statutory_interest_rate: '5.33% p.a. Commercial Rate',
+        notice_generated: true,
+        court_admissible_pdf: 'https://vault.lexnova.ai/notices/siac_arbitration_demand_10928k.pdf'
+      },
+      escrow_guarantee: 'Active (Maxwell Chambers SIAC Protocol)'
+    },
+    codeSnippets: {
+      curl: `curl -X POST https://api.lexnova.ai/v1/cases/intake \\
+  -H "Authorization: Bearer ln_live_99a8b1c4e7" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "jurisdiction": "SG_SIAC_APAC",
+    "claim_currency": "USD",
+    "claim_amount": 350000,
+    "dispute_type": "INTERNATIONAL_COMMERCIAL_ARBITRATION",
+    "auto_generate_pre_action_notice": true
+  }'`,
+      typescript: `import { LexNova } from '@lexnova/sdk';
+
+const lexnova = new LexNova({ apiKey: process.env.LEXNOVA_API_KEY });
+
+const result = await lexnova.cases.intake({
+  jurisdiction: 'SG_SIAC_APAC',
+  claim: { amount: 350000, currency: 'USD' },
+  disputeType: 'INTERNATIONAL_COMMERCIAL_ARBITRATION'
+});`,
+      python: `from lexnova import LexNovaClient
+
+client = LexNovaClient(api_key="ln_live_99a8b1c4e7")
+
+case = client.cases.intake(
+    jurisdiction="SG_SIAC_APAC",
+    claim_amount=350000,
+    claim_currency="USD"
+)`
+    }
+  }
 };
 
 const GLOBAL_FAQS = [
@@ -304,27 +703,62 @@ export default function HomePage() {
   const router = useRouter();
   const [heroInput, setHeroInput] = useState('');
   const [activeScenarioId, setActiveScenarioId] = useState<string>('us-saas');
-  const [activePipelineStage, setActivePipelineStage] = useState<number>(0);
   const [activeCodeTab, setActiveCodeTab] = useState<'curl' | 'typescript' | 'python'>('curl');
   const [copiedCode, setCopiedCode] = useState(false);
   const [copiedNotice, setCopiedNotice] = useState(false);
-  const [selectedCurrency, setSelectedCurrency] = useState<'USD' | 'EUR' | 'GBP' | 'INR' | 'SGD'>('USD');
-  const [simClaimAmount, setSimClaimAmount] = useState(100000);
-  const [selectedLimitation, setSelectedLimitation] = useState(GLOBAL_LIMITATION_DATA[0]);
-  const [limitationDaysElapsed, setLimitationDaysElapsed] = useState(180);
-  const [apiSimulating, setApiSimulating] = useState(false);
-  const [apiResponseText, setApiResponseText] = useState<string | null>(null);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
 
-  const activeScenario = GLOBAL_SCENARIOS.find((s) => s.id === activeScenarioId) || GLOBAL_SCENARIOS[0];
+  // ── Advocates Directory & Booking State ──
+  const [selectedAdvocateCountry, setSelectedAdvocateCountry] = useState<'ALL' | 'US' | 'GB' | 'EU' | 'SG' | 'IN'>('ALL');
+  const [bookingAdvocate, setBookingAdvocate] = useState<GlobalAdvocateItem | null>(null);
+  const [bookingTier, setBookingTier] = useState<'triage' | 'consultation' | 'drafting'>('consultation');
+  const [bookingSlot, setBookingSlot] = useState<string>('Today, 4:30 PM');
+  const [bookingCaseDesc, setBookingCaseDesc] = useState<string>('');
+  const [bookingConfirmed, setBookingConfirmed] = useState<boolean>(false);
 
-  // Auto-cycle through pipeline stages every 4.5 seconds
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setActivePipelineStage((prev) => (prev + 1) % 4);
-    }, 4500);
-    return () => clearInterval(timer);
-  }, []);
+  // ── Developer API Interactive State ──
+  const [apiPresetId, setApiPresetId] = useState<'us' | 'uk' | 'eu' | 'sg'>('us');
+  const [activeApiView, setActiveApiView] = useState<'json' | 'analysis' | 'notice'>('json');
+  const [isExecutingApi, setIsExecutingApi] = useState<boolean>(false);
+  const [apiExecutionTime, setApiExecutionTime] = useState<number>(38);
+  const [copiedApiResponse, setCopiedApiResponse] = useState<boolean>(false);
+
+  // ── Unique Enterprise Showcase State (from user reference designs) ──
+  const [isScanningClause, setIsScanningClause] = useState<boolean>(false);
+  const [clauseScanCompleted, setClauseScanCompleted] = useState<boolean>(false);
+  const [activeDispatchForum, setActiveDispatchForum] = useState<'delaware' | 'london' | 'siac' | 'mumbai'>('delaware');
+
+  const handleScanClause = () => {
+    setIsScanningClause(true);
+    setClauseScanCompleted(false);
+    setTimeout(() => {
+      setIsScanningClause(false);
+      setClauseScanCompleted(true);
+    }, 1200);
+  };
+
+  const currentApiPreset = API_PRESETS[apiPresetId];
+
+  const handleRunApi = () => {
+    setIsExecutingApi(true);
+    const simulatedLatency = Math.floor(Math.random() * 20) + 26; // 26-46ms
+    setTimeout(() => {
+      setApiExecutionTime(simulatedLatency);
+      setIsExecutingApi(false);
+    }, 450);
+  };
+
+  const copyApiResponse = () => {
+    navigator.clipboard.writeText(JSON.stringify(currentApiPreset.resPayload, null, 2));
+    setCopiedApiResponse(true);
+    setTimeout(() => setCopiedApiResponse(false), 2000);
+  };
+
+  const filteredAdvocates = selectedAdvocateCountry === 'ALL'
+    ? GLOBAL_ADVOCATES
+    : GLOBAL_ADVOCATES.filter((a) => a.countryCode === selectedAdvocateCountry);
+
+  const activeScenario = GLOBAL_SCENARIOS.find((s) => s.id === activeScenarioId) || GLOBAL_SCENARIOS[0];
 
   const handleHeroSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -336,7 +770,7 @@ export default function HomePage() {
   };
 
   const copyCode = () => {
-    navigator.clipboard.writeText(CODE_EXAMPLES[activeCodeTab]);
+    navigator.clipboard.writeText(currentApiPreset.codeSnippets[activeCodeTab]);
     setCopiedCode(true);
     setTimeout(() => setCopiedCode(false), 2000);
   };
@@ -347,1084 +781,1443 @@ export default function HomePage() {
     setTimeout(() => setCopiedNotice(false), 2000);
   };
 
-  const runApiSimulation = () => {
-    setApiSimulating(true);
-    setApiResponseText(null);
-    setTimeout(() => {
-      setApiResponseText(
-        JSON.stringify(
-          {
-            status: 201,
-            success: true,
-            docketId: `GLN-2026-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
-            jurisdictionMapped: activeScenario.jurisdiction,
-            country: activeScenario.country,
-            applicableStatutes: [
-              activeScenario.statute,
-              'UNCITRAL Model Law on International Commercial Arbitration (1985/2006)',
-            ],
-            bindingPrecedents: [
-              activeScenario.precedent,
-              'New York Convention on Foreign Arbitral Awards (1958 Article III)',
-            ],
-            claimQuantification: {
-              principal: activeScenario.claimAmountDisplay,
-              currency: activeScenario.currency,
-              statutoryInterestAccrued: 'CALCULATED_PER_LOCAL_LAW',
-              totalClaimPayable: activeScenario.claimAmountDisplay,
-            },
-            statuteOfLimitations: {
-              daysRemaining: activeScenario.limitationDays,
-              status: activeScenario.riskLevel,
-              statuteCited: activeScenario.statute,
-            },
-            preActionNoticeResult: {
-              format: activeScenario.noticeFormat,
-              status: 'COURT_ADMISSIBLE_READY_FOR_SERVICE',
-              serviceMethods: ['Registered Post', 'Bailiff Service', 'Electronic Proof-of-Service'],
-            },
-            verifiedCounselHandoff: {
-              status: 'MATCHED',
-              regionsAvailable: ['US Bar', 'UK SRA', 'EU Bar Association', 'SIAC Arbitrators'],
-            },
-          },
-          null,
-          2
-        )
-      );
-      setApiSimulating(false);
-    }, 600);
-  };
-
-  // Currency interest rules
-  const currencySymbol =
-    selectedCurrency === 'USD' ? '$' :
-    selectedCurrency === 'EUR' ? '€' :
-    selectedCurrency === 'GBP' ? '£' :
-    selectedCurrency === 'INR' ? '₹' : 'S$';
-
-  const interestRate =
-    selectedCurrency === 'USD' ? 0.085 : // US Pre-judgment interest ~8.5%
-    selectedCurrency === 'EUR' ? 0.115 : // EU Late Payment Directive (ECB + 8%) ~11.5%
-    selectedCurrency === 'GBP' ? 0.1325 : // UK Late Payment Act (BOE + 8%) ~13.25%
-    selectedCurrency === 'INR' ? 0.18 : // India CPC §34 / Commercial Courts 18%
-    0.0533; // Singapore Rules of Court ~5.33%
-
-  const interestAmount = Math.round(simClaimAmount * interestRate);
-  const courtFeeEst = Math.max(250, Math.round(simClaimAmount * 0.02));
-  const totalRecovery = simClaimAmount + interestAmount;
-
-  // Deterministic number formatter (avoids server/client locale mismatch)
-  const formatAmount = (num: number) => {
-    return new Intl.NumberFormat('en-US').format(num);
-  };
-
-  // Limitation calculation
-  const remainingDays = Math.max(0, selectedLimitation.maxDays - limitationDaysElapsed);
-
   return (
-    <div className="min-h-screen bg-[#000000] text-white flex flex-col relative selection:bg-blue-600 selection:text-white hud-grid overflow-x-hidden">
+    <div className="min-h-screen bg-white text-[#141413] flex flex-col overflow-x-hidden selection:bg-[#F4EFEA] selection:text-[#141413]">
       <Navbar />
 
-      {/* Futuristic Deep Space / Cyber Backdrop */}
-      <div className="fixed inset-0 hud-mesh pointer-events-none z-0" />
-      <div className="fixed -top-40 left-1/2 -translate-x-1/2 w-[1100px] h-[450px] bg-blue-600/10 rounded-full blur-[140px] pointer-events-none z-0" />
+      {/* ── HERO SECTION: UNIQUE LEXNOVA IDENTITY ── */}
+      <section className="pt-28 sm:pt-36 pb-14 px-6 sm:px-10 lg:px-14">
+        <div className="max-w-7xl mx-auto">
+          
+          {/* Top 2-Column Split Copy (Unique LexNova Identity) */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
+            
+            {/* Left Column: Unique Monumental Headline */}
+            <div className="lg:col-span-7 space-y-4">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#F7F4EE] border border-[#E8E4DA] text-[12px] font-mono font-medium text-[#42403B]">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#141413] animate-pulse" />
+                LexNova 2.5 · Autonomous Legal Operating System
+              </div>
+              <h1 className="text-[44px] sm:text-[60px] md:text-[70px] lg:text-[76px] font-bold tracking-tight text-[#141413] leading-[1.06]">
+                Autonomous legal intelligence for{' '}
+                <span className="underline decoration-[#141413] decoration-[3px] underline-offset-8">disputes</span>,{' '}
+                <span className="underline decoration-[#141413] decoration-[3px] underline-offset-8">contracts</span> &amp;{' '}
+                <span className="underline decoration-[#141413] decoration-[3px] underline-offset-8">counsel</span>.
+              </h1>
+            </div>
 
-      {/* ── 1. REAL-TIME GLOBAL LEGAL TELEMETRY TICKER ─────────────── */}
-      <div className="relative z-20 pt-[74px] border-b border-white/[0.06] bg-[#03060E]/85 backdrop-blur-md">
-        <div className="max-w-7xl mx-auto px-4 py-2 flex items-center justify-between text-[11px] font-mono text-[#8D9CB0] overflow-x-auto gap-6">
-          <div className="flex items-center gap-3 shrink-0">
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-emerald-400 font-bold">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              JURISDICTION NETWORK: 52 FORUMS ONLINE
-            </span>
-            <span className="hidden sm:inline text-white/20">|</span>
-            <span className="hidden sm:flex items-center gap-1.5 text-slate-300">
-              <Scale size={12} className="text-blue-400" />
-              <span>US (DEL/NY/CA) · UK HIGH COURT · EU DIRECTIVES · APAC ARBITRATION</span>
-            </span>
+            {/* Right Column: Literary Serif Narrative & Direct Actions */}
+            <div className="lg:col-span-5 pt-3 sm:pt-6 space-y-6">
+              <p className="font-serif text-2xl sm:text-3xl lg:text-[28px] text-[#141413] font-normal leading-[1.45]">
+                LexNova deciphers statutory frameworks across 50+ jurisdictions, computes exact limitation clocks, drafts court-admissible notices, and connects you directly to verified Bar advocates worldwide.
+              </p>
+              
+              <div className="flex items-center gap-3 pt-1">
+                <Link
+                  href="/dashboard/chat"
+                  className="px-6 py-3 rounded-full bg-[#141413] hover:bg-black text-white text-[14px] font-medium shadow-xs transition-all flex items-center gap-2"
+                >
+                  <span>Launch Free Intake</span>
+                  <ArrowRight size={14} />
+                </Link>
+                <Link
+                  href="/how-it-works"
+                  className="px-5 py-3 rounded-full border border-[#DED9CE] hover:border-[#B5AFA2] text-[#141413] text-[14px] font-medium transition-colors bg-white"
+                >
+                  <span>Platform Architecture</span>
+                </Link>
+              </div>
+            </div>
+
           </div>
 
-          <div className="flex items-center gap-4 shrink-0 text-right">
-            <span className="hidden md:inline text-slate-400">
-              AVERAGE INTAKE: <strong className="text-white">32s</strong>
-            </span>
-            <span className="text-emerald-400 font-bold flex items-center gap-1">
-              <ShieldCheck size={12} />
-              <span>PRIVILEGE: AES-256 GCM</span>
-            </span>
+          {/* Panoramic Atmospheric Horizon Banner (Anthropic-Style Visual Centerpiece) */}
+          <div className="mt-12 rounded-[28px] sm:rounded-[36px] overflow-hidden border border-[#E8E4DA] relative shadow-md h-[240px] sm:h-[340px] lg:h-[390px] group">
+            <Image
+              src="/images/anthropic_horizon.jpg"
+              alt="Autonomous Global Legal Horizon"
+              fill
+              priority
+              className="object-cover object-center group-hover:scale-[1.02] transition-transform duration-700"
+            />
+            {/* Ambient Glassmorphic Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent flex flex-col justify-end p-6 sm:p-8">
+              <div className="flex flex-wrap items-center justify-between gap-3 text-white">
+                <div className="flex items-center gap-2.5 font-mono text-[12px] sm:text-[13px] bg-black/45 backdrop-blur-md px-4 py-2 rounded-full border border-white/20 shadow-sm">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+                  <span className="font-semibold text-white">52 Jurisdictions Synchronized</span>
+                  <span className="text-white/60 hidden sm:inline">· US · UK · EU · SG · IN</span>
+                </div>
+                <div className="flex items-center gap-3 font-mono text-[11.5px] text-white/90 bg-black/45 backdrop-blur-md px-4 py-2 rounded-full border border-white/15 shadow-sm">
+                  <span className="flex items-center gap-1.5">
+                    <ShieldCheck size={14} className="text-emerald-400" />
+                    <span>Zero-Knowledge AES-256</span>
+                  </span>
+                  <span>·</span>
+                  <span>38ms Mean Intake Latency</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Interactive Autonomous Legal Console Hero Centerpiece */}
+          <div className="mt-8 rounded-[28px] sm:rounded-[36px] overflow-hidden border border-[#E8E4DA] relative shadow-sm bg-white">
+            
+            {/* Console Control Bar */}
+            <div className="px-6 py-4 bg-[#F7F4EE] border-b border-[#E8E4DA] flex flex-wrap items-center justify-between gap-3 text-[12px] font-mono">
+              <div className="flex items-center gap-2 text-[#141413] font-semibold">
+                <span className="w-2 h-2 rounded-full bg-emerald-600" />
+                <span>LEXNOVA LIVE STATUTORY CONSOLE</span>
+              </div>
+              <div className="flex items-center gap-4 text-[#87837B]">
+                <span>52 JURISDICTIONS SYNCHRONIZED</span>
+                <span>·</span>
+                <span>ZERO-KNOWLEDGE PRIVILEGE</span>
+              </div>
+            </div>
+
+            {/* Interactive Showcase Body */}
+            <div className="p-6 sm:p-8 space-y-6">
+              
+              {/* Intake Form */}
+              <form onSubmit={handleHeroSubmit} className="flex flex-col sm:flex-row items-center gap-3 bg-[#FAF8F5] border border-[#E8E5DE] rounded-2xl p-2.5 sm:p-3">
+                <div className="flex items-center gap-3 w-full px-2">
+                  <Sparkles size={18} className="text-[#141413] shrink-0" />
+                  <input
+                    type="text"
+                    value={heroInput}
+                    onChange={(e) => setHeroInput(e.target.value)}
+                    placeholder="Describe your dispute (e.g. Counterparty defaulted on $140k SaaS contract in Delaware)..."
+                    className="w-full bg-transparent border-none text-[#141413] text-[14.5px] placeholder-[#87837B] focus:outline-none"
+                  />
+                </div>
+                <button
+                  type="submit"
+                  className="h-11 px-6 rounded-xl bg-[#141413] hover:bg-black text-white font-medium text-[13.5px] flex items-center justify-center gap-2 transition-all shrink-0 w-full sm:w-auto"
+                >
+                  <span>Analyze Case</span>
+                  <ArrowRight size={14} />
+                </button>
+              </form>
+
+              {/* Quick Scenario Triggers */}
+              <div className="space-y-2">
+                <div className="text-[11px] font-mono font-bold text-[#87837B] uppercase tracking-wider">
+                  Test Live Multi-Jurisdiction Engine:
+                </div>
+                <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
+                  {GLOBAL_SCENARIOS.map((sc) => (
+                    <button
+                      key={sc.id}
+                      onClick={() => {
+                        setActiveScenarioId(sc.id);
+                        setHeroInput(sc.title);
+                      }}
+                      className={`px-3.5 py-2 rounded-full text-[12.5px] font-medium transition-all flex items-center gap-2 whitespace-nowrap ${
+                        activeScenarioId === sc.id
+                          ? 'bg-[#141413] text-white shadow-xs'
+                          : 'bg-[#F7F4EE] border border-[#E8E4DA] text-[#42403B] hover:border-[#B5AFA2]'
+                      }`}
+                    >
+                      <span>{sc.flag}</span>
+                      <span>{sc.country}</span>
+                      <span className="text-[11px] opacity-70 font-mono">({sc.claimAmountDisplay})</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Active Docket Summary Card */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 pt-2">
+                
+                {/* Left: Metrics & Breach */}
+                <div className="lg:col-span-6 bg-[#FAF8F5] border border-[#E8E5DE] rounded-2xl p-5 space-y-4">
+                  <div className="flex items-center justify-between pb-3 border-b border-[#E8E5DE]">
+                    <span className="text-[11px] font-mono font-bold uppercase text-[#87837B]">{activeScenario.badge}</span>
+                    <span className="text-[11px] font-mono font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-md">
+                      96% ENFORCEABLE
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-3 divide-x divide-[#E8E4DA] text-center py-1">
+                    <div>
+                      <div className="text-[10px] font-mono text-[#87837B] uppercase">Claim</div>
+                      <div className="text-[18px] font-bold text-[#141413] font-mono">{activeScenario.claimAmountDisplay}</div>
+                    </div>
+                    <div>
+                      <div className="text-[10px] font-mono text-[#87837B] uppercase">Limitation</div>
+                      <div className="text-[18px] font-bold text-[#B45309] font-mono">{activeScenario.limitationDays} Days</div>
+                    </div>
+                    <div>
+                      <div className="text-[10px] font-mono text-[#87837B] uppercase">Jurisdiction</div>
+                      <div className="text-[13px] font-bold text-[#141413] mt-1">{activeScenario.country}</div>
+                    </div>
+                  </div>
+
+                  <div className="text-[12.5px] text-[#42403B] font-mono pt-1">
+                    <strong>Statute:</strong> {activeScenario.statute}
+                  </div>
+                </div>
+
+                {/* Right: Formal Notice Excerpt */}
+                <div className="lg:col-span-6 bg-[#FAF8F5] border border-[#E8E5DE] rounded-2xl p-5 space-y-3 flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center justify-between pb-2 border-b border-[#E8E5DE]">
+                      <span className="text-[11px] font-mono font-bold uppercase text-[#87837B]">Court-Admissible Notice Format</span>
+                      <span className="text-[11px] font-mono text-[#141413]">{activeScenario.noticeFormat.split(' ')[0]} Format</span>
+                    </div>
+                    <p className="font-mono text-[12px] text-[#5A5752] leading-relaxed italic pt-2 line-clamp-3">
+                      "{activeScenario.noticeExcerpt}"
+                    </p>
+                  </div>
+
+                  <div className="pt-2 border-t border-[#E8E4DA] flex items-center justify-between text-[12px]">
+                    <span className="text-[#87837B] font-mono">Verified Advocate Handoff Ready</span>
+                    <Link
+                      href={`/dashboard/chat?init=${encodeURIComponent(activeScenario.title)}`}
+                      className="font-medium text-[#141413] underline hover:no-underline flex items-center gap-1"
+                    >
+                      Draft Full Docket &rarr;
+                    </Link>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+      {/* ── KEY METRICS BAR ── */}
+      <div className="border-y border-[#E8E4DA] bg-white">
+        <div className="max-w-7xl mx-auto px-6 sm:px-10">
+          <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-[#E8E4DA]">
+            {[
+              { val: '$840M+', label: 'Disputes Processed Worldwide' },
+              { val: '4,200+', label: 'Verified Global Advocates' },
+              { val: '50+', label: 'Autonomous Jurisdictions' },
+              { val: '< 60s', label: 'Average Time to Enforceable Notice' },
+            ].map((m, i) => (
+              <div key={i} className="py-8 px-6 text-center">
+                <div className="text-3xl sm:text-4xl font-bold font-mono tracking-tight text-[#141413]">
+                  {m.val}
+                </div>
+                <div className="text-[12px] text-[#636059] font-medium mt-1 uppercase tracking-wide">
+                  {m.label}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
 
-      {/* ── 2. HERO SECTION WITH 3D HOLOGRAPHIC LEGAL SCALES ──────────── */}
-      <section className="pt-16 sm:pt-24 pb-20 px-4 sm:px-6 max-w-7xl mx-auto text-center relative z-10 space-y-8 overflow-visible">
-        
-        {/* Interactive 3D WebGL Holographic Legal Scales Backdrop */}
-        <div className="absolute inset-0 -top-8 w-full h-[620px] pointer-events-none z-0 opacity-70">
-          <LegalScales3D />
-        </div>
-
-        {/* Global Jurisdiction Pill */}
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full border border-blue-500/40 bg-gradient-to-r from-blue-950/70 via-indigo-950/50 to-cyan-950/70 backdrop-blur-2xl shadow-[0_0_30px_rgba(59,130,246,0.3)] font-mono text-[11.5px] text-blue-300 tracking-wider uppercase relative z-10"
-        >
-          <span className="flex h-2 w-2 relative">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-500"></span>
-          </span>
-          <span>AUTONOMOUS LEGAL OS · ENTERPRISE CONTRACT & DISPUTE INTELLIGENCE</span>
-        </motion.div>
-
-        {/* Grounded, Powerful & Meaningful Hero Title */}
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.08 }}
-          className="text-4xl sm:text-6xl md:text-7xl lg:text-[88px] font-black tracking-[-0.04em] max-w-6xl mx-auto leading-[1.02] relative z-10"
-        >
-          <span className="block text-transparent bg-clip-text bg-gradient-to-b from-white via-slate-100 to-slate-400 drop-shadow-[0_2px_14px_rgba(255,255,255,0.2)]">
-            THE AUTONOMOUS LEGAL OS.
-          </span>
-          <span className="relative inline-block mt-1 sm:mt-2">
-            <span className="text-gradient-flashy drop-shadow-[0_0_50px_rgba(96,165,250,0.65)]">
-              PRECISION FOR GLOBAL COMMERCE.
-            </span>
-            {/* Ambient laser glow refraction aura */}
-            <span className="absolute -inset-x-8 -inset-y-4 bg-gradient-to-r from-blue-600/35 via-purple-600/30 to-cyan-500/35 blur-3xl -z-10 rounded-full pointer-events-none opacity-85 animate-pulse-glow" />
-          </span>
-        </motion.h1>
-
-        {/* Clean, Grounded & Meaningful Caption */}
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.16 }}
-          className="text-base sm:text-xl text-[#94A3B8] max-w-2xl mx-auto font-normal leading-relaxed tracking-tight relative z-10"
-        >
-          Analyze contract breaches, calculate statutory pre-judgment interest, and generate court-admissible demand notices across 50+ jurisdictions in seconds.
-        </motion.p>
-
-        {/* Interactive Neural Intake HUD Box */}
-        <motion.div
-          initial={{ opacity: 0, y: 25 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.22 }}
-          className="max-w-3xl mx-auto pt-2 relative z-10"
-        >
-          <form
-            onSubmit={handleHeroSubmit}
-            className="p-3 bg-[#05070C]/90 backdrop-blur-2xl border border-white/[0.14] focus-within:border-blue-500/80 rounded-2xl sm:rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.8)] transition-all space-y-3"
-          >
-            <div className="flex items-center px-3 pt-1">
-              <Sparkles size={18} className="text-blue-400 shrink-0 mr-3" />
-              <input
-                type="text"
-                value={heroInput}
-                onChange={(e) => setHeroInput(e.target.value)}
-                placeholder="Describe your dispute (e.g. US client defaulted on $140k contract, UK remote contractor non-payment, EU GDPR breach)..."
-                className="w-full bg-transparent border-none text-white text-[15px] placeholder-[#55667E] focus:outline-none py-2"
-              />
-            </div>
-
-            <div className="flex flex-col sm:flex-row items-center justify-between pt-3 border-t border-white/[0.08] px-2 gap-3">
-              <div className="flex items-center gap-2 text-[12px] text-[#7A8A9E] font-mono">
-                <ShieldCheck size={15} className="text-emerald-400" />
-                <span>GLOBAL PRIVILEGE (US FRE 502 · UK PRIVILEGE · EU GDPR)</span>
+      {/* ── INTERACTIVE GLOBAL CASE INTELLIGENCE ENGINE ── */}
+      <section className="py-20 px-6 sm:px-10 lg:px-14">
+        <div className="max-w-7xl mx-auto space-y-10">
+          
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+            <div className="space-y-2">
+              <div className="text-[12px] font-mono font-semibold text-[#87837B] uppercase tracking-widest">
+                Interactive Case Engine
               </div>
-
-              <div className="flex items-center gap-2 w-full sm:w-auto">
-                <button
-                  type="submit"
-                  className="btn-glow-blue w-full sm:w-auto h-11 px-6 rounded-xl text-[14px] font-semibold flex items-center justify-center gap-2 shadow-lg shadow-blue-600/30"
-                >
-                  <span>Execute Analysis</span>
-                  <CornerDownLeft size={14} />
-                </button>
-              </div>
+              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#141413]">
+                Autonomous cross-border statutory intelligence.
+              </h2>
             </div>
-          </form>
+            <Link
+              href="/dashboard/chat"
+              className="inline-flex items-center gap-1 text-[13.5px] font-medium text-[#141413] hover:underline"
+            >
+              <span>Launch Live Intake Console</span>
+              <ArrowRight size={14} />
+            </Link>
+          </div>
 
-          {/* Quick Scenario Chips */}
-          <div className="flex items-center justify-center gap-2 flex-wrap mt-4 text-[12.5px] text-[#7A8A9E]">
-            <span className="text-[#55667E] font-mono text-[11px] uppercase tracking-wider">Worldwide Scenarios:</span>
-            {[
-              { label: "🇺🇸 $140k US SaaS Default", text: "US enterprise counterparty defaulted on $140k contract governed by Delaware law" },
-              { label: "🇬🇧 £65k UK Contractor Breach", text: "London client withheld £65,000 contractor milestone invoices under English law" },
-              { label: "🇪🇺 €95k EU Commercial Dispute", text: "German supplier delivered defective components with refused refund under BGB §286" },
-              { label: "🇸🇬 $350k SIAC Arbitration", text: "International maritime supply chain breach with SIAC arbitration clause" },
-            ].map((chip, idx) => (
+          {/* Scenario Selector Pills */}
+          <div className="flex gap-2 overflow-x-auto pb-2 border-b border-[#E8E4DA]">
+            {GLOBAL_SCENARIOS.map((sc) => (
               <button
-                key={idx}
-                type="button"
-                onClick={() => setHeroInput(chip.text)}
-                className="px-3 py-1 rounded-full bg-white/[0.03] hover:bg-white/[0.08] border border-white/[0.08] text-[#CBD5E1] text-[12px] transition-all hover:border-blue-500/40"
+                key={sc.id}
+                onClick={() => setActiveScenarioId(sc.id)}
+                className={`px-4 py-2.5 rounded-full text-[13px] font-medium transition-all flex items-center gap-2 whitespace-nowrap ${
+                  activeScenarioId === sc.id
+                    ? 'bg-[#141413] text-white shadow-sm'
+                    : 'bg-white border border-[#E8E4DA] text-[#42403B] hover:border-[#B5AFA2]'
+                }`}
               >
-                {chip.label}
+                <span>{sc.flag}</span>
+                <span>{sc.country}</span>
+                <span className="text-[11px] opacity-70 font-mono">({sc.claimAmountDisplay})</span>
               </button>
             ))}
           </div>
-        </motion.div>
 
-        {/* Global Telemetry Metrics Matrix */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
-          className="pt-12 grid grid-cols-2 md:grid-cols-4 gap-6 max-w-5xl mx-auto border-t border-white/[0.08] relative z-10"
-        >
-          <div className="space-y-1 p-4 rounded-2xl bg-white/[0.02] border border-white/[0.05]">
-            <div className="text-2xl sm:text-3xl lg:text-4xl font-black text-white font-mono">$840M+</div>
-            <div className="text-[11.5px] text-[#8D9CB0] uppercase tracking-wider font-mono">Disputes Quantified</div>
-          </div>
-          <div className="space-y-1 p-4 rounded-2xl bg-white/[0.02] border border-white/[0.05]">
-            <div className="text-2xl sm:text-3xl lg:text-4xl font-black text-blue-400 font-mono">50+</div>
-            <div className="text-[11.5px] text-[#8D9CB0] uppercase tracking-wider font-mono">Countries & States</div>
-          </div>
-          <div className="space-y-1 p-4 rounded-2xl bg-white/[0.02] border border-white/[0.05]">
-            <div className="text-2xl sm:text-3xl lg:text-4xl font-black text-emerald-400 font-mono">4,200+</div>
-            <div className="text-[11.5px] text-[#8D9CB0] uppercase tracking-wider font-mono">Attorneys & Counsel</div>
-          </div>
-          <div className="space-y-1 p-4 rounded-2xl bg-white/[0.02] border border-white/[0.05]">
-            <div className="text-2xl sm:text-3xl lg:text-4xl font-black text-cyan-400 font-mono">&lt; 60 sec</div>
-            <div className="text-[11.5px] text-[#8D9CB0] uppercase tracking-wider font-mono">Pre-Action Generation</div>
-          </div>
-        </motion.div>
-      </section>
-
-      {/* ── 2B. ENTERPRISE LEGAL PRODUCT & WORKSPACE SHOWCASE ────────── */}
-      <section className="pt-4 pb-20 px-4 sm:px-6 max-w-7xl mx-auto relative z-10">
-        <div className="text-center mb-10 space-y-2">
-          <span className="text-[11px] font-bold text-blue-400 tracking-widest uppercase bg-blue-500/10 border border-blue-500/25 px-3 py-1 rounded-full font-mono">
-            ENTERPRISE ARCHITECTURE · FULL AUTONOMY
-          </span>
-          <h3 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
-            Engineered for High-Stakes Commercial Law
-          </h3>
-          <p className="text-[14.5px] text-[#8D9CB0] max-w-xl mx-auto">
-            Autonomous legal operations trusted by cross-border founders, corporate counsels, and enterprise litigation teams.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
-          {/* Card 1: Enterprise Contract & Dispute Workspace */}
-          <div className="group relative rounded-3xl overflow-hidden border border-white/[0.12] bg-[#05070C] shadow-2xl transition-all duration-300 hover:border-blue-500/50 hover:shadow-[0_0_50px_rgba(59,130,246,0.3)] flex flex-col justify-between">
-            <div className="relative aspect-[16/9] w-full overflow-hidden bg-black">
-              <Image
-                src="/images/lexnova_product_dashboard.jpg"
-                alt="LexNova enterprise contract dispute analysis interface"
-                fill
-                className="object-cover transition-transform duration-700 group-hover:scale-105"
-                sizes="(max-width: 1024px) 100vw, 50vw"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#05070C] via-[#05070C]/30 to-transparent" />
-              
-              {/* Product HUD Overlay */}
-              <div className="absolute top-4 left-4 flex items-center gap-2 font-mono text-[10px] text-cyan-300 bg-black/70 backdrop-blur-md px-3 py-1 rounded-full border border-cyan-500/30">
-                <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
-                <span>LIVE WORKSPACE · CONTRACT CLAUSE MAPPING</span>
-              </div>
-
-              <div className="absolute top-4 right-4 font-mono text-[10px] text-slate-300 bg-black/70 backdrop-blur-md px-2.5 py-1 rounded-md border border-white/10">
-                STATUTORY ENGINE: ACTIVE
-              </div>
-            </div>
-
-            <div className="p-6 sm:p-8 space-y-3 relative z-10 -mt-6">
-              <div className="flex items-center gap-2 text-xs font-mono text-blue-400 font-bold uppercase tracking-wider">
-                <FileText size={14} />
-                <span>Automated Clause Dissection</span>
-              </div>
-              <h4 className="text-xl sm:text-2xl font-black text-white tracking-tight">
-                Enterprise Contract & Dispute Workspace
-              </h4>
-              <p className="text-[14px] text-[#8D9CB0] leading-relaxed">
-                Autonomous clause extraction, breach detection, and statutory damages quantification displayed in a unified executive docket with real-time statutory calculation.
-              </p>
-
-              <div className="pt-3 border-t border-white/[0.08] flex items-center justify-between text-xs font-mono text-slate-400">
-                <span>Clause Parsing: &lt; 30s</span>
-                <span className="text-emerald-400 font-bold">Admissible Breaches Identified</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Card 2: Global Commercial Operations & Dispatch */}
-          <div className="group relative rounded-3xl overflow-hidden border border-white/[0.12] bg-[#05070C] shadow-2xl transition-all duration-300 hover:border-purple-500/50 hover:shadow-[0_0_50px_rgba(168,85,247,0.3)] flex flex-col justify-between">
-            <div className="relative aspect-[16/9] w-full overflow-hidden bg-black">
-              <Image
-                src="/images/legal_operations_hub.jpg"
-                alt="Modern corporate legal operations center"
-                fill
-                className="object-cover transition-transform duration-700 group-hover:scale-105"
-                sizes="(max-width: 1024px) 100vw, 50vw"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#05070C] via-[#05070C]/30 to-transparent" />
-              
-              {/* Product HUD Overlay */}
-              <div className="absolute top-4 left-4 flex items-center gap-2 font-mono text-[10px] text-purple-300 bg-black/70 backdrop-blur-md px-3 py-1 rounded-full border border-purple-500/30">
-                <span className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-pulse" />
-                <span>COMMERCIAL DISPATCH: 52 FORUMS</span>
-              </div>
-
-              <div className="absolute top-4 right-4 font-mono text-[10px] text-slate-300 bg-black/70 backdrop-blur-md px-2.5 py-1 rounded-md border border-white/10">
-                ICC & SIAC SYNCHRONIZED
-              </div>
-            </div>
-
-            <div className="p-6 sm:p-8 space-y-3 relative z-10 -mt-6">
-              <div className="flex items-center gap-2 text-xs font-mono text-purple-400 font-bold uppercase tracking-wider">
-                <Gavel size={14} />
-                <span>Pre-Action Enforcement & Filings</span>
-              </div>
-              <h4 className="text-xl sm:text-2xl font-black text-white tracking-tight">
-                Global Commercial Operations & Dispatch
-              </h4>
-              <p className="text-[14px] text-[#8D9CB0] leading-relaxed">
-                Coordinates court-ready demand notices, certified postal and digital service, and direct handover to verified commercial litigators across international forums.
-              </p>
-
-              <div className="pt-3 border-t border-white/[0.08] flex items-center justify-between text-xs font-mono text-slate-400">
-                <span>Enforcement Speed: Instant</span>
-                <span className="text-cyan-400 font-bold">Verified Counsel Handoff</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-
-      {/* ── 3. CORE INNOVATION: LIVE CROSS-BORDER LEGAL ENGINE VISUALIZER ── */}
-      <section className="py-20 px-4 sm:px-6 max-w-7xl mx-auto w-full space-y-10 relative z-10">
-        <div className="text-center space-y-3 max-w-3xl mx-auto">
-          <span className="text-[11px] font-bold text-blue-400 tracking-widest uppercase bg-blue-500/10 border border-blue-500/25 px-3 py-1 rounded-full font-mono">
-            GLOBAL ENGINE · MULTI-JURISDICTION SIMULATOR
-          </span>
-          <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white">
-            Autonomous Legal Intelligence Across Borders
-          </h2>
-          <p className="text-[15px] text-[#8D9CB0]">
-            Select an international dispute scenario below to observe real-time fact extraction, conflict-of-laws determination, statute of limitations calculation, and court-admissible pre-action notice drafting.
-          </p>
-        </div>
-
-        {/* Global Scenario Switcher Tabs */}
-        <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 max-w-6xl mx-auto">
-          {GLOBAL_SCENARIOS.map((scen) => {
-            const active = scen.id === activeScenarioId;
-            return (
-              <button
-                key={scen.id}
-                onClick={() => {
-                  setActiveScenarioId(scen.id);
-                  setActivePipelineStage(0);
-                }}
-                className={`p-3.5 rounded-2xl border text-left transition-all ${
-                  active
-                    ? 'bg-blue-600/15 border-blue-500/60 shadow-[0_0_25px_rgba(37,99,235,0.25)]'
-                    : 'bg-[#05070C]/80 border-white/[0.08] hover:border-white/20 text-[#8D9CB0]'
-                }`}
-              >
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-base">{scen.flag}</span>
-                  <span className={`w-1.5 h-1.5 rounded-full ${active ? 'bg-blue-400 animate-ping' : 'bg-slate-600'}`} />
-                </div>
-                <div className={`text-[12px] font-bold truncate ${active ? 'text-white' : 'text-[#CBD5E1]'}`}>
-                  {scen.country}
-                </div>
-                <div className="text-[10px] font-mono text-slate-400 truncate mt-0.5">
-                  {scen.badge}
-                </div>
-                <div className="text-[11px] font-mono font-bold text-emerald-400 mt-1">
-                  {scen.claimAmountDisplay}
-                </div>
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Visualizer Frame */}
-        <div className="glass-panel-luxury rounded-3xl overflow-hidden border border-white/[0.12] max-w-5xl mx-auto">
-          
-          {/* Top Engine Control Bar */}
-          <div className="px-6 py-4 border-b border-white/[0.08] bg-[#05070C] flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-blue-600/20 border border-blue-500/40 flex items-center justify-center text-blue-400 text-lg">
-                {activeScenario.flag}
-              </div>
+          {/* Active Scenario Card */}
+          <div className="bg-white rounded-3xl border border-[#E8E4DA] p-6 sm:p-8 shadow-sm space-y-6">
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-6 border-b border-[#E8E4DA]">
               <div>
-                <div className="text-[13.5px] font-bold text-white flex items-center gap-2">
-                  <span>DOCKET: GLN-2026-X884</span>
-                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-bold">
-                    JURISDICTION: {activeScenario.country.toUpperCase()}
-                  </span>
+                <div className="inline-block px-3 py-1 rounded-full bg-[#F3EFE6] text-[#42403B] text-[11px] font-mono font-semibold uppercase tracking-wider mb-2">
+                  {activeScenario.badge}
                 </div>
-                <p className="text-[11.5px] text-[#8D9CB0] font-mono truncate max-w-md">
+                <h3 className="text-2xl font-bold text-[#141413]">
+                  {activeScenario.title}
+                </h3>
+                <p className="text-[14px] text-[#636059] mt-1 font-mono">
                   Forum: {activeScenario.forum}
                 </p>
               </div>
+
+              <div className="flex items-center gap-4 shrink-0">
+                <div className="text-right">
+                  <div className="text-[11px] font-mono text-[#87837B] uppercase">Claim Principal</div>
+                  <div className="text-2xl font-black text-[#141413] font-mono">{activeScenario.claimAmountDisplay}</div>
+                </div>
+                <div className="text-right">
+                  <div className="text-[11px] font-mono text-[#87837B] uppercase">Limitation Clock</div>
+                  <div className="text-2xl font-black text-[#B45309] font-mono">{activeScenario.limitationDays} Days</div>
+                </div>
+              </div>
             </div>
 
-            {/* Pipeline Stage Indicators */}
-            <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0">
-              {['1. Extraction', '2. Governing Law', '3. Limitation Clock', '4. Pre-Action Notice'].map((stage, idx) => (
+            {/* Excerpt Notice */}
+            <div className="space-y-3">
+              <div className="flex items-center justify-between text-[12px]">
+                <span className="font-mono font-bold text-[#87837B] uppercase">
+                  Auto-Generated Court Notice Excerpt · {activeScenario.noticeFormat}
+                </span>
                 <button
-                  key={idx}
-                  onClick={() => setActivePipelineStage(idx)}
-                  className={`px-3 py-1 rounded-lg text-[11px] font-mono transition-all shrink-0 ${
-                    activePipelineStage === idx
-                      ? 'bg-blue-600 text-white font-bold shadow-md'
-                      : 'bg-white/[0.04] text-[#8D9CB0] hover:text-white'
-                  }`}
+                  onClick={() => copyNotice(activeScenario.noticeExcerpt)}
+                  className="inline-flex items-center gap-1 text-[#141413] hover:underline font-mono"
                 >
-                  {stage}
+                  <Copy size={13} />
+                  <span>{copiedNotice ? 'Copied' : 'Copy Notice'}</span>
                 </button>
-              ))}
+              </div>
+              <div className="bg-[#FAF8F5] border border-[#E8E4DA] rounded-2xl p-5 text-[13.5px] font-mono text-[#2D2C2A] leading-relaxed italic">
+                "{activeScenario.noticeExcerpt}"
+              </div>
             </div>
-          </div>
 
-          {/* Engine Content Stage Display */}
-          <div className="p-6 sm:p-8 bg-[#020408] space-y-6">
-            <AnimatePresence mode="wait">
-              {activePipelineStage === 0 && (
-                <motion.div
-                  key="stage-0"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  className="space-y-4"
-                >
-                  <div className="flex items-center justify-between text-xs font-mono text-blue-400">
-                    <span>STAGE 1: NEURAL CROSS-BORDER FACT PARSING & FORUM SELECTION</span>
-                    <span className="text-emerald-400">COMPLETED (14ms)</span>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/[0.08] space-y-2">
-                      <span className="text-[11px] font-mono text-slate-500 uppercase">Cross-Border Claim</span>
-                      <p className="text-[13.5px] font-bold text-white leading-snug">{activeScenario.title}</p>
-                    </div>
-                    <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/[0.08] space-y-2">
-                      <span className="text-[11px] font-mono text-slate-500 uppercase">Principal Claimed</span>
-                      <p className="text-2xl font-black font-mono text-emerald-400">
-                        {activeScenario.claimAmountDisplay}
-                      </p>
-                      <span className="text-[10px] text-slate-400 block">+Statutory Pre-Judgment Interest</span>
-                    </div>
-                    <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/[0.08] space-y-2">
-                      <span className="text-[11px] font-mono text-slate-500 uppercase">Competent Judicial Forum</span>
-                      <p className="text-[12.5px] font-semibold text-cyan-300 leading-snug">{activeScenario.jurisdiction}</p>
-                    </div>
-                  </div>
-                </motion.div>
-              )}
+            {/* Citations & Precedents */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+              <div className="p-4 rounded-2xl bg-[#F7F4EE] border border-[#E8E4DA]">
+                <div className="text-[11px] font-mono font-bold text-[#87837B] uppercase mb-1">Governing Statute</div>
+                <div className="text-[13px] font-medium text-[#141413]">{activeScenario.statute}</div>
+              </div>
+              <div className="p-4 rounded-2xl bg-[#F7F4EE] border border-[#E8E4DA]">
+                <div className="text-[11px] font-mono font-bold text-[#87837B] uppercase mb-1">Binding Precedent</div>
+                <div className="text-[13px] font-medium text-[#141413]">{activeScenario.precedent}</div>
+              </div>
+            </div>
 
-              {activePipelineStage === 1 && (
-                <motion.div
-                  key="stage-1"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  className="space-y-4"
-                >
-                  <div className="flex items-center justify-between text-xs font-mono text-blue-400">
-                    <span>STAGE 2: GOVERNING STATUTE & INTERNATIONAL CONVENTION MATCH</span>
-                    <span className="text-emerald-400">99.7% ADMISSIBILITY RATING</span>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="p-5 rounded-2xl bg-blue-950/20 border border-blue-500/30 space-y-2">
-                      <div className="flex items-center gap-2 text-blue-400 text-xs font-mono font-bold">
-                        <Scale size={14} />
-                        <span>APPLICABLE DOMESTIC OR UNIFORM STATUTE</span>
-                      </div>
-                      <p className="text-[14.5px] font-bold text-white leading-snug">
-                        {activeScenario.statute}
-                      </p>
-                      <p className="text-[12px] text-[#8D9CB0]">
-                        Verified against governing commercial laws, civil procedure rules, and cross-border conflict doctrines.
-                      </p>
-                    </div>
-
-                    <div className="p-5 rounded-2xl bg-indigo-950/20 border border-indigo-500/30 space-y-2">
-                      <div className="flex items-center gap-2 text-indigo-400 text-xs font-mono font-bold">
-                        <BookmarkCheck size={14} />
-                        <span>BINDING COMMERCIAL APEX PRECEDENT</span>
-                      </div>
-                      <p className="text-[14.5px] font-bold text-indigo-200 leading-snug">
-                        {activeScenario.precedent}
-                      </p>
-                      <p className="text-[12px] text-[#8D9CB0]">
-                        Binding ratio decidendi confirms right to summary relief, emergency injunctions, and legal cost awards.
-                      </p>
-                    </div>
-                  </div>
-                </motion.div>
-              )}
-
-              {activePipelineStage === 2 && (
-                <motion.div
-                  key="stage-2"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  className="space-y-4"
-                >
-                  <div className="flex items-center justify-between text-xs font-mono text-blue-400">
-                    <span>STAGE 3: STATUTE OF LIMITATIONS & PRESCRIPTION CLOCK</span>
-                    <span className={activeScenario.riskLevel === 'CRITICAL' ? 'text-rose-400 font-bold' : 'text-emerald-400'}>
-                      {activeScenario.riskLevel} EXTINCTION RISK
-                    </span>
-                  </div>
-
-                  <div className="p-6 rounded-2xl bg-[#090D17] border border-white/[0.08] space-y-4">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                      <div>
-                        <span className="text-xs font-mono text-slate-400 uppercase">Worldwide Filing Window Remaining</span>
-                        <div className="text-3xl sm:text-4xl font-black font-mono text-white flex items-center gap-3">
-                          <span>{activeScenario.limitationDays} Days</span>
-                          <span className="text-xs px-2.5 py-1 rounded-full bg-blue-500/10 border border-blue-500/25 text-blue-400 font-sans font-semibold">
-                            Full Claim Rights Active
-                          </span>
-                        </div>
-                      </div>
-                      <div className="text-right sm:text-right">
-                        <span className="text-xs font-mono text-slate-400 uppercase">Applicable Framework</span>
-                        <p className="text-[13px] font-bold text-emerald-400">
-                          {activeScenario.country} Limitation Regime
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="w-full bg-white/[0.05] h-2.5 rounded-full overflow-hidden">
-                      <div
-                        className={`h-full rounded-full ${
-                          activeScenario.riskLevel === 'CRITICAL' ? 'bg-rose-500' : 'bg-blue-500'
-                        }`}
-                        style={{ width: `${Math.min(100, Math.max(15, (activeScenario.limitationDays / 2190) * 100))}%` }}
-                      />
-                    </div>
-                    <p className="text-[12px] text-slate-400 font-mono">
-                      *Prescription or statute of limitations failure bars enforcement under both local courts and the 1958 New York Convention.
-                    </p>
-                  </div>
-                </motion.div>
-              )}
-
-              {activePipelineStage === 3 && (
-                <motion.div
-                  key="stage-3"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  className="space-y-4"
-                >
-                  <div className="flex items-center justify-between text-xs font-mono text-blue-400">
-                    <span>STAGE 4: COURT-READY PRE-ACTION DEMAND & NOTICE</span>
-                    <button
-                      onClick={() => copyNotice(activeScenario.noticeExcerpt)}
-                      className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-white/[0.05] hover:bg-white/[0.1] text-[#CBD5E1] text-[11px] font-mono transition-all"
-                    >
-                      {copiedNotice ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} />}
-                      <span>{copiedNotice ? 'Copied' : 'Copy Notice Text'}</span>
-                    </button>
-                  </div>
-
-                  <div className="p-5 sm:p-6 rounded-2xl bg-[#04060B] border border-blue-500/30 space-y-3 font-serif text-[13.5px] leading-relaxed text-[#CBD5E1] shadow-inner">
-                    <div className="flex items-center justify-between pb-3 border-b border-white/[0.08] font-mono text-[11px] text-slate-400 not-italic">
-                      <span className="flex items-center gap-2">
-                        <FileText size={14} className="text-blue-400" />
-                        <span>{activeScenario.noticeFormat}</span>
-                      </span>
-                      <span className="text-emerald-400 font-bold">READY FOR SERVICE</span>
-                    </div>
-
-                    <p className="text-white font-sans text-[13px] font-medium leading-relaxed bg-white/[0.02] p-4 rounded-xl border border-white/[0.05]">
-                      {activeScenario.noticeExcerpt}
-                    </p>
-
-                    <div className="flex flex-col sm:flex-row items-center justify-between pt-2 text-xs font-sans text-slate-400 gap-3">
-                      <div className="flex items-center gap-2">
-                        <ShieldCheck size={14} className="text-emerald-400" />
-                        <span>Admissible for expedited commercial filing & counsel handover</span>
-                      </div>
-                      <Link
-                        href={`/dashboard/chat?init=${encodeURIComponent(activeScenario.title)}`}
-                        className="btn-glow-blue h-9 px-4 rounded-lg text-xs font-semibold"
-                      >
-                        Draft in Console →
-                      </Link>
-                    </div>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            {/* Bottom Stepper CTA */}
-            <div className="flex items-center justify-between pt-4 border-t border-white/[0.08] text-[13px]">
-              <div className="flex items-center gap-2 text-[#8D9CB0]">
-                <span>Have a cross-border dispute in another country?</span>
+            <div className="pt-4 flex flex-wrap items-center justify-between gap-4">
+              <div className="flex items-center gap-2 text-[12.5px] text-[#636059]">
+                <CheckCircle2 size={16} className="text-[#141413]" />
+                <span>Court-admissible in {activeScenario.country} jurisdictions</span>
               </div>
               <Link
                 href={`/dashboard/chat?init=${encodeURIComponent(activeScenario.title)}`}
-                className="text-blue-400 hover:text-blue-300 font-semibold flex items-center gap-1 transition-colors"
+                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#141413] hover:bg-black text-white text-[13px] font-medium shadow-sm transition-all"
               >
-                <span>Launch Global Legal Analysis</span>
+                <span>Draft Full Notice for this Case</span>
                 <ArrowRight size={14} />
               </Link>
             </div>
           </div>
+
         </div>
       </section>
 
-      {/* ── 4. GLOBAL STATUTE OF LIMITATIONS & PRESCRIPTION RADAR ───── */}
-      <section className="py-20 px-4 sm:px-6 max-w-7xl mx-auto w-full space-y-12 relative z-10">
-        <div className="text-center space-y-3 max-w-3xl mx-auto">
-          <span className="text-[11px] font-bold text-amber-400 tracking-widest uppercase bg-amber-500/10 border border-amber-500/25 px-3 py-1 rounded-full font-mono">
-            GLOBAL STATUTE OF LIMITATIONS TRACKER
-          </span>
-          <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white">
-            Statutory Deadlines Vary by Country. <br />Never Miss One.
-          </h2>
-          <p className="text-[15px] text-[#8D9CB0]">
-            Whether under the US Uniform Commercial Code, the UK Limitation Act 1980, German BGB §195, or international arbitration rules, missing the statutory deadline completely extinguishes your right to recover.
-          </p>
-        </div>
-
-        <div className="glass-panel-luxury p-6 sm:p-10 rounded-3xl border border-white/[0.12] max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-          {/* Preset Selector */}
-          <div className="lg:col-span-5 space-y-4">
-            <label className="text-xs font-mono font-bold uppercase text-slate-400 block tracking-wider">
-              Select Jurisdiction & Cause:
-            </label>
-
-            <div className="space-y-2">
-              {GLOBAL_LIMITATION_DATA.map((preset, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => {
-                    setSelectedLimitation(preset);
-                    setLimitationDaysElapsed(Math.round(preset.maxDays * 0.25));
-                  }}
-                  className={`w-full p-3.5 rounded-xl border text-left transition-all ${
-                    selectedLimitation.jurisdiction === preset.jurisdiction
-                      ? 'bg-amber-500/15 border-amber-500/40 text-white font-semibold shadow-md'
-                      : 'bg-white/[0.02] border-white/[0.06] text-[#8D9CB0] hover:text-white hover:bg-white/[0.05]'
-                  }`}
-                >
-                  <div className="flex justify-between items-center text-[13px]">
-                    <span className="flex items-center gap-1.5 font-bold">
-                      <span>{preset.flag}</span>
-                      <span>{preset.jurisdiction}</span>
-                    </span>
-                    <span className="font-mono text-xs text-amber-400 font-bold">{preset.maxDays}d</span>
-                  </div>
-                  <div className="text-[11px] text-slate-400 font-mono mt-0.5">
-                    {preset.cause} · {preset.statute}
-                  </div>
-                </button>
-              ))}
+      {/* ── HOW IT WORKS: 3 STEPS ── */}
+      <section className="py-20 px-6 sm:px-10 lg:px-14 border-t border-[#E8E4DA] bg-white">
+        <div className="max-w-7xl mx-auto space-y-12">
+          
+          <div className="max-w-2xl space-y-3">
+            <div className="text-[12px] font-mono font-semibold text-[#87837B] uppercase tracking-widest">
+              Methodology
             </div>
+            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#141413]">
+              From commercial dispute to resolution in three steps.
+            </h2>
           </div>
 
-          {/* Radar Dial & Sliders */}
-          <div className="lg:col-span-7 p-6 rounded-2xl bg-[#04060B] border border-white/[0.08] space-y-6">
-            <div className="flex items-center justify-between pb-3 border-b border-white/[0.08]">
-              <div className="space-y-0.5">
-                <span className="text-xs font-mono text-slate-500 uppercase">Applicable Statute</span>
-                <p className="text-[14px] font-bold text-white">{selectedLimitation.statute}</p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              {
+                step: '01',
+                title: 'Case & Contract Ingestion',
+                desc: 'Upload agreements or type the dispute in plain English. LexNova extracts governing clauses, choice of forum, and defaults in seconds.',
+                badge: '< 30s Analysis',
+              },
+              {
+                step: '02',
+                title: 'Statutory Notice & Docketing',
+                desc: 'Autonomous generation of jurisdiction-specific pre-action notices (RPAD, CPR, UCC, BGB) with strict statutory limitation clocks.',
+                badge: 'Court-Admissible',
+              },
+              {
+                step: '03',
+                title: 'Verified Global Counsel Retainer',
+                desc: 'Handoff to Bar-verified attorneys and solicitors across the US, UK, EU, and Asia. Escrow-protected retainers with fixed pricing.',
+                badge: '1-Click Retainer',
+              },
+            ].map((s, i) => (
+              <div
+                key={i}
+                className="bg-[#FAF8F5] border border-[#E8E5DE] rounded-3xl p-8 space-y-4 hover:border-[#141413] transition-all"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="font-mono text-[14px] font-bold text-[#87837B]">
+                    STEP {s.step}
+                  </span>
+                  <span className="px-2.5 py-1 rounded-full bg-white border border-[#E8E4DA] text-[11px] font-mono font-semibold text-[#42403B]">
+                    {s.badge}
+                  </span>
+                </div>
+                <h3 className="text-xl font-bold text-[#141413] tracking-tight">
+                  {s.title}
+                </h3>
+                <p className="text-[14px] text-[#636059] leading-relaxed">
+                  {s.desc}
+                </p>
               </div>
-              <span className="px-3 py-1 rounded-full text-xs font-mono font-bold bg-amber-500/10 border border-amber-500/30 text-amber-400">
-                {selectedLimitation.riskWindow}
-              </span>
-            </div>
+            ))}
+          </div>
 
-            {/* Slider */}
-            <div className="space-y-2">
-              <div className="flex justify-between text-xs font-mono">
-                <span className="text-slate-400">Days Elapsed Since Cause of Action:</span>
-                <span className="text-white font-bold text-sm">{limitationDaysElapsed} Days</span>
-              </div>
-              <input
-                type="range"
-                min="1"
-                max={selectedLimitation.maxDays}
-                value={limitationDaysElapsed}
-                onChange={(e) => setLimitationDaysElapsed(Number(e.target.value))}
-                className="w-full h-2 bg-white/[0.1] rounded-lg appearance-none cursor-pointer accent-amber-400"
-              />
-              <div className="flex justify-between text-[11px] font-mono text-slate-500">
-                <span>0 Days (Accrual Date)</span>
-                <span>{selectedLimitation.maxDays} Days (Absolute Extinction)</span>
-              </div>
-            </div>
+        </div>
+      </section>
 
-            {/* Results Display */}
-            <div className="grid grid-cols-2 gap-4 pt-2">
-              <div className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.06] space-y-1">
-                <span className="text-[11px] font-mono text-slate-500 uppercase">Statutory Window Remaining</span>
-                <div className="text-3xl font-black font-mono text-white">
-                  {remainingDays} <span className="text-sm font-normal text-slate-400">days left</span>
+      {/* ── DUAL PLATFORM: CLIENTS & ADVOCATES ── */}
+      <section className="py-20 px-6 sm:px-10 lg:px-14 border-t border-[#E8E5DE] bg-white">
+        <div className="max-w-7xl mx-auto space-y-12">
+          
+          <div className="text-center max-w-2xl mx-auto space-y-3">
+            <div className="text-[12px] font-mono font-semibold text-[#87837B] uppercase tracking-widest">
+              Unified Ecosystem
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#141413]">
+              Engineered for both claimants and counsel.
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
+            
+            {/* Left Showcase Card: Enterprise Contract & Dispute Workspace */}
+            <div className="bg-white rounded-3xl border border-[#E8E5DE] overflow-hidden text-[#141413] flex flex-col justify-between shadow-xs hover:shadow-md transition-all relative group">
+              
+              {/* Image & Header Overlay */}
+              <div className="relative h-[220px] sm:h-[250px] w-full overflow-hidden bg-slate-900">
+                <Image
+                  src="/images/legal_operations_hub.jpg"
+                  alt="Enterprise Contract & Dispute Workspace"
+                  fill
+                  className="object-cover object-top opacity-90 group-hover:scale-105 transition-transform duration-700"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                
+                {/* Floating Top Badges */}
+                <div className="absolute top-4 left-4 right-4 flex items-center justify-between text-[11px] font-mono">
+                  <span className="bg-black/60 backdrop-blur-md px-3 py-1 rounded-full border border-white/20 text-white flex items-center gap-1.5 shadow-sm">
+                    <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+                    ITVF WORKSPACE · CLAUSE ENGINE
+                  </span>
+                  <span className="bg-emerald-950/80 text-emerald-300 border border-emerald-500/40 px-2.5 py-1 rounded-full font-semibold shadow-sm">
+                    STATUTORY ACTIVE
+                  </span>
                 </div>
               </div>
 
-              <div className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.06] space-y-1">
-                <span className="text-[11px] font-mono text-slate-500 uppercase">Risk Evaluation</span>
-                <div className={`text-xl font-black font-mono ${remainingDays < 60 ? 'text-rose-400' : 'text-emerald-400'}`}>
-                  {remainingDays < 60 ? 'CRITICAL - ACT NOW' : 'ACTIVE CLAIM WINDOW'}
+              {/* Card Body */}
+              <div className="p-6 sm:p-8 space-y-6 flex-1 flex flex-col justify-between">
+                <div className="space-y-3">
+                  <span className="text-[11px] font-mono text-cyan-800 bg-cyan-50 border border-cyan-200 px-3 py-1 rounded-full font-bold uppercase tracking-wider inline-block">
+                    AUTOMATED CLAUSE DISSECTION
+                  </span>
+                  <h3 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#141413]">
+                    Enterprise Contract &amp; Dispute Workspace
+                  </h3>
+                  <p className="text-[14px] text-[#636059] leading-relaxed">
+                    Autonomous clause extraction, breach detection, and statutory damages quantification displayed in a unified executive docket with real-time statutory calculation.
+                  </p>
+
+                  {/* High-Tech Terminal Scanner Viewport Inset */}
+                  <div className="pt-2">
+                    <div className="bg-[#12161F] border border-[#2B3242] rounded-2xl p-4 relative overflow-hidden text-[#C9D1D9]">
+                      
+                      {/* Laser beam animation while scanning */}
+                      {isScanningClause && (
+                        <div
+                          className="absolute left-0 right-0 h-0.5 bg-cyan-400 shadow-[0_0_15px_#22d3ee] z-20 transition-all duration-1000 ease-linear animate-pulse"
+                          style={{
+                            top: '45%',
+                          }}
+                        />
+                      )}
+
+                      <div className="flex items-center justify-between pb-2 mb-2 border-b border-white/10 text-[11px] font-mono">
+                        <span className="text-white/60">Sample Clause: Master Services Agreement §8.2</span>
+                        <span className="text-cyan-400 font-semibold">Delaware UCC</span>
+                      </div>
+
+                      <p className="text-[12px] font-mono text-[#C9D1D9] leading-relaxed italic">
+                        "8.2 Termination for Cause: In the event of non-remittance exceeding $140,000.00 within thirty (30) days, Defaulting Party shall be in material default under Delaware UCC §2-708 subject to immediate AAA expedited arbitration."
+                      </p>
+
+                      {/* Post-Scan Revealed Badges */}
+                      {clauseScanCompleted && (
+                        <div className="mt-3 pt-3 border-t border-white/10 flex flex-wrap gap-2 text-[11px] font-mono animate-fadeIn">
+                          <span className="bg-emerald-950/90 text-emerald-300 border border-emerald-500/40 px-2.5 py-1 rounded-md flex items-center gap-1">
+                            <CheckCircle2 size={12} className="text-emerald-400" />
+                            Breach Confirmed (§2-708)
+                          </span>
+                          <span className="bg-cyan-950/90 text-cyan-300 border border-cyan-500/40 px-2.5 py-1 rounded-md flex items-center gap-1">
+                            <CheckCircle2 size={12} className="text-cyan-400" />
+                            +18.0% Statutory Late Interest
+                          </span>
+                          <span className="bg-white/10 text-white/90 border border-white/20 px-2.5 py-1 rounded-md">
+                            Delaware Chancery Court
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 </div>
+
+                {/* Bottom Trigger & Metrics */}
+                <div className="pt-4 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <button
+                      type="button"
+                      onClick={handleScanClause}
+                      disabled={isScanningClause}
+                      className="px-4 py-2.5 rounded-xl bg-[#141413] hover:bg-black text-white font-mono text-[12px] font-medium transition-all flex items-center gap-2 shadow-xs"
+                    >
+                      {isScanningClause ? (
+                        <>
+                          <RefreshCw size={12} className="animate-spin text-cyan-400" />
+                          <span>Scanning Clause...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Zap size={12} className="fill-current text-cyan-400" />
+                          <span>{clauseScanCompleted ? 'Re-Scan Clause ⚡' : 'Scan Clause for Breach ⚡'}</span>
+                        </>
+                      )}
+                    </button>
+                    <Link
+                      href="/dashboard/chat"
+                      className="text-[13px] font-medium text-[#141413] hover:underline flex items-center gap-1"
+                    >
+                      <span>Open Full Workspace</span>
+                      <ChevronRight size={14} />
+                    </Link>
+                  </div>
+
+                  <div className="pt-3 border-t border-[#E8E5DE] flex items-center justify-between text-[11.5px] font-mono text-[#87837B]">
+                    <span>Clause Parsing: <strong className="text-[#141413]">&lt; 30s</strong></span>
+                    <span className="text-emerald-700 font-semibold flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-600" />
+                      Admissible Breaches Identified
+                    </span>
+                  </div>
+                </div>
+
               </div>
             </div>
 
-            <Link
-              href={`/dashboard/chat?init=${encodeURIComponent(`Check limitation period for: ${selectedLimitation.jurisdiction} - ${selectedLimitation.cause}`)}`}
-              className="btn-glow-blue w-full h-11 text-center justify-center text-[13.5px] font-semibold"
-            >
-              Generate Pre-Suit Notice Before Expiry →
+            {/* Right Showcase Card: Global Commercial Operations & Dispatch */}
+            <div className="bg-white rounded-3xl border border-[#E8E5DE] overflow-hidden text-[#141413] flex flex-col justify-between shadow-xs hover:shadow-md transition-all relative group">
+              
+              {/* Image & Header Overlay */}
+              <div className="relative h-[220px] sm:h-[250px] w-full overflow-hidden bg-slate-900">
+                <Image
+                  src="/images/tesla_mission_control.jpg"
+                  alt="Global Commercial Operations & Dispatch"
+                  fill
+                  className="object-cover object-top opacity-90 group-hover:scale-105 transition-transform duration-700"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                
+                {/* Floating Top Badges */}
+                <div className="absolute top-4 left-4 right-4 flex items-center justify-between text-[11px] font-mono">
+                  <span className="bg-black/60 backdrop-blur-md px-3 py-1 rounded-full border border-white/20 text-white flex items-center gap-1.5 shadow-sm">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                    COMMERCIAL DISPATCH: 52 FORUMS
+                  </span>
+                  <span className="bg-purple-950/80 text-purple-300 border border-purple-500/40 px-2.5 py-1 rounded-full font-semibold shadow-sm">
+                    TCC &amp; SIAC SYNCHRONIZED
+                  </span>
+                </div>
+              </div>
+
+              {/* Card Body */}
+              <div className="p-6 sm:p-8 space-y-6 flex-1 flex flex-col justify-between">
+                <div className="space-y-3">
+                  <span className="text-[11px] font-mono text-purple-800 bg-purple-50 border border-purple-200 px-3 py-1 rounded-full font-bold uppercase tracking-wider inline-block">
+                    PRE-ACTION ENFORCEMENT &amp; FILINGS
+                  </span>
+                  <h3 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#141413]">
+                    Global Commercial Operations &amp; Dispatch
+                  </h3>
+                  <p className="text-[14px] text-[#636059] leading-relaxed">
+                    Coordinates court-ready demand notices, certified postal and digital service, and direct handover to verified commercial litigators across international forums.
+                  </p>
+
+                  {/* Interactive Forum Dispatch Selector */}
+                  <div className="pt-2 space-y-2">
+                    <div className="flex gap-1.5 overflow-x-auto pb-1 no-scrollbar">
+                      {[
+                        { id: 'delaware', label: '🇺🇸 Delaware ($140k)', court: 'Delaware Court of Chancery', counsel: 'Sarah Jenkins, Esq.' },
+                        { id: 'london', label: '🇬🇧 London (£65k)', court: 'Rolls Building Commercial Court', counsel: 'David Alistair-Smith, KC' },
+                        { id: 'siac', label: '🇸🇬 SIAC ($350k)', court: 'Maxwell Chambers Singapore', counsel: 'Kenneth Tan, FCIArb' },
+                        { id: 'mumbai', label: '🇮🇳 Bombay (₹85L)', court: 'High Court of Bombay Commercial Div', counsel: 'Adv. Rajesh Sharma' },
+                      ].map((item) => (
+                        <button
+                          key={item.id}
+                          onClick={() => setActiveDispatchForum(item.id as any)}
+                          className={`px-3 py-1.5 rounded-xl text-[11px] font-mono transition-all whitespace-nowrap border ${
+                            activeDispatchForum === item.id
+                              ? 'bg-[#141413] text-white border-[#141413] shadow-xs'
+                              : 'bg-[#FAF8F5] text-[#636059] border-[#E8E5DE] hover:border-[#B5AFA2] hover:text-[#141413]'
+                          }`}
+                        >
+                          {item.label}
+                        </button>
+                      ))}
+                    </div>
+
+                    {/* Active Dispatch Detail Box Inset Terminal */}
+                    <div className="bg-[#12161F] border border-[#2B3242] rounded-2xl p-4 text-[12px] font-mono space-y-2 text-[#C9D1D9]">
+                      <div className="flex justify-between items-center text-[11px] border-b border-white/10 pb-2">
+                        <span className="text-white/60">Service Method:</span>
+                        <span className="text-emerald-400 font-semibold">RPAD + Secure Digital Timestamp</span>
+                      </div>
+                      <div className="flex justify-between items-center text-[11px]">
+                        <span className="text-white/60">Enforcement Forum:</span>
+                        <span className="text-white font-medium">
+                          {activeDispatchForum === 'delaware' && 'Delaware Court of Chancery (AAA Rules)'}
+                          {activeDispatchForum === 'london' && 'Rolls Building, King’s Bench Commercial Court'}
+                          {activeDispatchForum === 'siac' && 'Maxwell Chambers, SIAC Expedited Procedure'}
+                          {activeDispatchForum === 'mumbai' && 'Commercial Division, High Court of Bombay'}
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center text-[11px]">
+                        <span className="text-white/60">Assigned Counsel:</span>
+                        <span className="text-purple-300 font-medium">
+                          {activeDispatchForum === 'delaware' && 'Sarah Jenkins, Esq. (NY/DE Bar #4891024)'}
+                          {activeDispatchForum === 'london' && 'David Alistair-Smith, KC (SRA #598210)'}
+                          {activeDispatchForum === 'siac' && 'Kenneth Tan, FCIArb (SIAC Panel)'}
+                          {activeDispatchForum === 'mumbai' && 'Adv. Rajesh Sharma (BCM/3081/2010)'}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Bottom Trigger & Metrics */}
+                <div className="pt-4 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <Link
+                      href="/advocates"
+                      className="px-4 py-2.5 rounded-xl bg-[#141413] hover:bg-black text-white font-mono text-[12px] font-medium transition-colors flex items-center gap-2 shadow-xs"
+                    >
+                      <ShieldCheck size={13} className="text-emerald-400" />
+                      <span>Review 140+ Admitted Litigators</span>
+                    </Link>
+                    <Link
+                      href="/dashboard/chat"
+                      className="text-[13px] font-medium text-[#141413] hover:underline flex items-center gap-1"
+                    >
+                      <span>Dispatch Notice</span>
+                      <ChevronRight size={14} />
+                    </Link>
+                  </div>
+
+                  <div className="pt-3 border-t border-[#E8E5DE] flex items-center justify-between text-[11.5px] font-mono text-[#87837B]">
+                    <span>Enforcement Speed: <strong className="text-[#141413]">Instant</strong></span>
+                    <span className="text-purple-700 font-semibold flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-purple-600" />
+                      Verified Counsel Handoff
+                    </span>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+      {/* ── JURISDICTIONS NETWORK ── */}
+      <section className="py-20 px-6 sm:px-10 lg:px-14 border-t border-[#E8E4DA] bg-white">
+        <div className="max-w-7xl mx-auto space-y-10">
+          
+          <div className="flex items-center justify-between">
+            <div className="space-y-1">
+              <div className="text-[12px] font-mono font-semibold text-[#87837B] uppercase tracking-widest">
+                Global Coverage
+              </div>
+              <h2 className="text-2xl sm:text-3xl font-bold text-[#141413]">
+                Fifty active statutory jurisdictions.
+              </h2>
+            </div>
+            <Link href="/dashboard/chat" className="text-[13px] font-medium text-[#141413] hover:underline flex items-center gap-1">
+              <span>View All Frameworks</span>
+              <ChevronRight size={15} />
             </Link>
           </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+            {[
+              { flag: '🇺🇸', name: 'United States', courts: 'Delaware Chancery · UCC §2-708' },
+              { flag: '🇬🇧', name: 'United Kingdom', courts: 'High Court CPR · 1998 Late Payment' },
+              { flag: '🇪🇺', name: 'European Union', courts: 'BGB §195 · GDPR Art. 82 EOP' },
+              { flag: '🇸🇬', name: 'Singapore', courts: 'SIAC Arbitration · Maxwell Chambers' },
+              { flag: '🇮🇳', name: 'India', courts: 'Sec 138 NI Act · BNS §318 Commercial' },
+              { flag: '🇦🇺', name: 'Australia', courts: 'Federal Court of Australia · ACICA' },
+              { flag: '🇨🇦', name: 'Canada', courts: 'Ontario Superior Court · BCSC' },
+              { flag: '🇩🇪', name: 'Germany', courts: 'Landgericht Frankfurt · Mahnbescheid' },
+              { flag: '🇫🇷', name: 'France', courts: 'Tribunal de Commerce de Paris' },
+              { flag: '🌍', name: '+41 More', courts: 'UNCITRAL · New York Conv. 1958' },
+            ].map((j, i) => (
+              <div
+                key={i}
+                className="p-5 rounded-2xl border border-[#E8E5DE] bg-[#FAF8F5] hover:border-[#141413] hover:bg-white transition-all"
+              >
+                <div className="text-3xl mb-3">{j.flag}</div>
+                <div className="text-[14px] font-bold text-[#141413]">{j.name}</div>
+                <div className="text-[11px] text-[#636059] font-mono mt-1 leading-snug">{j.courts}</div>
+              </div>
+            ))}
+          </div>
+
         </div>
       </section>
 
-      {/* ── 5. MULTI-CURRENCY GLOBAL CLAIM & INTEREST CALCULATOR ─────── */}
-      <section className="py-20 px-4 sm:px-6 max-w-7xl mx-auto w-full space-y-12 relative z-10">
-        <div className="text-center space-y-3 max-w-2xl mx-auto">
-          <span className="text-[11px] font-bold text-cyan-400 tracking-widest uppercase bg-cyan-500/10 border border-cyan-500/25 px-3 py-1 rounded-full font-mono">
-            MULTI-CURRENCY STATUTORY QUANTIFICATION
-          </span>
-          <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
-            Calculate Statutory Pre-Judgment Interest
-          </h2>
-          <p className="text-[14.5px] text-[#8D9CB0]">
-            Adjust your claim and select currency to calculate legally enforceable pre-judgment interest under US UCC, UK Late Payment Act, or EU directives.
-          </p>
-        </div>
-
-        <div className="glass-panel-luxury p-8 sm:p-10 rounded-3xl grid grid-cols-1 lg:grid-cols-3 gap-8 items-center border border-white/[0.12] max-w-5xl mx-auto">
+      {/* ── VERIFIED ADVOCATES ROSTER ── */}
+      <section className="py-20 px-6 sm:px-10 lg:px-14 border-t border-[#E8E5DE] bg-white">
+        <div className="max-w-7xl mx-auto space-y-10">
           
-          {/* Controls */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* Currency Selector */}
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div className="space-y-2">
-              <label className="text-[12px] font-bold text-[#8D9CB0] uppercase tracking-wider font-mono">
-                Currency & Jurisdiction Benchmark
-              </label>
-              <div className="grid grid-cols-5 gap-2 text-[12px] font-semibold">
-                {[
-                  { code: 'USD', label: '$ USD (US)' },
-                  { code: 'EUR', label: '€ EUR (EU)' },
-                  { code: 'GBP', label: '£ GBP (UK)' },
-                  { code: 'SGD', label: 'S$ SGD (SG)' },
-                  { code: 'INR', label: '₹ INR (IN)' },
-                ].map((curr) => (
-                  <button
-                    key={curr.code}
-                    type="button"
-                    onClick={() => setSelectedCurrency(curr.code as any)}
-                    className={`py-2 px-2 rounded-xl border text-center transition-all ${
-                      selectedCurrency === curr.code
-                        ? 'bg-blue-600/20 border-blue-500/50 text-white font-bold'
-                        : 'bg-white/[0.03] border-white/[0.06] text-[#8D9CB0] hover:text-white'
-                    }`}
-                  >
-                    {curr.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <div className="flex items-center justify-between mb-2">
-                <label className="text-[13px] font-bold text-[#8D9CB0] uppercase tracking-wider font-mono">
-                  Principal Claim Amount
-                </label>
-                <span suppressHydrationWarning className="text-2xl sm:text-3xl font-extrabold text-white font-mono">
-                  {currencySymbol}{formatAmount(simClaimAmount)}
+              <div className="flex items-center gap-2">
+                <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span className="text-[12px] font-mono font-semibold text-[#87837B] uppercase tracking-widest">
+                  Verified Global Advocates
+                </span>
+                <span className="text-[11px] font-mono text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
+                  140+ Admitted Advocates
                 </span>
               </div>
-
-              <input
-                type="range"
-                min="5000"
-                max="1000000"
-                step="5000"
-                value={simClaimAmount}
-                onChange={(e) => setSimClaimAmount(Number(e.target.value))}
-                className="w-full h-2 bg-white/[0.1] rounded-lg appearance-none cursor-pointer accent-blue-500"
-              />
-              <div className="flex justify-between text-[11px] text-[#55667E] font-mono mt-1">
-                <span>{currencySymbol}5,000</span>
-                <span>{currencySymbol}500,000</span>
-                <span>{currencySymbol}1,000,000</span>
-              </div>
+              <h2 className="text-2xl sm:text-3xl font-bold text-[#141413]">
+                Licensed international counsel on standby.
+              </h2>
+              <p className="text-[14px] text-[#636059] max-w-2xl leading-relaxed">
+                Retain accredited trial lawyers, King’s Counsel, and SIAC arbitration specialists. Review verified Bar registrations, real-time availability, and book immediate consultations protected by LexNova Escrow.
+              </p>
             </div>
-          </div>
-
-          {/* Computed Metrics HUD Card */}
-          <div className="p-6 rounded-2xl bg-[#04060B] border border-white/[0.08] space-y-4 font-mono text-[13px]">
-            <div className="text-[11px] text-blue-400 font-bold uppercase tracking-wider pb-2 border-b border-white/[0.08]">
-              Statutory Claim Matrix ({selectedCurrency})
-            </div>
-
-            <div className="space-y-2.5">
-              <div className="flex justify-between text-[#8D9CB0]">
-                <span>Principal Claim:</span>
-                <span suppressHydrationWarning className="text-white font-bold">{currencySymbol}{formatAmount(simClaimAmount)}</span>
-              </div>
-              <div className="flex justify-between text-[#8D9CB0]">
-                <span>Statutory Interest ({(interestRate * 100).toFixed(1)}% p.a.):</span>
-                <span suppressHydrationWarning className="text-emerald-400 font-bold">+{currencySymbol}{formatAmount(interestAmount)}</span>
-              </div>
-              <div className="flex justify-between text-[#8D9CB0]">
-                <span>Est. Court Filing Fee:</span>
-                <span suppressHydrationWarning className="text-amber-400 font-bold">{currencySymbol}{formatAmount(courtFeeEst)}</span>
-              </div>
-              <div className="pt-2 border-t border-white/[0.08] flex justify-between text-[14px]">
-                <span className="text-white font-bold">Total Recovery Demand:</span>
-                <span suppressHydrationWarning className="text-cyan-400 font-bold">{currencySymbol}{formatAmount(totalRecovery)}</span>
-              </div>
-            </div>
-
             <Link
-              href={`/dashboard/chat?init=${encodeURIComponent(`I want to recover ${currencySymbol}${simClaimAmount} in ${selectedCurrency} with applicable statutory interest.`)}`}
-              className="btn-glow-blue w-full text-center justify-center text-[13px] font-semibold h-10 mt-2"
+              href="/advocates"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-[#E8E4DA] bg-white text-[13px] font-medium text-[#141413] hover:border-[#141413] shadow-xs transition-colors shrink-0"
             >
-              Draft Formal Notice →
+              <span>Explore All 140+ Advocates</span>
+              <ChevronRight size={15} />
             </Link>
           </div>
+
+          {/* Jurisdiction Filter Tabs */}
+          <div className="flex flex-wrap gap-2 pt-2 border-b border-[#E8E4DA] pb-4">
+            {[
+              { id: 'ALL', label: 'All Jurisdictions', count: GLOBAL_ADVOCATES.length },
+              { id: 'US', label: '🇺🇸 United States', count: GLOBAL_ADVOCATES.filter(a => a.countryCode === 'US').length },
+              { id: 'GB', label: '🇬🇧 United Kingdom', count: GLOBAL_ADVOCATES.filter(a => a.countryCode === 'GB').length },
+              { id: 'EU', label: '🇪🇺 European Union', count: GLOBAL_ADVOCATES.filter(a => a.countryCode === 'EU').length },
+              { id: 'SG', label: '🇸🇬 Singapore & APAC', count: GLOBAL_ADVOCATES.filter(a => a.countryCode === 'SG').length },
+              { id: 'IN', label: '🇮🇳 India', count: GLOBAL_ADVOCATES.filter(a => a.countryCode === 'IN').length },
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setSelectedAdvocateCountry(tab.id as any)}
+                className={`px-4 py-2 rounded-full text-[12.5px] font-medium transition-all flex items-center gap-2 ${
+                  selectedAdvocateCountry === tab.id
+                    ? 'bg-[#141413] text-white shadow-xs'
+                    : 'bg-white text-[#636059] border border-[#E8E4DA] hover:border-[#B5AFA2] hover:text-[#141413]'
+                }`}
+              >
+                <span>{tab.label}</span>
+                <span
+                  className={`text-[11px] font-mono px-1.5 py-0.5 rounded-full ${
+                    selectedAdvocateCountry === tab.id
+                      ? 'bg-white/20 text-white'
+                      : 'bg-[#F7F4EE] text-[#87837B]'
+                  }`}
+                >
+                  {tab.count}
+                </span>
+              </button>
+            ))}
+          </div>
+
+          {/* Advocates Cards Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredAdvocates.map((adv) => (
+              <div
+                key={adv.id}
+                className="bg-white rounded-3xl border border-[#E8E4DA] p-6 flex flex-col justify-between shadow-xs hover:border-[#141413]/30 hover:shadow-md transition-all duration-200 group"
+              >
+                <div className="space-y-4">
+                  {/* Top: Avatar + Identity */}
+                  <div className="flex items-start gap-4">
+                    <div className="relative shrink-0">
+                      <div className="w-16 h-16 rounded-2xl overflow-hidden border border-[#E8E4DA] bg-[#F7F4EE] relative">
+                        <Image
+                          src={adv.photo}
+                          alt={adv.name}
+                          fill
+                          className="object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
+                      </div>
+                      <span className="absolute -bottom-1 -right-1 flex h-4 w-4">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-4 w-4 bg-emerald-500 border-2 border-white"></span>
+                      </span>
+                    </div>
+
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-1.5">
+                        <h4 className="text-[16px] font-bold text-[#141413] truncate">{adv.name}</h4>
+                        <ShieldCheck size={16} className="text-emerald-600 shrink-0" />
+                      </div>
+                      <p className="text-[12px] text-[#636059] leading-tight line-clamp-1 mt-0.5">
+                        {adv.title}
+                      </p>
+                      <p className="text-[11.5px] font-mono text-[#87837B] mt-1 flex items-center gap-1">
+                        <span>{adv.flag}</span>
+                        <span className="truncate">{adv.jurisdiction}</span>
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Credentials Pill */}
+                  <div className="bg-[#FAF8F5] border border-[#E8E4DA] rounded-xl px-3 py-2 text-[11.5px] font-mono text-[#42403B] flex items-center justify-between">
+                    <span className="truncate">{adv.credentials}</span>
+                    <span className="text-emerald-700 font-semibold shrink-0 ml-2">VERIFIED</span>
+                  </div>
+
+                  {/* Summary Focus */}
+                  <p className="text-[13px] text-[#42403B] leading-snug">
+                    {adv.focus}
+                  </p>
+
+                  {/* Practice Area Tags */}
+                  <div className="flex flex-wrap gap-1.5 pt-1">
+                    {adv.tags.map((tag, tIdx) => (
+                      <span
+                        key={tIdx}
+                        className="text-[11px] font-mono text-[#636059] bg-[#F7F4EE] border border-[#E8E4DA] px-2.5 py-1 rounded-full"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+
+                  {/* Timing & Rating Row */}
+                  <div className="pt-2 flex items-center justify-between text-[11.5px] font-mono text-[#87837B] border-t border-[#F0ECE1]">
+                    <span className="text-[#B45309] font-medium flex items-center gap-1">
+                      ★ {adv.rating} <span className="text-[#87837B]">({adv.reviewsCount})</span>
+                    </span>
+                    <span className="flex items-center gap-1 text-emerald-700 font-medium">
+                      <Clock size={12} />
+                      <span>{adv.nextSlot}</span>
+                    </span>
+                  </div>
+                </div>
+
+                {/* Card Bottom CTA */}
+                <div className="pt-5 mt-5 border-t border-[#E8E4DA] flex items-center justify-between gap-3">
+                  <div>
+                    <div className="text-[16px] font-bold font-mono text-[#141413]">{adv.fee}</div>
+                    <div className="text-[10px] font-mono uppercase tracking-wider text-[#87837B]">
+                      LexNova Escrow
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <Link
+                      href={`/dashboard/chat?advocate=${encodeURIComponent(adv.name)}`}
+                      className="px-3.5 py-2 rounded-full border border-[#E8E4DA] text-[12px] font-medium text-[#141413] hover:bg-[#F7F4EE] transition-colors"
+                    >
+                      Chat
+                    </Link>
+                    <button
+                      onClick={() => {
+                        setBookingAdvocate(adv);
+                        setBookingConfirmed(false);
+                        setBookingSlot(adv.nextSlot);
+                      }}
+                      className="px-4 py-2 rounded-full bg-[#141413] text-white text-[12px] font-medium hover:bg-black transition-colors shadow-xs"
+                    >
+                      Book Call
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
         </div>
       </section>
 
-      {/* ── 6. STRIPE-STYLE INTERACTIVE DEVELOPER API PLAYGROUND ──── */}
-      <section className="py-20 px-4 sm:px-6 max-w-7xl mx-auto w-full space-y-10 relative z-10">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-          <div>
-            <span className="text-[11px] font-bold text-blue-400 tracking-widest uppercase bg-blue-500/10 border border-blue-500/25 px-3 py-1 rounded-full font-mono">
-              GLOBAL DEVELOPER PLATFORM · PUBLIC API v1
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white mt-3">
-              Integrate Global Legal Intelligence via API
-            </h2>
-            <p className="text-[14.5px] text-[#8D9CB0] mt-1">
-              Trigger autonomous statutory mapping, limitation countdowns, and court notices directly into your billing, CRM, or enterprise ERP.
-            </p>
+      {/* ── CONSULTATION BOOKING MODAL ── */}
+      {bookingAdvocate && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-[#FBF9F5] rounded-3xl max-w-lg w-full border border-[#E8E4DA] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+            
+            {/* Modal Header */}
+            <div className="p-6 border-b border-[#E8E4DA] bg-white flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-2xl overflow-hidden border border-[#E8E4DA] relative shrink-0">
+                  <Image src={bookingAdvocate.photo} alt={bookingAdvocate.name} fill className="object-cover" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-1.5">
+                    <h3 className="text-[16px] font-bold text-[#141413]">{bookingAdvocate.name}</h3>
+                    <ShieldCheck size={16} className="text-emerald-600" />
+                  </div>
+                  <p className="text-[12px] font-mono text-[#87837B]">
+                    {bookingAdvocate.flag} {bookingAdvocate.credentials}
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setBookingAdvocate(null)}
+                className="w-8 h-8 rounded-full border border-[#E8E4DA] flex items-center justify-center text-[#636059] hover:text-[#141413] hover:bg-[#F7F4EE]"
+              >
+                <X size={16} />
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="p-6 overflow-y-auto space-y-6">
+              {!bookingConfirmed ? (
+                <>
+                  {/* Step 1: Select Scope */}
+                  <div className="space-y-2">
+                    <label className="text-[12px] font-mono font-semibold text-[#87837B] uppercase tracking-wider block">
+                      1. Select Consultation Scope
+                    </label>
+                    <div className="space-y-2">
+                      {[
+                        {
+                          id: 'triage',
+                          title: '15-Min Quick Strategy Triage',
+                          desc: 'Rapid jurisdictional & limitation check before drafting formal notices.',
+                          fee: '$95'
+                        },
+                        {
+                          id: 'consultation',
+                          title: '45-Min Comprehensive Dispute Review',
+                          desc: 'In-depth contract scrutiny, choice of law analysis, and counterparty litigation roadmap.',
+                          fee: bookingAdvocate.fee
+                        },
+                        {
+                          id: 'drafting',
+                          title: 'Full Pre-Action Notice & Filing Sign-off',
+                          desc: 'Advocate reviews and formally validates court-admissible pre-action protocol documents.',
+                          fee: '$450'
+                        }
+                      ].map((tier) => (
+                        <div
+                          key={tier.id}
+                          onClick={() => setBookingTier(tier.id as any)}
+                          className={`p-3.5 rounded-2xl border cursor-pointer transition-all ${
+                            bookingTier === tier.id
+                              ? 'border-[#141413] bg-white shadow-xs'
+                              : 'border-[#E8E4DA] bg-white/60 hover:border-[#B5AFA2]'
+                          }`}
+                        >
+                          <div className="flex items-center justify-between">
+                            <span className="text-[14px] font-bold text-[#141413]">{tier.title}</span>
+                            <span className="text-[14px] font-mono font-bold text-[#141413]">{tier.fee}</span>
+                          </div>
+                          <p className="text-[12px] text-[#636059] mt-1 leading-snug">{tier.desc}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Step 2: Time Slot */}
+                  <div className="space-y-2">
+                    <label className="text-[12px] font-mono font-semibold text-[#87837B] uppercase tracking-wider block">
+                      2. Choose Open Strategy Slot
+                    </label>
+                    <div className="grid grid-cols-2 gap-2">
+                      {[
+                        bookingAdvocate.nextSlot,
+                        'Today, 6:00 PM',
+                        'Tomorrow, 10:00 AM',
+                        'Tomorrow, 2:30 PM'
+                      ].map((slot) => (
+                        <button
+                          key={slot}
+                          type="button"
+                          onClick={() => setBookingSlot(slot)}
+                          className={`py-2 px-3 rounded-xl text-[12px] font-mono transition-all border ${
+                            bookingSlot === slot
+                              ? 'bg-[#141413] text-white border-[#141413]'
+                              : 'bg-white text-[#42403B] border-[#E8E4DA] hover:border-[#B5AFA2]'
+                          }`}
+                        >
+                          {slot}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Step 3: Matter Summary */}
+                  <div className="space-y-2">
+                    <label className="text-[12px] font-mono font-semibold text-[#87837B] uppercase tracking-wider block">
+                      3. Brief Matter Overview (Optional)
+                    </label>
+                    <textarea
+                      rows={2}
+                      value={bookingCaseDesc}
+                      onChange={(e) => setBookingCaseDesc(e.target.value)}
+                      placeholder="e.g. Counterparty defaulted on $140k invoice under Delaware law..."
+                      className="w-full bg-white border border-[#E8E4DA] rounded-2xl p-3 text-[13px] text-[#141413] placeholder-[#87837B] focus:outline-hidden focus:border-[#141413]"
+                    />
+                  </div>
+
+                  {/* Escrow Banner */}
+                  <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-3.5 flex items-start gap-3">
+                    <ShieldCheck size={18} className="text-emerald-700 shrink-0 mt-0.5" />
+                    <div className="text-[12px] text-emerald-900 leading-snug">
+                      <strong className="font-semibold">LexNova Escrow Assurance:</strong> Funds remain securely locked until consultation completion. If counsel cannot attend, 100% immediate refund is issued.
+                    </div>
+                  </div>
+                </>
+              ) : (
+                /* Confirmed Screen */
+                <div className="py-6 text-center space-y-4">
+                  <div className="w-14 h-14 rounded-full bg-emerald-100 border border-emerald-300 text-emerald-700 flex items-center justify-center mx-auto">
+                    <CheckCircle2 size={32} />
+                  </div>
+                  <div>
+                    <h4 className="text-xl font-bold text-[#141413]">Consultation Confirmed</h4>
+                    <p className="text-[13px] text-[#636059] mt-1 max-w-sm mx-auto">
+                      Your strategy conference with <strong>{bookingAdvocate.name}</strong> is scheduled for <strong>{bookingSlot}</strong>.
+                    </p>
+                  </div>
+                  <div className="bg-white border border-[#E8E4DA] rounded-2xl p-4 font-mono text-[12px] text-[#42403B] space-y-1 text-left max-w-sm mx-auto">
+                    <div className="flex justify-between">
+                      <span className="text-[#87837B]">Session Pass:</span>
+                      <span className="font-bold">LNX-CONF-88492</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-[#87837B]">Escrow Status:</span>
+                      <span className="text-emerald-700 font-semibold">Bonded & Protected</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-[#87837B]">Meeting Link:</span>
+                      <span className="text-blue-600 underline cursor-pointer">lexnova.ai/room/sarah</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Modal Footer */}
+            <div className="p-6 border-t border-[#E8E4DA] bg-white flex items-center justify-end gap-3">
+              {!bookingConfirmed ? (
+                <>
+                  <button
+                    onClick={() => setBookingAdvocate(null)}
+                    className="px-5 py-2.5 rounded-full border border-[#E8E4DA] text-[13px] font-medium text-[#636059] hover:text-[#141413]"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={() => setBookingConfirmed(true)}
+                    className="px-6 py-2.5 rounded-full bg-[#141413] text-white text-[13px] font-medium hover:bg-black transition-colors shadow-xs flex items-center gap-2"
+                  >
+                    <span>Confirm & Reserve Slot</span>
+                    <ArrowRight size={14} />
+                  </button>
+                </>
+              ) : (
+                <div className="flex items-center gap-3 w-full justify-between">
+                  <button
+                    onClick={() => setBookingAdvocate(null)}
+                    className="px-4 py-2.5 rounded-full border border-[#E8E4DA] text-[13px] font-medium text-[#636059]"
+                  >
+                    Close
+                  </button>
+                  <Link
+                    href={`/dashboard/chat?advocate=${encodeURIComponent(bookingAdvocate.name)}`}
+                    className="px-6 py-2.5 rounded-full bg-[#141413] text-white text-[13px] font-medium hover:bg-black transition-colors shadow-xs flex items-center gap-2"
+                  >
+                    <span>Enter Secure Room Now</span>
+                    <ArrowRight size={14} />
+                  </Link>
+                </div>
+              )}
+            </div>
+
           </div>
-
-          <Link href="/dashboard/team" className="btn-ghost text-[13.5px] font-semibold h-10 px-4 rounded-xl inline-flex items-center gap-1.5 shrink-0">
-            <Terminal size={14} className="text-blue-400" />
-            <span>Generate Global API Key</span>
-            <ArrowRight size={13} />
-          </Link>
         </div>
+      )}
 
-        {/* Code Playground Box */}
-        <div className="glass-panel-luxury overflow-hidden border border-white/[0.12] rounded-3xl">
-          {/* Header Bar */}
-          <div className="flex items-center justify-between px-5 py-3 border-b border-white/[0.08] bg-[#05070C]">
-            <div className="flex items-center gap-2">
+      {/* ── DEVELOPER SDK & API PLAYGROUND ── */}
+      <section className="py-20 px-6 sm:px-10 lg:px-14 border-t border-[#E8E4DA] bg-white">
+        <div className="max-w-7xl mx-auto space-y-8">
+          
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <span className="text-[12px] font-mono font-semibold text-[#87837B] uppercase tracking-widest">
+                  Developer REST API & SDK
+                </span>
+                <span className="text-[11px] font-mono text-[#42403B] bg-[#F7F4EE] px-2.5 py-0.5 rounded-full border border-[#E8E4DA]">
+                  v1.4 Production
+                </span>
+              </div>
+              <h2 className="text-2xl sm:text-3xl font-bold text-[#141413]">
+                Programmatic legal intelligence for modern platforms.
+              </h2>
+              <p className="text-[14px] text-[#636059] max-w-2xl leading-relaxed">
+                Autonomous multi-jurisdiction dispute intake, statutory limitation countdowns, and court-admissible pre-action notice generation executable in 38ms.
+              </p>
+            </div>
+            
+            {/* Language Tabs */}
+            <div className="flex items-center gap-2 bg-[#FAF8F5] p-1.5 rounded-full border border-[#E8E5DE]">
               {(['curl', 'typescript', 'python'] as const).map((tab) => (
                 <button
                   key={tab}
-                  onClick={() => {
-                    setActiveCodeTab(tab);
-                    setApiResponseText(null);
-                  }}
-                  className={`px-3 py-1.5 rounded-lg text-[12.5px] font-mono font-semibold transition-all ${
+                  onClick={() => setActiveCodeTab(tab)}
+                  className={`px-4 py-1.5 rounded-full text-[12px] font-mono font-medium transition-colors ${
                     activeCodeTab === tab
-                      ? 'bg-blue-600/20 text-blue-400 border border-blue-500/30'
-                      : 'text-[#8D9CB0] hover:text-white'
+                      ? 'bg-[#141413] text-white shadow-xs'
+                      : 'text-[#636059] hover:text-[#141413]'
                   }`}
                 >
-                  {tab === 'curl' ? 'cURL' : tab === 'typescript' ? 'Node.js (TypeScript)' : 'Python'}
+                  {tab}
                 </button>
               ))}
             </div>
-
-            <div className="flex items-center gap-2">
-              <button
-                onClick={runApiSimulation}
-                disabled={apiSimulating}
-                className="px-3 py-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 text-[12px] font-semibold font-mono flex items-center gap-1.5 transition-all"
-              >
-                {apiSimulating ? <RefreshCw size={12} className="animate-spin" /> : <Play size={12} fill="currentColor" />}
-                <span>Test Global Endpoint</span>
-              </button>
-
-              <button
-                onClick={copyCode}
-                className="p-1.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-[#8D9CB0] hover:text-white transition-all"
-                title="Copy snippet"
-              >
-                {copiedCode ? <Check size={14} className="text-emerald-400" /> : <Copy size={14} />}
-              </button>
-            </div>
           </div>
 
-          {/* Editor Body */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-white/[0.08] bg-[#020408]">
-            {/* Left: Code Snippet */}
-            <div className="p-5 font-mono text-[13px] text-[#CBD5E1] overflow-x-auto leading-relaxed">
-              <pre>{CODE_EXAMPLES[activeCodeTab]}</pre>
-            </div>
-
-            {/* Right: Live Simulated Response */}
-            <div className="p-5 font-mono text-[12px] overflow-x-auto bg-[#04060B]">
-              <div className="text-[11px] text-[#55667E] uppercase tracking-wider mb-2 font-bold flex items-center justify-between">
-                <span>Response Stream (JSON)</span>
-                <span className="text-emerald-400">HTTP 201 OK</span>
-              </div>
-              <pre className="text-emerald-300 leading-relaxed font-mono">
-                {apiResponseText || `// Click "Test Global Endpoint" above to simulate live multi-jurisdiction analysis response...`}
-              </pre>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── 7. VERIFIED GLOBAL COUNSEL & ARBITRATORS ───────────────── */}
-      <section className="py-20 px-4 sm:px-6 max-w-7xl mx-auto w-full space-y-10 relative z-10">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-          <div>
-            <span className="text-[11px] font-bold text-emerald-400 tracking-widest uppercase bg-emerald-500/10 border border-emerald-500/25 px-3 py-1 rounded-full font-mono">
-              WORLDWIDE BAR & SOLICITOR NETWORK
+          {/* Interactive Preset Selector Pills */}
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-[12px] font-mono text-[#87837B] uppercase tracking-wider mr-2">
+              Test Presets:
             </span>
-            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white mt-3">
-              Matched Global Counsel & Arbitrators
-            </h2>
-            <p className="text-[14.5px] text-[#8D9CB0] mt-1">
-              Seamlessly transition from AI intake to encrypted video consultations with verified counsel across US, UK, EU, and Asian jurisdictions.
-            </p>
+            {(['us', 'uk', 'eu', 'sg'] as const).map((pId) => {
+              const p = API_PRESETS[pId];
+              return (
+                <button
+                  key={pId}
+                  onClick={() => setApiPresetId(pId)}
+                  className={`px-3.5 py-1.5 rounded-full text-[12px] font-mono transition-all flex items-center gap-1.5 ${
+                    apiPresetId === pId
+                      ? 'bg-[#141413] text-white shadow-xs'
+                      : 'bg-[#FAF8F5] border border-[#E8E4DA] text-[#636059] hover:text-[#141413]'
+                  }`}
+                >
+                  <span>{p.flag}</span>
+                  <span>{p.label}</span>
+                </button>
+              );
+            })}
           </div>
 
-          <Link href="/advocates" className="btn-ghost text-[13.5px] font-semibold h-10 px-4 rounded-xl inline-flex items-center gap-1.5">
-            <span>Browse All 4,200+ Global Counsel</span>
-            <ArrowRight size={13} />
-          </Link>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {GLOBAL_ADVOCATES.map((adv, idx) => (
-            <div key={idx} className="glass-panel-luxury p-6 rounded-2xl flex flex-col justify-between gap-6 border border-white/[0.08]">
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center text-white font-bold text-[18px] shadow-md">
-                    {adv.flag}
+          {/* Split Interactive Console: Code & Live Execution */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            
+            {/* Left Console: Request & Code */}
+            <div className="lg:col-span-6 bg-[#141413] rounded-3xl p-6 text-white flex flex-col justify-between shadow-md">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between pb-3 border-b border-white/10">
+                  <div className="flex items-center gap-2">
+                    <span className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-mono text-[11px] font-bold">
+                      POST
+                    </span>
+                    <span className="text-[12px] font-mono text-white/70">
+                      https://api.lexnova.ai/v1/cases/intake
+                    </span>
                   </div>
-                  <div className="flex items-center gap-1 text-[11px] font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20 font-mono">
-                    <Star size={11} fill="currentColor" /> {adv.rating}
-                  </div>
+                  <button
+                    onClick={copyCode}
+                    className="text-[12px] font-mono text-white/70 hover:text-white flex items-center gap-1.5"
+                  >
+                    <Copy size={13} />
+                    <span>{copiedCode ? 'Copied' : 'Copy'}</span>
+                  </button>
                 </div>
 
-                <div>
-                  <h4 className="text-[16px] font-bold text-white">{adv.name}</h4>
-                  <p className="text-[12px] text-blue-400 font-semibold">{adv.title}</p>
-                  <p className="text-[11px] text-[#8D9CB0] font-mono">{adv.credentials}</p>
-                </div>
-
-                <div className="text-[12.5px] text-[#CBD5E1] space-y-1 pt-1 border-t border-white/[0.05]">
-                  <div className="truncate">🏛️ {adv.jurisdiction}</div>
-                  <div className="truncate">⚖️ {adv.focus}</div>
-                  <div className="text-emerald-400 font-mono text-[11px]">✓ {adv.verifiedCases}</div>
-                </div>
+                <pre className="overflow-x-auto text-[12.5px] font-mono text-[#F4F0E8] leading-relaxed max-h-[360px] py-1">
+                  <code>{currentApiPreset.codeSnippets[activeCodeTab]}</code>
+                </pre>
               </div>
 
-              <div className="pt-4 border-t border-white/[0.08] flex items-center justify-between">
-                <div>
-                  <span className="text-[10px] text-[#6B7B94] font-mono block uppercase">Strategy Session</span>
-                  <span className="text-[15px] font-bold text-white font-mono">{adv.fee}</span>
-                </div>
-                <Link
-                  href={`/dashboard/chat?init=${encodeURIComponent(`Consultation with ${adv.name} (${adv.jurisdiction})`)}`}
-                  className="px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-[12px] transition-all shadow-md shadow-blue-600/20"
+              <div className="pt-4 mt-4 border-t border-white/10 flex items-center justify-between">
+                <span className="text-[11px] font-mono text-white/40">
+                  Target: {currentApiPreset.jurisdiction} · {currentApiPreset.claimAmount}
+                </span>
+                <button
+                  onClick={handleRunApi}
+                  disabled={isExecutingApi}
+                  className="px-4 py-2 rounded-full bg-white text-[#141413] text-[12.5px] font-mono font-medium hover:bg-[#FAF8F5] transition-colors flex items-center gap-2 shadow-xs disabled:opacity-50"
                 >
-                  Book Session
-                </Link>
+                  {isExecutingApi ? (
+                    <>
+                      <RefreshCw size={13} className="animate-spin" />
+                      <span>Executing...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Play size={13} className="fill-current" />
+                      <span>Run API Request ⚡</span>
+                    </>
+                  )}
+                </button>
               </div>
             </div>
-          ))}
+
+            {/* Right Console: Live Response Inspector */}
+            <div className="lg:col-span-6 bg-[#FAF8F5] rounded-3xl p-6 border border-[#E8E4DA] flex flex-col justify-between shadow-xs">
+              <div className="space-y-4">
+                
+                {/* Top Status Bar */}
+                <div className="flex items-center justify-between pb-3 border-b border-[#E8E4DA]">
+                  <div className="flex items-center gap-2">
+                    <span className="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-mono text-[11px] font-bold border border-emerald-200">
+                      ● 201 Created
+                    </span>
+                    <span className="text-[11.5px] font-mono text-[#87837B]">
+                      Latency: <strong className="text-[#141413]">{apiExecutionTime}ms</strong>
+                    </span>
+                    <span className="hidden sm:inline text-[11px] font-mono text-[#87837B]">
+                      TLS 1.3 · us-east-1
+                    </span>
+                  </div>
+
+                  {/* View Switcher */}
+                  <div className="flex gap-1">
+                    {[
+                      { id: 'json', label: 'JSON' },
+                      { id: 'analysis', label: 'Analysis' },
+                      { id: 'notice', label: 'Notice' }
+                    ].map((v) => (
+                      <button
+                        key={v.id}
+                        onClick={() => setActiveApiView(v.id as any)}
+                        className={`px-2.5 py-1 rounded-lg text-[11px] font-mono font-medium transition-colors ${
+                          activeApiView === v.id
+                            ? 'bg-[#141413] text-white'
+                            : 'bg-white border border-[#E8E4DA] text-[#636059] hover:text-[#141413]'
+                        }`}
+                      >
+                        {v.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* View 1: JSON Payload */}
+                {activeApiView === 'json' && (
+                  <div className="relative">
+                    <button
+                      onClick={copyApiResponse}
+                      className="absolute top-2 right-2 px-2.5 py-1 rounded-md bg-white border border-[#E8E4DA] text-[11px] font-mono text-[#636059] hover:text-[#141413] shadow-xs flex items-center gap-1 z-10"
+                    >
+                      <Copy size={11} />
+                      <span>{copiedApiResponse ? 'Copied' : 'Copy JSON'}</span>
+                    </button>
+                    <pre className="overflow-x-auto text-[12px] font-mono text-[#2B2A27] leading-relaxed bg-white p-4 rounded-2xl border border-[#E8E4DA] max-h-[350px]">
+                      <code>{JSON.stringify(currentApiPreset.resPayload, null, 2)}</code>
+                    </pre>
+                  </div>
+                )}
+
+                {/* View 2: Analysis Cards */}
+                {activeApiView === 'analysis' && (
+                  <div className="space-y-3 max-h-[350px] overflow-y-auto pr-1">
+                    <div className="bg-white p-4 rounded-2xl border border-[#E8E4DA] space-y-2">
+                      <div className="text-[11px] font-mono font-semibold text-[#87837B] uppercase">
+                        Statutory Governing Citations
+                      </div>
+                      <div className="space-y-1.5">
+                        {currentApiPreset.resPayload.governing_statutes.map((s: string, idx: number) => (
+                          <div key={idx} className="text-[12.5px] font-mono text-[#141413] flex items-center gap-2">
+                            <CheckCircle2 size={13} className="text-emerald-600 shrink-0" />
+                            <span>{s}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="bg-white p-4 rounded-2xl border border-[#E8E4DA]">
+                        <div className="text-[11px] font-mono text-[#87837B]">Limitation Remaining</div>
+                        <div className="text-[20px] font-bold font-mono text-emerald-700 mt-1">
+                          {currentApiPreset.resPayload.limitation_analysis.days_remaining} Days
+                        </div>
+                        <div className="text-[11px] font-mono text-[#87837B] mt-0.5">
+                          Extinction: {currentApiPreset.resPayload.limitation_analysis.statute_of_limitations_deadline}
+                        </div>
+                      </div>
+
+                      <div className="bg-white p-4 rounded-2xl border border-[#E8E4DA]">
+                        <div className="text-[11px] font-mono text-[#87837B]">Pre-Action Cure Period</div>
+                        <div className="text-[20px] font-bold font-mono text-[#141413] mt-1">
+                          {currentApiPreset.resPayload.pre_action_protocol.cure_period_days} Days
+                        </div>
+                        <div className="text-[11px] font-mono text-[#87837B] mt-0.5">
+                          Statutory Rate: {currentApiPreset.resPayload.pre_action_protocol.statutory_interest_rate}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="bg-white p-4 rounded-2xl border border-[#E8E4DA] flex items-center justify-between">
+                      <div>
+                        <div className="text-[11px] font-mono text-[#87837B]">Escrow Integrity</div>
+                        <div className="text-[12.5px] font-bold text-[#141413] mt-0.5">
+                          {currentApiPreset.resPayload.escrow_guarantee}
+                        </div>
+                      </div>
+                      <ShieldCheck size={20} className="text-emerald-600" />
+                    </div>
+                  </div>
+                )}
+
+                {/* View 3: Court Notice Document Preview */}
+                {activeApiView === 'notice' && (
+                  <div className="bg-white p-5 rounded-2xl border border-[#E8E4DA] space-y-3 font-serif max-h-[350px] overflow-y-auto shadow-inner">
+                    <div className="border-b border-[#E8E4DA] pb-3 flex items-center justify-between">
+                      <div>
+                        <div className="text-[13px] font-bold uppercase tracking-wider text-[#141413] font-mono">
+                          Formal Demand & Cure Requisition
+                        </div>
+                        <div className="text-[11px] text-[#87837B] font-mono">
+                          Case File: {currentApiPreset.resPayload.case_id}
+                        </div>
+                      </div>
+                      <span className="text-[11px] font-mono bg-[#FAF8F5] px-2.5 py-1 rounded border border-[#E8E4DA]">
+                        Court Admissible
+                      </span>
+                    </div>
+
+                    <div className="text-[12px] text-[#42403B] space-y-2 leading-relaxed font-sans">
+                      <p>
+                        <strong>NOTICE IS HEREBY GIVEN</strong> pursuant to {currentApiPreset.resPayload.governing_statutes[0]} that Defaulting Entity has committed material breach regarding principal sum of <strong>{currentApiPreset.claimAmount}</strong>.
+                      </p>
+                      <p>
+                        Pursuant to pre-action protocol guidelines in <em>{currentApiPreset.resPayload.recommended_forum}</em>, recipient is granted {currentApiPreset.resPayload.pre_action_protocol.cure_period_days} calendar days to remit settlement.
+                      </p>
+                    </div>
+
+                    <div className="pt-2 border-t border-[#E8E4DA] flex items-center justify-between font-mono text-[11px]">
+                      <span className="text-emerald-700 font-semibold">● Digital Seal Affixed</span>
+                      <a
+                        href={currentApiPreset.resPayload.pre_action_protocol.court_admissible_pdf}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-blue-600 hover:underline flex items-center gap-1"
+                      >
+                        <span>Download Signed PDF</span>
+                        <ExternalLink size={11} />
+                      </a>
+                    </div>
+                  </div>
+                )}
+
+              </div>
+
+              {/* Bottom API Summary */}
+              <div className="pt-4 mt-4 border-t border-[#E8E4DA] flex items-center justify-between text-[11.5px] font-mono text-[#87837B]">
+                <span>Status: <strong className="text-emerald-700">Autonomous Pipeline Verified</strong></span>
+                <span>Case ID: <strong className="text-[#141413]">{currentApiPreset.resPayload.case_id}</strong></span>
+              </div>
+            </div>
+
+          </div>
+
         </div>
       </section>
 
-      {/* ── 8. GLOBAL LEGAL CLARITY & COMPLIANCE FAQ ────────────────── */}
-      <section className="py-20 px-4 sm:px-6 max-w-5xl mx-auto w-full space-y-10 relative z-10">
-        <div className="text-center space-y-3">
-          <span className="text-[11px] font-bold text-blue-400 tracking-widest uppercase bg-blue-500/10 border border-blue-500/25 px-3 py-1 rounded-full font-mono">
-            CROSS-BORDER LEGAL COMPLIANCE
-          </span>
-          <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
-            Frequently Asked Questions
-          </h2>
-          <p className="text-[14.5px] text-[#8D9CB0]">
-            Everything you need to know about multi-jurisdiction intelligence, cross-border dispute enforcement, and privilege.
-          </p>
-        </div>
+      {/* ── FAQ SECTION ── */}
+      <section className="py-20 px-6 sm:px-10 lg:px-14 border-t border-[#E8E5DE] bg-[#FAF8F5]">
+        <div className="max-w-3xl mx-auto space-y-8">
+          
+          <div className="text-center space-y-2">
+            <div className="text-[12px] font-mono font-semibold text-[#87837B] uppercase tracking-widest">
+              Questions & Answers
+            </div>
+            <h2 className="text-3xl font-bold text-[#141413]">
+              Frequently asked questions.
+            </h2>
+          </div>
 
-        <div className="space-y-3">
-          {GLOBAL_FAQS.map((faq, idx) => {
-            const isOpen = openFaqIndex === idx;
-            return (
+          <div className="space-y-3">
+            {GLOBAL_FAQS.map((faq, i) => (
               <div
-                key={idx}
-                className="rounded-2xl border border-white/[0.08] bg-[#05070C]/80 overflow-hidden transition-all"
+                key={i}
+                className="bg-white border border-[#E8E4DA] rounded-2xl overflow-hidden"
               >
                 <button
-                  type="button"
-                  onClick={() => setOpenFaqIndex(isOpen ? null : idx)}
-                  className="w-full p-5 text-left flex items-center justify-between gap-4 font-semibold text-[15px] text-white hover:text-blue-400 transition-colors"
+                  onClick={() => setOpenFaqIndex(openFaqIndex === i ? null : i)}
+                  className="w-full px-6 py-5 text-left flex items-center justify-between gap-4 hover:bg-[#FAF8F5] transition-colors"
                 >
-                  <span>{faq.q}</span>
+                  <span className="text-[15px] font-medium text-[#141413]">
+                    {faq.q}
+                  </span>
                   <ChevronDown
-                    size={18}
-                    className={`shrink-0 text-slate-400 transition-transform duration-200 ${isOpen ? 'rotate-180 text-blue-400' : ''}`}
+                    size={17}
+                    className={`text-[#87837B] shrink-0 transition-transform duration-200 ${
+                      openFaqIndex === i ? 'rotate-180 text-[#141413]' : ''
+                    }`}
                   />
                 </button>
-                <AnimatePresence>
-                  {isOpen && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: 'auto', opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      className="px-5 pb-5 text-[14px] text-[#8D9CB0] leading-relaxed border-t border-white/[0.04] pt-3"
-                    >
-                      {faq.a}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                {openFaqIndex === i && (
+                  <div className="px-6 pb-6 text-[14px] text-[#5A5752] leading-relaxed border-t border-[#E8E4DA] pt-4 font-serif">
+                    {faq.a}
+                  </div>
+                )}
               </div>
-            );
-          })}
+            ))}
+          </div>
+
         </div>
       </section>
 
-      {/* ── 9. EXECUTIVE GLOBAL CTA BANNER ─────────────────────────── */}
-      <section className="py-20 px-4 sm:px-6 max-w-7xl mx-auto w-full text-center relative z-10">
-        <div className="relative rounded-3xl p-10 sm:p-16 border border-white/[0.14] bg-gradient-to-b from-[#080D1A] to-[#000000] overflow-hidden shadow-2xl space-y-6">
-          <div className="absolute inset-0 hud-mesh pointer-events-none" />
-          <div className="absolute top-0 right-1/4 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
-
-          <span className="text-[11px] font-bold text-blue-400 tracking-widest uppercase bg-blue-500/10 border border-blue-500/25 px-3 py-1 rounded-full font-mono relative z-10 inline-block">
-            WORLDWIDE ENFORCEMENT & ADMISSIBILITY
-          </span>
-          
-          <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight relative z-10 max-w-3xl mx-auto leading-tight">
-            Enforce your legal rights across borders with autonomous precision.
+      {/* ── FINAL CTA: MINIMALIST ANTHROPIC FINISH ── */}
+      <section className="py-24 px-6 sm:px-10 lg:px-14 border-t border-[#E8E4DA] bg-white">
+        <div className="max-w-3xl mx-auto text-center space-y-6">
+          <h2 className="text-4xl sm:text-5xl font-bold tracking-tight text-[#141413]">
+            Bring legal certainty to the frontier.
           </h2>
-          <p className="text-[15.5px] text-[#8D9CB0] max-w-xl mx-auto relative z-10 font-normal">
-            Join cross-border enterprises, remote teams, and global legal counsels using LexNova to resolve disputes in the US, UK, EU, Asia, and worldwide.
+          <p className="font-serif text-xl sm:text-2xl text-[#5A5752] max-w-xl mx-auto">
+            Experience court-admissible autonomous analysis and verified counsel for disputes worldwide.
           </p>
-
-          <div className="flex items-center justify-center gap-4 pt-4 flex-wrap relative z-10">
+          <div className="pt-4 flex flex-wrap items-center justify-center gap-4">
             <Link
               href="/dashboard/chat"
-              className="btn-primary h-12 px-8 rounded-xl text-[14.5px] font-bold shadow-xl"
+              className="px-7 py-3.5 rounded-full bg-[#141413] hover:bg-black text-white font-medium text-[14.5px] shadow-sm transition-all flex items-center gap-2"
             >
-              Start Free Global Case Assessment →
+              <span>Try LexNova Free</span>
+              <ArrowRight size={15} />
             </Link>
             <Link
-              href="/pricing"
-              className="btn-ghost h-12 px-8 rounded-xl text-[14.5px] font-semibold"
+              href="/auth/signup?role=ADVOCATE"
+              className="px-6 py-3.5 rounded-full border border-[#DED9CE] hover:border-[#B5AFA2] text-[#141413] font-medium text-[14.5px] transition-colors"
             >
-              View Global Enterprise Plans
+              <span>Join as Advocate</span>
             </Link>
           </div>
         </div>

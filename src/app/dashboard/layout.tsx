@@ -16,7 +16,7 @@ export default function DashboardLayout({
     <div style={{
       display: 'flex',
       minHeight: '100vh',
-      background: '#07090D',
+      background: '#F8FAFC',
     }}>
       <Sidebar />
       <div style={{
@@ -25,7 +25,7 @@ export default function DashboardLayout({
         display: 'flex',
         flexDirection: 'column',
         minHeight: '100vh',
-        background: '#07090D',
+        background: '#F8FAFC',
         overflowX: 'hidden',
       }}>
         <DashboardNavbar />

@@ -98,32 +98,41 @@ export default function ReviewPage() {
   const [filter, setFilter] = useState<"all" | "pending" | "approved" | "rejected">("all");
 
   const activeItem = queue.find(q => q.id === activeId);
-  const filtered = queue.filter(q => filter === "all" || q.status === filter);
+  const filtered = queue.filter(item => filter === "all" || item.status === filter);
 
-  const updateStatus = (id: string, status: ReviewItem["status"], commentText?: string) => {
-    setQueue(q => q.map(item => item.id === id ? { ...item, status, comment: commentText || item.comment } : item));
-    setActiveId(null);
+  const statusStyle: Record<string, { bg: string; color: string; label: string }> = {
+    pending: { bg: "#FEF3C7", color: "#D97706", label: "Pending Review" },
+    approved: { bg: "#ECFDF5", color: "#059669", label: "Approved & Signed" },
+    rejected: { bg: "#FEE2E2", color: "#DC2626", label: "Revision Required" },
+    editing: { bg: "#EFF6FF", color: "#2563EB", label: "Editing" },
+  };
+
+  const updateStatus = (id: string, status: ReviewItem["status"], c?: string) => {
+    setQueue(prev => prev.map(item => {
+      if (item.id === id) {
+        return {
+          ...item,
+          status,
+          comment: c !== undefined ? c : item.comment,
+          docContent: editingId === id ? editContent : item.docContent
+        };
+      }
+      return item;
+    }));
     setEditingId(null);
     setComment("");
   };
 
-  const statusStyle: Record<string, { bg: string; color: string; label: string }> = {
-    pending: { bg: "rgba(245,158,11,0.1)", color: "#d97706", label: "Pending Review" },
-    approved: { bg: "rgba(34,197,94,0.1)", color: "#16a34a", label: "Approved" },
-    rejected: { bg: "rgba(239,68,68,0.1)", color: "#dc2626", label: "Rejected" },
-    editing: { bg: "rgba(37,99,235,0.1)", color: "#7C3AED", label: "In Edit" },
-  };
-
   return (
-    <div className="max-w-5xl mx-auto space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="max-w-6xl mx-auto space-y-6 animate-fade-up">
+      <div className="flex items-center justify-between flex-wrap gap-4 border-b border-slate-200 pb-4">
         <div>
-          <h1 className="text-2xl font-black text-white">Lawyer Review Queue</h1>
-          <p className="text-sm text-slate-500 mt-1">Review, edit, and approve AI-generated legal documents</p>
+          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Lawyer Review Queue</h1>
+          <p className="text-sm text-slate-500 mt-1">Review, redline, and authenticate AI-drafted legal documents</p>
         </div>
-        <div className="flex items-center gap-2 text-sm font-bold">
-          <span className="px-3 py-1.5 rounded-full" style={{ background: "rgba(245,158,11,0.1)", color: "#d97706" }}>
-            {queue.filter(q => q.status === "pending").length} Pending
+        <div className="flex items-center gap-2 text-sm font-semibold">
+          <span className="px-3.5 py-1.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200">
+            {queue.filter(q => q.status === "pending").length} Pending Review
           </span>
         </div>
       </div>
@@ -132,10 +141,10 @@ export default function ReviewPage() {
       <div className="flex gap-2">
         {(["all", "pending", "approved", "rejected"] as const).map((f) => (
           <button key={f} onClick={() => setFilter(f)}
-            className="px-4 py-2 rounded-xl text-sm font-bold capitalize transition-all"
+            className="px-4 py-2 rounded-xl text-xs font-semibold capitalize transition-all"
             style={filter === f
-              ? { background: "linear-gradient(135deg,#1e3a8a,#7C3AED)", color: "white" }
-              : { background: "white", color: "#64748b", border: "1px solid #E5E7EB" }}>
+              ? { background: "#0F172A", color: "white" }
+              : { background: "#FFFFFF", color: "#64748B", border: "1px solid #E2E8F0" }}>
             {f}
           </button>
         ))}
@@ -148,23 +157,23 @@ export default function ReviewPage() {
             const ss = statusStyle[item.status];
             return (
               <button key={item.id} onClick={() => setActiveId(activeId === item.id ? null : item.id)}
-                className="w-full text-left p-4 rounded-2xl border transition-all"
+                className="w-full text-left p-4 rounded-2xl border transition-all shadow-sm"
                 style={{
-                  borderColor: activeId === item.id ? "#F59E0B" : "#E5E7EB",
-                  background: activeId === item.id ? "rgba(37,99,235,0.03)" : "white",
+                  borderColor: activeId === item.id ? "#2563EB" : "#E2E8F0",
+                  background: activeId === item.id ? "#EFF6FF" : "#FFFFFF",
                 }}>
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-[10px] font-black uppercase tracking-widest px-2 py-1 rounded-full"
+                  <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full"
                     style={{ background: ss.bg, color: ss.color }}>{ss.label}</span>
                   {item.urgency === "high" && (
-                    <span className="text-[10px] font-black text-red-500 flex items-center gap-1">
+                    <span className="text-[11px] font-bold text-red-600 flex items-center gap-1 bg-red-50 px-2 py-0.5 rounded-full border border-red-200">
                       <AlertTriangle className="w-3 h-3" /> URGENT
                     </span>
                   )}
                 </div>
-                <p className="font-black text-white text-sm">{item.clientName}</p>
+                <p className="font-bold text-slate-900 text-sm">{item.clientName}</p>
                 <p className="text-xs text-slate-500 mt-0.5">{item.docType}</p>
-                <div className="flex items-center gap-1 mt-2 text-[10px] font-bold text-gray-300">
+                <div className="flex items-center gap-1 mt-2 text-[11px] font-medium text-slate-400">
                   <Clock className="w-3 h-3" /> {item.submittedAt}
                 </div>
               </button>
@@ -177,14 +186,14 @@ export default function ReviewPage() {
           <AnimatePresence mode="wait">
             {activeItem ? (
               <motion.div key={activeItem.id} initial={{ opacity: 0, x: 16 }} animate={{ opacity: 1, x: 0 }}
-                className="bg-[#0D0D18] rounded-2xl border" style={{ borderColor: "#E5E7EB" }}>
+                className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
                 {/* Header */}
-                <div className="p-5 border-b flex items-center justify-between" style={{ borderColor: "#F1F5F9" }}>
+                <div className="p-5 border-b border-slate-100 flex items-center justify-between">
                   <div>
-                    <p className="font-black text-white">{activeItem.clientName}</p>
+                    <p className="font-bold text-slate-900">{activeItem.clientName}</p>
                     <p className="text-xs text-slate-500 mt-0.5">{activeItem.docType} · {activeItem.submittedAt}</p>
                   </div>
-                  <span className="text-[10px] font-black uppercase px-3 py-1.5 rounded-full"
+                  <span className="text-[10px] font-bold uppercase px-3 py-1.5 rounded-full"
                     style={{ background: statusStyle[activeItem.status].bg, color: statusStyle[activeItem.status].color }}>
                     {statusStyle[activeItem.status].label}
                   </span>
@@ -193,11 +202,10 @@ export default function ReviewPage() {
                 {/* Document Content */}
                 <div className="p-5">
                   <div className="flex items-center justify-between mb-3">
-                    <p className="text-xs font-black uppercase tracking-widest text-slate-500">Document Content</p>
+                    <p className="text-xs font-bold uppercase tracking-wider text-slate-500">Document Content</p>
                     {activeItem.status === "pending" && editingId !== activeItem.id && (
                       <button onClick={() => { setEditingId(activeItem.id); setEditContent(activeItem.docContent); }}
-                        className="flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-lg border hover:bg-[#080810] transition-all"
-                        style={{ borderColor: "#E5E7EB", color: "#F59E0B" }}>
+                        className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 transition-all text-blue-600">
                         <Edit3 className="w-3.5 h-3.5" /> Edit
                       </button>
                     )}
@@ -207,12 +215,10 @@ export default function ReviewPage() {
                     <textarea
                       value={editContent}
                       onChange={(e) => setEditContent(e.target.value)}
-                      className="w-full h-48 p-4 text-xs font-mono rounded-xl border text-slate-300 outline-none resize-none"
-                      style={{ borderColor: "#F59E0B", background: "rgba(37,99,235,0.02)", fontFamily: "monospace" }}
+                      className="w-full h-48 p-4 text-xs font-mono rounded-xl border border-blue-400 bg-slate-50 text-slate-800 outline-none resize-none"
                     />
                   ) : (
-                    <pre className="text-xs font-mono text-slate-300 whitespace-pre-wrap leading-relaxed bg-[#080810] rounded-xl p-4 max-h-48 overflow-y-auto"
-                      style={{ fontFamily: "monospace" }}>
+                    <pre className="text-xs font-mono text-slate-800 whitespace-pre-wrap leading-relaxed bg-slate-50 border border-slate-200 rounded-xl p-4 max-h-48 overflow-y-auto">
                       {activeItem.docContent}
                     </pre>
                   )}
@@ -220,35 +226,31 @@ export default function ReviewPage() {
 
                 {/* Comment & Approved comment */}
                 {activeItem.comment && (
-                  <div className="mx-5 mb-4 p-3 rounded-xl text-xs font-medium"
-                    style={{ background: "rgba(34,197,94,0.06)", color: "#15803d" }}>
-                    <p className="font-black mb-1">Lawyer Comment:</p>
+                  <div className="mx-5 mb-4 p-3.5 rounded-xl text-xs font-medium bg-emerald-50 text-emerald-800 border border-emerald-200">
+                    <p className="font-bold mb-1">Lawyer Comment:</p>
                     {activeItem.comment}
                   </div>
                 )}
 
                 {/* Actions */}
                 {activeItem.status === "pending" && (
-                  <div className="p-5 border-t space-y-3" style={{ borderColor: "#F1F5F9" }}>
+                  <div className="p-5 border-t border-slate-100 space-y-3">
                     <textarea
-                      placeholder="Add your professional comment / recommendations..."
+                      placeholder="Add your professional legal counsel comment / recommendations..."
                       value={comment}
                       onChange={(e) => setComment(e.target.value)}
                       rows={3}
-                      className="w-full px-4 py-3 rounded-xl border text-sm outline-none resize-none font-medium"
-                      style={{ borderColor: "#E5E7EB" }}
+                      className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm outline-none resize-none font-medium bg-slate-50 focus:bg-white focus:border-blue-500"
                     />
                     <div className="flex gap-3">
                       <button
                         onClick={() => updateStatus(activeItem.id, "approved", comment || "Reviewed and approved by licensed advocate.")}
-                        className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-black text-white transition-all"
-                        style={{ background: "linear-gradient(135deg,#15803d,#16a34a)" }}>
+                        className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-700 transition-all shadow-sm">
                         <CheckCircle className="w-4 h-4" /> Approve &amp; Sign
                       </button>
                       <button
                         onClick={() => updateStatus(activeItem.id, "rejected", comment || "Document requires significant revision.")}
-                        className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-black transition-all"
-                        style={{ background: "rgba(239,68,68,0.08)", color: "#dc2626" }}>
+                        className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-bold bg-red-50 text-red-700 border border-red-200 hover:bg-red-100 transition-all">
                         <XCircle className="w-4 h-4" /> Reject
                       </button>
                     </div>
@@ -257,10 +259,9 @@ export default function ReviewPage() {
               </motion.div>
             ) : (
               <motion.div key="empty" initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-                className="h-64 flex flex-col items-center justify-center rounded-2xl border"
-                style={{ borderColor: "#E5E7EB", background: "white" }}>
-                <ClipboardCheck className="w-10 h-10 text-gray-200 mb-3" />
-                <p className="font-bold text-slate-500">Select a document to review</p>
+                className="h-64 flex flex-col items-center justify-center rounded-2xl border border-slate-200 bg-white shadow-sm">
+                <ClipboardCheck className="w-10 h-10 text-slate-300 mb-3" />
+                <p className="font-semibold text-slate-500">Select a document from queue to review</p>
               </motion.div>
             )}
           </AnimatePresence>

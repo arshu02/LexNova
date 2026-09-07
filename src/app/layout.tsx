@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Inter } from 'next/font/google';
+import { Inter, Newsreader } from 'next/font/google';
 import './globals.css';
 import CookieConsent from '@/components/CookieConsent';
 import SessionProvider from '@/components/providers/SessionProvider';
@@ -10,6 +10,13 @@ const inter = Inter({
   display: 'swap',
   variable: '--font-inter',
   preload: true,
+});
+
+const newsreader = Newsreader({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-serif',
+  style: ['normal', 'italic'],
 });
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://lexnova.in';
@@ -72,7 +79,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: '#050508',
+  themeColor: '#FBF9F5',
   width: 'device-width',
   initialScale: 1,
   maximumScale: 5,
@@ -104,7 +111,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${inter.variable}`}>
+    <html lang="en" className={`${inter.variable} ${newsreader.variable}`}>
       <head>
         {/* Preconnect to external services */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />

@@ -15,21 +15,21 @@ const APP_URL = 'https://lexnova.in';
 
 export default function PrivacyPolicy() {
   return (
-    <div className="min-h-screen bg-[#050508] text-[#F0F2F5]">
+    <div className="min-h-screen bg-[#FBF9F5] text-[#141413]">
       <Navbar />
-      <main className="max-w-4xl mx-auto px-6 py-24">
+      <main className="max-w-4xl mx-auto px-6 pt-36 pb-24">
         <div className="mb-12">
-          <div className="inline-flex items-center gap-2 text-[12px] font-bold text-blue-400 tracking-[0.1em] uppercase mb-4">
-            Legal Documents
+          <div className="inline-flex items-center gap-2 text-[12px] font-mono font-bold text-[#87837B] tracking-[0.1em] uppercase mb-3">
+            Compliance & Privacy
           </div>
-          <h1 className="text-[40px] sm:text-[52px] font-bold text-white tracking-tight leading-tight mb-4">
+          <h1 className="text-4xl sm:text-5xl font-bold text-[#141413] tracking-tight leading-tight mb-3">
             Privacy Policy
           </h1>
-          <p className="text-[#8D9CB0]">
-            Last updated: <strong className="text-white">{LAST_UPDATED}</strong>
+          <p className="text-[#636059]">
+            Last updated: <strong className="text-[#141413]">{LAST_UPDATED}</strong>
             {' '}· Effective for all users in India and worldwide
           </p>
-          <div className="mt-4 p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl text-[14px] text-blue-300">
+          <div className="mt-4 p-4 bg-white border border-[#E8E4DA] rounded-2xl text-[13.5px] text-[#42403B] shadow-xs">
             This policy is compliant with the{' '}
             <strong>Digital Personal Data Protection Act 2023 (DPDPA)</strong>,{' '}
             <strong>Information Technology (Reasonable Security Practices) Rules 2011</strong>, and{' '}
@@ -37,7 +37,7 @@ export default function PrivacyPolicy() {
           </div>
         </div>
 
-        <div className="prose prose-invert max-w-none space-y-10 text-[15px] leading-relaxed text-[#C5D0DC]">
+        <div className="max-w-none space-y-10 text-[15px] leading-relaxed text-[#42403B]">
 
           <section>
             <h2 className="text-[24px] font-bold text-white mb-4">1. Who We Are</h2>

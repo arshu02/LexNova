@@ -81,9 +81,9 @@ export default function TeamWorkspacePage() {
         setInviteEmail('');
         fetchOrg();
       } else {
-        setNotification({ type: 'error', message: data.error || 'Invite failed.' });
+        setNotification({ type: 'error', message: data.error || 'Failed to add member.' });
       }
-    } catch {
+    } catch (e) {
       setNotification({ type: 'error', message: 'Network error.' });
     } finally {
       setInviteLoading(false);
@@ -92,26 +92,20 @@ export default function TeamWorkspacePage() {
   };
 
   const handleRegenerateKey = async () => {
-    if (!confirm('Are you sure you want to regenerate your Enterprise API key? Any active integrations using the old key will stop working.')) {
-      return;
-    }
+    if (!confirm('Are you sure you want to regenerate your enterprise API key? Existing integrations will break.')) return;
     setRegenLoading(true);
     try {
-      const res = await fetch('/api/organizations', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'REGENERATE_API_KEY' }),
-      });
-      const data = await res.json();
-      if (res.ok && data.apiKey) {
-        setOrg(prev => prev ? { ...prev, apiKey: data.apiKey } : null);
-        setNotification({ type: 'success', message: 'API key regenerated successfully.' });
+      const res = await fetch('/api/organizations/api-key', { method: 'POST' });
+      if (res.ok) {
+        const data = await res.json();
+        setOrg((prev) => prev ? { ...prev, apiKey: data.apiKey } : null);
+        setNotification({ type: 'success', message: 'Enterprise API key regenerated successfully.' });
       }
-    } catch {
+    } catch (e) {
       setNotification({ type: 'error', message: 'Failed to regenerate key.' });
     } finally {
       setRegenLoading(false);
-      setTimeout(() => setNotification(null), 3000);
+      setTimeout(() => setNotification(null), 4000);
     }
   };
 
@@ -125,8 +119,8 @@ export default function TeamWorkspacePage() {
 
   if (loading) {
     return (
-      <div className="py-24 text-center text-[#8D9CB0] flex flex-col items-center gap-3">
-        <Loader2 size={24} className="animate-spin text-blue-500" />
+      <div className="py-24 text-center text-slate-500 flex flex-col items-center gap-3">
+        <Loader2 size={24} className="animate-spin text-blue-600" />
         <p className="text-[13.5px]">Loading organization workspace...</p>
       </div>
     );
@@ -135,15 +129,15 @@ export default function TeamWorkspacePage() {
   return (
     <div className="max-w-6xl mx-auto space-y-8 animate-fade-up">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-white/[0.08]">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-slate-200">
         <div>
           <div className="flex items-center gap-2.5 mb-1">
-            <h1 className="text-[26px] font-bold text-white tracking-tight">{org?.name || 'Legal Workspace'}</h1>
-            <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold tracking-wider uppercase bg-purple-500/10 border border-purple-500/25 text-purple-400">
+            <h1 className="text-[26px] font-bold text-slate-900 tracking-tight">{org?.name || 'Legal Workspace'}</h1>
+            <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold tracking-wider uppercase bg-blue-50 border border-blue-200 text-blue-700">
               {org?.plan || 'ENTERPRISE'}
             </span>
           </div>
-          <p className="text-[13.5px] text-[#8D9CB0]">
+          <p className="text-[13.5px] text-slate-500">
             Manage multi-tenant team members, role-based access, and enterprise API keys.
           </p>
         </div>
@@ -154,8 +148,8 @@ export default function TeamWorkspacePage() {
         <div
           className={`p-4 rounded-xl text-[13.5px] font-medium flex items-center gap-2.5 ${
             notification.type === 'success'
-              ? 'bg-emerald-500/10 border border-emerald-500/30 text-emerald-300'
-              : 'bg-red-500/10 border border-red-500/30 text-red-300'
+              ? 'bg-emerald-50 border border-emerald-200 text-emerald-800'
+              : 'bg-red-50 border border-red-200 text-red-800'
           }`}
         >
           {notification.type === 'success' ? <CheckCircle2 size={16} /> : <AlertCircle size={16} />}
@@ -168,26 +162,26 @@ export default function TeamWorkspacePage() {
         {/* Members List */}
         <div className="lg:col-span-2 space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-[16px] font-bold text-white flex items-center gap-2">
-              <Users size={18} className="text-blue-400" /> Team Members ({org?.members?.length || 0})
+            <h2 className="text-[16px] font-bold text-slate-900 flex items-center gap-2">
+              <Users size={18} className="text-blue-600" /> Team Members ({org?.members?.length || 0})
             </h2>
           </div>
 
-          <div className="bg-[#0A0C12] border border-white/[0.08] rounded-2xl overflow-hidden divide-y divide-white/[0.06]">
+          <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden divide-y divide-slate-100 shadow-sm">
             {org?.members?.map((member) => (
-              <div key={member.id} className="p-4 sm:p-5 flex items-center justify-between gap-4">
+              <div key={member.id} className="p-4 sm:p-5 flex items-center justify-between gap-4 hover:bg-slate-50/60 transition-colors">
                 <div className="flex items-center gap-3.5 min-w-0">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center text-white font-bold text-[14px] shrink-0">
+                  <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white font-bold text-[14px] shrink-0 shadow-sm">
                     {member.name ? member.name.charAt(0).toUpperCase() : 'U'}
                   </div>
                   <div className="min-w-0">
-                    <div className="text-[14.5px] font-semibold text-white truncate">{member.name}</div>
-                    <div className="text-[12.5px] text-[#6B7B94] truncate">{member.email}</div>
+                    <div className="text-[14.5px] font-semibold text-slate-900 truncate">{member.name}</div>
+                    <div className="text-[12.5px] text-slate-500 truncate">{member.email}</div>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-3 shrink-0">
-                  <span className="px-2.5 py-1 rounded-lg text-[11px] font-semibold tracking-wider uppercase bg-white/[0.05] border border-white/[0.08] text-[#CBD5E1]">
+                  <span className="px-2.5 py-1 rounded-lg text-[11px] font-semibold tracking-wider uppercase bg-slate-100 border border-slate-200 text-slate-700">
                     {member.role || 'MEMBER'}
                   </span>
                 </div>
@@ -198,13 +192,13 @@ export default function TeamWorkspacePage() {
 
         {/* Invite Form */}
         <div className="space-y-4">
-          <h2 className="text-[16px] font-bold text-white flex items-center gap-2">
-            <UserPlus size={18} className="text-emerald-400" /> Invite Colleague
+          <h2 className="text-[16px] font-bold text-slate-900 flex items-center gap-2">
+            <UserPlus size={18} className="text-emerald-600" /> Invite Colleague
           </h2>
 
-          <form onSubmit={handleInvite} className="bg-[#0A0C12] border border-white/[0.08] rounded-2xl p-5 space-y-4">
+          <form onSubmit={handleInvite} className="bg-white border border-slate-200 rounded-2xl p-5 space-y-4 shadow-sm">
             <div>
-              <label className="text-[11.5px] font-semibold text-[#8D9CB0] uppercase tracking-wider block mb-1.5">
+              <label className="text-[11.5px] font-bold text-slate-700 uppercase tracking-wider block mb-1.5">
                 Full Name
               </label>
               <input
@@ -212,12 +206,12 @@ export default function TeamWorkspacePage() {
                 value={inviteName}
                 onChange={(e) => setInviteName(e.target.value)}
                 placeholder="Adv. Vikram Sharma"
-                className="w-full bg-[#050508] border border-white/[0.08] rounded-xl px-3.5 py-2.5 text-[13.5px] text-white placeholder-[#3D4E5E] focus:outline-none focus:border-blue-500/50"
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-[13.5px] text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-blue-500 transition-colors"
               />
             </div>
 
             <div>
-              <label className="text-[11.5px] font-semibold text-[#8D9CB0] uppercase tracking-wider block mb-1.5">
+              <label className="text-[11.5px] font-bold text-slate-700 uppercase tracking-wider block mb-1.5">
                 Work Email *
               </label>
               <input
@@ -226,18 +220,18 @@ export default function TeamWorkspacePage() {
                 onChange={(e) => setInviteEmail(e.target.value)}
                 placeholder="colleague@lawfirm.in"
                 required
-                className="w-full bg-[#050508] border border-white/[0.08] rounded-xl px-3.5 py-2.5 text-[13.5px] text-white placeholder-[#3D4E5E] focus:outline-none focus:border-blue-500/50"
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-[13.5px] text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-blue-500 transition-colors"
               />
             </div>
 
             <div>
-              <label className="text-[11.5px] font-semibold text-[#8D9CB0] uppercase tracking-wider block mb-1.5">
+              <label className="text-[11.5px] font-bold text-slate-700 uppercase tracking-wider block mb-1.5">
                 Role & Permissions
               </label>
               <select
                 value={inviteRole}
                 onChange={(e) => setInviteRole(e.target.value)}
-                className="w-full bg-[#050508] border border-white/[0.08] rounded-xl px-3.5 py-2.5 text-[13.5px] text-white focus:outline-none focus:border-blue-500/50"
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-[13.5px] text-slate-900 focus:outline-none focus:bg-white focus:border-blue-500 transition-colors"
               >
                 <option value="MANAGING_PARTNER">Managing Partner (Full Admin)</option>
                 <option value="SENIOR_ADVOCATE">Senior Advocate (Case Lead)</option>
@@ -250,7 +244,7 @@ export default function TeamWorkspacePage() {
             <button
               type="submit"
               disabled={inviteLoading}
-              className="w-full bg-blue-600 hover:bg-blue-500 active:scale-[0.98] text-white font-semibold py-3 rounded-xl text-[13.5px] transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+              className="btn-primary w-full py-2.5 rounded-xl text-[13.5px] font-semibold flex items-center justify-center gap-2 disabled:opacity-50"
             >
               {inviteLoading ? <Loader2 size={15} className="animate-spin" /> : <UserPlus size={15} />}
               Send Team Invitation
@@ -260,47 +254,47 @@ export default function TeamWorkspacePage() {
       </div>
 
       {/* Developer & B2B API Key Section */}
-      <div className="bg-[#0A0C12] border border-white/[0.08] rounded-2xl p-6 sm:p-8 space-y-6">
+      <div className="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 space-y-6 shadow-sm">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/25 flex items-center justify-center text-amber-400">
+            <div className="w-10 h-10 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-700">
               <Key size={18} />
             </div>
             <div>
-              <h3 className="text-[16px] font-bold text-white">Enterprise API Keys</h3>
-              <p className="text-[13px] text-[#8D9CB0]">Use this key to integrate LexNova with your CRM or internal systems.</p>
+              <h3 className="text-[16px] font-bold text-slate-900">Enterprise API Keys</h3>
+              <p className="text-[13px] text-slate-500">Use this secret key to integrate LexNova with your CRM or enterprise billing systems.</p>
             </div>
           </div>
 
           <button
             onClick={handleRegenerateKey}
             disabled={regenLoading}
-            className="inline-flex items-center gap-2 px-4 py-2 border border-white/[0.1] hover:bg-white/[0.05] rounded-xl text-[12.5px] font-semibold text-[#CBD5E1] transition-all"
+            className="btn-ghost inline-flex items-center gap-2 px-4 py-2 rounded-xl text-[12.5px] font-semibold text-slate-700"
           >
             <RefreshCw size={13} className={regenLoading ? 'animate-spin' : ''} /> Regenerate Key
           </button>
         </div>
 
         {/* API Key Box */}
-        <div className="flex items-center gap-3 bg-[#050508] border border-white/[0.08] rounded-xl p-3.5">
-          <code className="flex-1 font-mono text-[13px] text-amber-300 truncate">
+        <div className="flex items-center gap-3 bg-slate-50 border border-slate-200 rounded-xl p-3.5">
+          <code className="flex-1 font-mono text-[13px] text-blue-700 font-semibold truncate">
             {org?.apiKey || 'ln_live_********************************'}
           </code>
           <button
             onClick={copyApiKey}
-            className="px-4 py-1.5 bg-white/[0.08] hover:bg-white/[0.15] text-white text-[12.5px] font-semibold rounded-lg transition-all flex items-center gap-1.5 shrink-0"
+            className="btn-ghost px-4 py-1.5 text-slate-800 text-[12.5px] font-semibold rounded-lg flex items-center gap-1.5 shrink-0"
           >
-            {copiedKey ? <Check size={14} className="text-emerald-400" /> : <Copy size={14} />}
+            {copiedKey ? <Check size={14} className="text-emerald-600" /> : <Copy size={14} />}
             {copiedKey ? 'Copied' : 'Copy'}
           </button>
         </div>
 
         {/* Example cURL snippet */}
         <div className="space-y-2">
-          <div className="text-[12px] font-bold text-[#6B7B94] uppercase tracking-wider flex items-center gap-1.5">
+          <div className="text-[12px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
             <Terminal size={13} /> Example B2B Intake Request (cURL)
           </div>
-          <pre className="bg-[#050508] border border-white/[0.06] rounded-xl p-4 text-[12px] font-mono text-[#9AA8BC] overflow-x-auto">
+          <pre className="bg-slate-900 border border-slate-800 rounded-xl p-4 text-[12px] font-mono text-slate-200 overflow-x-auto">
 {`curl -X POST https://lexnova.in/api/v1/cases/intake \\
   -H "Authorization: Bearer ${org?.apiKey || 'ln_live_YOUR_KEY'}" \\
   -H "Content-Type: application/json" \\

@@ -177,63 +177,57 @@ export default function AdvocatesPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#050508] text-[#F0F2F5] selection:bg-blue-500/30 selection:text-white font-sans antialiased flex flex-col">
+    <div className="min-h-screen bg-white text-[#141413] selection:bg-[#F4EFEA] selection:text-[#141413] font-sans antialiased flex flex-col">
       <Navbar />
 
-      {/* Ambient Radial Lights */}
-      <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute top-0 left-1/3 w-[800px] h-[500px] bg-blue-600/[0.05] rounded-full blur-[180px]" />
-        <div className="absolute top-1/2 right-1/4 w-[600px] h-[600px] bg-purple-600/[0.03] rounded-full blur-[180px]" />
-      </div>
-
-      <main className="max-w-7xl mx-auto px-6 pt-40 pb-28 relative z-10 space-y-12 flex-1">
+      <main className="max-w-7xl mx-auto px-6 pt-36 pb-28 space-y-10 flex-1">
         
         {/* Header Title */}
-        <div className="max-w-3xl space-y-4">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/[0.06] border border-white/[0.12] text-[13px] text-[#C8D0DC] font-medium">
-            <ShieldCheck size={14} className="text-emerald-400" /> 2,400+ Verified Bar Council Advocates
+        <div className="max-w-3xl space-y-3">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F7F4EE] border border-[#E8E4DA] text-[12px] font-mono font-semibold text-[#42403B]">
+            <ShieldCheck size={14} className="text-emerald-700" /> 2,400+ Verified Bar Council Advocates
           </div>
 
-          <h1 className="text-[48px] sm:text-[64px] font-display text-white tracking-tight leading-[1.02]">
-            Find verified counsel across India.
+          <h1 className="text-4xl sm:text-5xl font-bold text-[#141413] tracking-tight leading-[1.05]">
+            Find verified legal counsel across jurisdictions.
           </h1>
-          <p className="text-[18px] sm:text-[20px] text-[#9AA8BC] leading-relaxed max-w-2xl font-normal">
-            Every advocate on LexNova is Bar Council verified with transparent fixed-fee consultation rates and HD video meeting rooms.
+          <p className="font-serif text-lg sm:text-xl text-[#636059] leading-relaxed max-w-2xl">
+            Every advocate on LexNova is Bar Council verified with transparent fixed-fee consultation rates and encrypted strategy sessions.
           </p>
         </div>
 
         {/* Search & Filter Controls */}
-        <div className="bg-[#0A0C12] border border-white/[0.08] rounded-2xl p-6 space-y-5 shadow-xl">
+        <div className="bg-white border border-[#E8E4DA] rounded-3xl p-6 space-y-4 shadow-xs">
           
           {/* Top Search Bar & City Selector */}
-          <div className="flex flex-col sm:flex-row items-center gap-4">
+          <div className="flex flex-col sm:flex-row items-center gap-3">
             <div className="relative flex-1 w-full">
-              <Search size={17} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#6B7B94]" />
+              <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#87837B]" />
               <input
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search by advocate name, specialty, legal act, or keyword..."
-                className="w-full bg-[#07090E] border border-white/[0.1] rounded-xl pl-11 pr-4 py-3 text-[14.5px] text-white placeholder-[#5A6A80] focus:border-blue-500/60 focus:outline-none transition-colors"
+                className="w-full bg-[#F7F4EE] border border-[#E8E4DA] rounded-2xl pl-11 pr-4 py-2.5 text-[14px] text-[#141413] placeholder-[#87837B] focus:border-[#141413] focus:outline-none transition-colors"
               />
               {search && (
                 <button
                   onClick={() => setSearch("")}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-[#6B7B94] hover:text-white"
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[12px] text-[#87837B] hover:text-[#141413]"
                 >
-                  <X size={15} />
+                  Clear
                 </button>
               )}
             </div>
 
-            <div className="flex items-center gap-3 w-full sm:w-auto">
+            <div className="relative w-full sm:w-56 shrink-0">
               <select
                 value={selectedCity}
                 onChange={(e) => setSelectedCity(e.target.value)}
-                className="bg-[#07090E] border border-white/[0.1] rounded-xl px-4 py-3 text-[14px] text-[#CBD5E1] focus:border-blue-500/60 focus:outline-none transition-colors w-full sm:w-auto"
+                className="w-full bg-[#F7F4EE] border border-[#E8E4DA] rounded-2xl px-4 py-2.5 text-[14px] text-[#141413] focus:border-[#141413] focus:outline-none transition-colors appearance-none cursor-pointer"
               >
                 {CITIES.map((c) => (
-                  <option key={c} value={c} className="bg-[#0A0C12] text-white">{c}</option>
+                  <option key={c} value={c} className="bg-white text-[#141413]">{c}</option>
                 ))}
               </select>
             </div>
@@ -247,10 +241,10 @@ export default function AdvocatesPage() {
                 <button
                   key={cat}
                   onClick={() => setSelectedCategory(cat)}
-                  className={`px-4 py-2 rounded-xl text-[13px] font-semibold transition-all whitespace-nowrap ${
+                  className={`px-3.5 py-1.5 rounded-full text-[12.5px] font-medium transition-all whitespace-nowrap ${
                     active
-                      ? "bg-white text-black shadow-md shadow-white/10"
-                      : "bg-[#07090E] text-[#8C9BB4] border border-white/[0.08] hover:border-white/[0.18] hover:text-white"
+                      ? "bg-[#141413] text-white shadow-xs"
+                      : "bg-[#F7F4EE] text-[#636059] border border-[#E8E4DA] hover:border-[#B5AFA2] hover:text-[#141413]"
                   }`}
                 >
                   {cat}
@@ -266,64 +260,64 @@ export default function AdvocatesPage() {
           {filteredAdvocates.map((adv) => (
             <motion.div
               key={adv.id}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-[#0A0C12] border border-white/[0.08] hover:border-white/[0.18] rounded-2xl p-6 flex flex-col justify-between space-y-5 transition-all shadow-xl group relative overflow-hidden"
+              className="bg-white border border-[#E8E4DA] hover:border-[#B5AFA2] rounded-3xl p-6 flex flex-col justify-between space-y-5 transition-all shadow-xs group"
             >
               <div className="space-y-4">
                 
                 {/* Top Profile Row */}
                 <div className="flex items-start gap-4">
-                  <div className="relative w-16 h-16 rounded-2xl overflow-hidden shrink-0 border border-white/10 shadow-md">
-                    <Image src={adv.photo} alt={adv.name} fill sizes="64px" className="object-cover" />
+                  <div className="relative w-14 h-14 rounded-2xl overflow-hidden shrink-0 border border-[#E8E4DA] shadow-xs">
+                    <Image src={adv.photo} alt={adv.name} fill sizes="56px" className="object-cover" />
                     {adv.availableToday && (
-                      <div className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-emerald-400 border-2 border-[#0A0C12]" title="Available Today" />
+                      <div className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-emerald-500 border-2 border-white" title="Available Today" />
                     )}
                   </div>
 
                   <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <h3 className="text-[17px] font-bold text-white leading-snug">{adv.name}</h3>
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <h3 className="text-[16px] font-bold text-[#141413] leading-snug">{adv.name}</h3>
                       <span title="Verified Bar Council Enrolled">
-                        <ShieldCheck size={16} className="text-blue-400 shrink-0" />
+                        <ShieldCheck size={15} className="text-emerald-700 shrink-0" />
                       </span>
                     </div>
-                    <p className="text-[13px] text-blue-400 font-medium leading-tight mt-0.5">{adv.role}</p>
+                    <p className="text-[12.5px] text-[#87837B] font-mono leading-tight mt-0.5">{adv.role}</p>
                     
-                    <div className="flex items-center gap-2 mt-2 text-[12.5px] text-[#8D9CB0]">
+                    <div className="flex items-center gap-2 mt-1.5 text-[12px] text-[#636059]">
                       <div className="flex items-center gap-1">
-                        <Star size={13} className="text-amber-400 fill-amber-400" />
-                        <strong className="text-white font-semibold">{adv.rating}</strong>
+                        <Star size={12} className="text-amber-500 fill-amber-500" />
+                        <strong className="text-[#141413] font-semibold">{adv.rating}</strong>
                         <span>({adv.reviews})</span>
                       </div>
                       <span>•</span>
                       <span className="flex items-center gap-1">
-                        <MapPin size={12} className="text-[#5B6B7C]" /> {adv.city}
+                        <MapPin size={11} className="text-[#87837B]" /> {adv.city}
                       </span>
                     </div>
                   </div>
                 </div>
 
                 {/* Bio Snippet */}
-                <p className="text-[13.5px] text-[#9AA8BC] leading-relaxed line-clamp-2">
+                <p className="text-[13px] text-[#636059] leading-relaxed line-clamp-2">
                   {adv.bio}
                 </p>
 
                 {/* Details Matrix */}
-                <div className="grid grid-cols-2 gap-2.5 pt-1 text-[12px]">
-                  <div className="bg-[#07090E] border border-white/[0.06] rounded-xl p-2.5">
-                    <span className="text-[#5B6B7C] uppercase font-bold text-[10.5px] block">Experience</span>
-                    <strong className="text-[#E2E8F0] font-semibold text-[13px] mt-0.5 block">{adv.experience} Years</strong>
+                <div className="grid grid-cols-2 gap-2 pt-1 text-[12px]">
+                  <div className="bg-[#F7F4EE] border border-[#E8E4DA] rounded-xl p-2.5">
+                    <span className="text-[#87837B] uppercase font-mono font-bold text-[10px] block">Experience</span>
+                    <strong className="text-[#141413] font-semibold text-[13px] mt-0.5 block">{adv.experience} Years</strong>
                   </div>
 
-                  <div className="bg-[#07090E] border border-white/[0.06] rounded-xl p-2.5">
-                    <span className="text-[#5B6B7C] uppercase font-bold text-[10.5px] block">Cases Handled</span>
-                    <strong className="text-[#E2E8F0] font-semibold text-[13px] mt-0.5 block">{adv.cases}+ Matters</strong>
+                  <div className="bg-[#F7F4EE] border border-[#E8E4DA] rounded-xl p-2.5">
+                    <span className="text-[#87837B] uppercase font-mono font-bold text-[10px] block">Cases Handled</span>
+                    <strong className="text-[#141413] font-semibold text-[13px] mt-0.5 block">{adv.cases}+ Matters</strong>
                   </div>
                 </div>
 
                 {/* Courts & Languages */}
-                <div className="text-[12px] text-[#7A8A9E] space-y-1">
+                <div className="text-[11.5px] text-[#636059] space-y-0.5 font-mono">
                   <div><strong>Courts:</strong> {adv.courts}</div>
                   <div><strong>Languages:</strong> {adv.languages.join(", ")}</div>
                 </div>
@@ -331,18 +325,18 @@ export default function AdvocatesPage() {
               </div>
 
               {/* Bottom Fee & Action Row */}
-              <div className="pt-4 border-t border-white/[0.08] flex items-center justify-between gap-3">
+              <div className="pt-4 border-t border-[#E8E4DA] flex items-center justify-between gap-3">
                 <div>
-                  <span className="text-[11px] text-[#7A8A9E] uppercase font-bold block">Consultation</span>
-                  <div className="text-[18px] font-bold text-white font-display leading-tight">₹{adv.consultationFee}</div>
-                  <span className="text-[11px] text-[#55667E]">60-min HD video</span>
+                  <span className="text-[10.5px] text-[#87837B] uppercase font-mono font-semibold block">Consultation</span>
+                  <div className="text-[17px] font-bold text-[#141413] font-mono leading-tight">₹{adv.consultationFee}</div>
+                  <span className="text-[10.5px] text-[#87837B]">60-min video</span>
                 </div>
 
                 <button
                   onClick={() => handleBook(adv)}
-                  className="btn-primary text-[13.5px] font-semibold px-5 py-2.5 rounded-xl flex items-center gap-1.5 shadow-md"
+                  className="bg-[#141413] hover:bg-black text-white text-[13px] font-medium px-4 py-2 rounded-full flex items-center gap-1.5 shadow-xs transition-all"
                 >
-                  <Video size={14} />
+                  <Video size={13} />
                   <span>Book Consult</span>
                 </button>
               </div>
@@ -352,10 +346,10 @@ export default function AdvocatesPage() {
         </div>
 
         {filteredAdvocates.length === 0 && (
-          <div className="text-center py-20 bg-[#0A0C12] border border-white/[0.08] rounded-3xl space-y-3">
-            <Scale size={36} className="text-[#5B6B7C] mx-auto" />
-            <h3 className="text-[18px] font-bold text-white">No advocates matched your search criteria</h3>
-            <p className="text-[14px] text-[#7A8A9E]">Try clearing your search term or switching the city and domain filter.</p>
+          <div className="text-center py-20 bg-white border border-[#E8E4DA] rounded-3xl space-y-3">
+            <Scale size={36} className="text-[#87837B] mx-auto" />
+            <h3 className="text-[18px] font-bold text-[#141413]">No advocates matched your search criteria</h3>
+            <p className="text-[14px] text-[#636059]">Try clearing your search term or switching the city and domain filter.</p>
             <button
               onClick={() => { setSearch(""); setSelectedCategory("All Domains"); setSelectedCity("All Cities"); }}
               className="btn-ghost text-[13px] px-5 py-2 mt-2"
