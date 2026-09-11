@@ -782,47 +782,54 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-white text-[#141413] flex flex-col overflow-x-hidden selection:bg-[#F4EFEA] selection:text-[#141413]">
+    <div className="min-h-screen text-white flex flex-col overflow-x-hidden" style={{background: '#050508', selection: 'rgba(99,102,241,0.2)'}}>
       <Navbar />
 
-      {/* ── HERO SECTION: UNIQUE LEXNOVA IDENTITY ── */}
-      <section className="pt-28 sm:pt-36 pb-14 px-6 sm:px-10 lg:px-14">
-        <div className="max-w-7xl mx-auto">
-          
-          {/* Top 2-Column Split Copy (Unique LexNova Identity) */}
+      {/* ── HERO SECTION ── */}
+      <section className="pt-28 sm:pt-36 pb-14 px-6 sm:px-10 lg:px-14 relative overflow-hidden">
+        {/* Background glow orbs */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <div className="absolute top-0 left-1/4 w-[600px] h-[600px] rounded-full" style={{background: 'radial-gradient(ellipse, rgba(99, 102, 241, 0.12) 0%, transparent 70%)', filter: 'blur(40px)'}} />
+          <div className="absolute top-20 right-1/4 w-[400px] h-[400px] rounded-full" style={{background: 'radial-gradient(ellipse, rgba(168, 85, 247, 0.08) 0%, transparent 70%)', filter: 'blur(40px)'}} />
+          <div className="absolute inset-0 hud-grid opacity-30" />
+        </div>
+        <div className="max-w-7xl mx-auto relative">
+          {/* Top 2-Column Split Copy */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
             
-            {/* Left Column: Unique Monumental Headline */}
+            {/* Left Column: Hero Headline */}
             <div className="lg:col-span-7 space-y-4">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#F7F4EE] border border-[#E8E4DA] text-[12px] font-mono font-medium text-[#42403B]">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#141413] animate-pulse" />
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-[12px] font-mono font-medium" style={{background: 'rgba(99,102,241,0.08)', border: '1px solid rgba(99,102,241,0.2)', color: '#818CF8'}}>
+                <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{background: '#10B981', boxShadow: '0 0 6px rgba(16,185,129,0.6)'}} />
                 LexNova 2.5 · Autonomous Legal Operating System
               </div>
-              <h1 className="text-[44px] sm:text-[60px] md:text-[70px] lg:text-[76px] font-bold tracking-tight text-[#141413] leading-[1.06]">
+              <h1 className="text-[44px] sm:text-[60px] md:text-[70px] lg:text-[76px] font-bold tracking-tight leading-[1.06] text-white">
                 Autonomous legal intelligence for{' '}
-                <span className="underline decoration-[#141413] decoration-[3px] underline-offset-8">disputes</span>,{' '}
-                <span className="underline decoration-[#141413] decoration-[3px] underline-offset-8">contracts</span> &amp;{' '}
-                <span className="underline decoration-[#141413] decoration-[3px] underline-offset-8">counsel</span>.
+                <span className="text-gradient">disputes</span>,{' '}
+                <span className="text-gradient">contracts</span> &{' '}
+                <span className="text-gradient">counsel</span>.
               </h1>
             </div>
 
-            {/* Right Column: Literary Serif Narrative & Direct Actions */}
+            {/* Right Column: Description & CTAs */}
             <div className="lg:col-span-5 pt-3 sm:pt-6 space-y-6">
-              <p className="font-serif text-2xl sm:text-3xl lg:text-[28px] text-[#141413] font-normal leading-[1.45]">
+              <p className="font-serif text-2xl sm:text-3xl lg:text-[28px] font-normal leading-[1.45]" style={{color: '#A8AECF'}}>
                 LexNova deciphers statutory frameworks across 50+ jurisdictions, computes exact limitation clocks, drafts court-admissible notices, and connects you directly to verified Bar advocates worldwide.
               </p>
               
               <div className="flex items-center gap-3 pt-1">
                 <Link
                   href="/dashboard/chat"
-                  className="px-6 py-3 rounded-full bg-[#141413] hover:bg-black text-white text-[14px] font-medium shadow-xs transition-all flex items-center gap-2"
+                  className="px-6 py-3 rounded-full text-white text-[14px] font-semibold shadow-lg transition-all flex items-center gap-2"
+                  style={{background: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)', boxShadow: '0 4px 20px rgba(99,102,241,0.4)'}}
                 >
                   <span>Launch Free Intake</span>
                   <ArrowRight size={14} />
                 </Link>
                 <Link
                   href="/how-it-works"
-                  className="px-5 py-3 rounded-full border border-[#DED9CE] hover:border-[#B5AFA2] text-[#141413] text-[14px] font-medium transition-colors bg-white"
+                  className="px-5 py-3 rounded-full text-[14px] font-medium transition-colors"
+                  style={{border: '1px solid rgba(99,102,241,0.2)', color: '#A8AECF', background: 'rgba(99,102,241,0.05)'}}
                 >
                   <span>Platform Architecture</span>
                 </Link>
@@ -831,26 +838,26 @@ export default function HomePage() {
 
           </div>
 
-          {/* Panoramic Atmospheric Horizon Banner (Anthropic-Style Visual Centerpiece) */}
-          <div className="mt-12 rounded-[28px] sm:rounded-[36px] overflow-hidden border border-[#E8E4DA] relative shadow-md h-[240px] sm:h-[340px] lg:h-[390px] group">
+          {/* Hero Visual Banner */}
+          <div className="mt-12 rounded-[28px] sm:rounded-[36px] overflow-hidden relative shadow-2xl h-[240px] sm:h-[340px] lg:h-[390px] group" style={{border: '1px solid rgba(99,102,241,0.2)'}}>
             <Image
               src="/images/anthropic_horizon.jpg"
               alt="Autonomous Global Legal Horizon"
               fill
               priority
-              className="object-cover object-center group-hover:scale-[1.02] transition-transform duration-700"
+              className="object-cover object-center group-hover:scale-[1.02] transition-transform duration-700 opacity-90"
             />
-            {/* Ambient Glassmorphic Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent flex flex-col justify-end p-6 sm:p-8">
+            {/* Gradient overlay */}
+            <div className="absolute inset-0 flex flex-col justify-end p-6 sm:p-8" style={{background: 'linear-gradient(to top, rgba(5,5,8,0.85) 0%, rgba(5,5,8,0.3) 50%, transparent 100%)'}}>
               <div className="flex flex-wrap items-center justify-between gap-3 text-white">
-                <div className="flex items-center gap-2.5 font-mono text-[12px] sm:text-[13px] bg-black/45 backdrop-blur-md px-4 py-2 rounded-full border border-white/20 shadow-sm">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+                <div className="flex items-center gap-2.5 font-mono text-[12px] sm:text-[13px] px-4 py-2 rounded-full" style={{background: 'rgba(5,5,8,0.7)', backdropFilter: 'blur(12px)', border: '1px solid rgba(99,102,241,0.25)', boxShadow: '0 0 20px rgba(99,102,241,0.1)'}}>
+                  <span className="status-live" />
                   <span className="font-semibold text-white">52 Jurisdictions Synchronized</span>
-                  <span className="text-white/60 hidden sm:inline">· US · UK · EU · SG · IN</span>
+                  <span className="hidden sm:inline" style={{color: 'rgba(168,174,207,0.7)'}}>· US · UK · EU · SG · IN</span>
                 </div>
-                <div className="flex items-center gap-3 font-mono text-[11.5px] text-white/90 bg-black/45 backdrop-blur-md px-4 py-2 rounded-full border border-white/15 shadow-sm">
+                <div className="flex items-center gap-3 font-mono text-[11.5px] px-4 py-2 rounded-full" style={{background: 'rgba(5,5,8,0.7)', backdropFilter: 'blur(12px)', border: '1px solid rgba(99,102,241,0.2)', color: 'rgba(168,174,207,0.9)'}}>
                   <span className="flex items-center gap-1.5">
-                    <ShieldCheck size={14} className="text-emerald-400" />
+                    <ShieldCheck size={14} style={{color: '#10B981'}} />
                     <span>Zero-Knowledge AES-256</span>
                   </span>
                   <span>·</span>
@@ -860,16 +867,16 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Interactive Autonomous Legal Console Hero Centerpiece */}
-          <div className="mt-8 rounded-[28px] sm:rounded-[36px] overflow-hidden border border-[#E8E4DA] relative shadow-sm bg-white">
+          {/* Interactive Statutory Console */}
+          <div className="mt-8 rounded-[28px] sm:rounded-[36px] overflow-hidden relative" style={{background: 'rgba(10,11,18,0.9)', border: '1px solid rgba(99,102,241,0.15)', boxShadow: '0 8px 40px rgba(99,102,241,0.08)'}}>
             
             {/* Console Control Bar */}
-            <div className="px-6 py-4 bg-[#F7F4EE] border-b border-[#E8E4DA] flex flex-wrap items-center justify-between gap-3 text-[12px] font-mono">
-              <div className="flex items-center gap-2 text-[#141413] font-semibold">
-                <span className="w-2 h-2 rounded-full bg-emerald-600" />
+            <div className="px-6 py-4 flex flex-wrap items-center justify-between gap-3 text-[12px] font-mono" style={{borderBottom: '1px solid rgba(99,102,241,0.12)', background: 'rgba(99,102,241,0.04)'}}>
+              <div className="flex items-center gap-2 font-semibold" style={{color: '#818CF8'}}>
+                <span className="status-live" />
                 <span>LEXNOVA LIVE STATUTORY CONSOLE</span>
               </div>
-              <div className="flex items-center gap-4 text-[#87837B]">
+              <div className="flex items-center gap-4" style={{color: '#444870'}}>
                 <span>52 JURISDICTIONS SYNCHRONIZED</span>
                 <span>·</span>
                 <span>ZERO-KNOWLEDGE PRIVILEGE</span>
@@ -880,20 +887,22 @@ export default function HomePage() {
             <div className="p-6 sm:p-8 space-y-6">
               
               {/* Intake Form */}
-              <form onSubmit={handleHeroSubmit} className="flex flex-col sm:flex-row items-center gap-3 bg-[#FAF8F5] border border-[#E8E5DE] rounded-2xl p-2.5 sm:p-3">
+              <form onSubmit={handleHeroSubmit} className="flex flex-col sm:flex-row items-center gap-3 rounded-2xl p-2.5 sm:p-3" style={{background: 'rgba(14,16,24,0.8)', border: '1px solid rgba(99,102,241,0.15)'}}>
                 <div className="flex items-center gap-3 w-full px-2">
-                  <Sparkles size={18} className="text-[#141413] shrink-0" />
+                  <Sparkles size={18} style={{color: '#818CF8'}} className="shrink-0" />
                   <input
                     type="text"
                     value={heroInput}
                     onChange={(e) => setHeroInput(e.target.value)}
                     placeholder="Describe your dispute (e.g. Counterparty defaulted on $140k SaaS contract in Delaware)..."
-                    className="w-full bg-transparent border-none text-[#141413] text-[14.5px] placeholder-[#87837B] focus:outline-none"
+                    className="w-full bg-transparent border-none text-[14.5px] focus:outline-none"
+                    style={{color: '#F0F2FF', '::placeholder': {color: '#444870'}} as any}
                   />
                 </div>
                 <button
                   type="submit"
-                  className="h-11 px-6 rounded-xl bg-[#141413] hover:bg-black text-white font-medium text-[13.5px] flex items-center justify-center gap-2 transition-all shrink-0 w-full sm:w-auto"
+                  className="h-11 px-6 rounded-xl text-white font-semibold text-[13.5px] flex items-center justify-center gap-2 transition-all shrink-0 w-full sm:w-auto"
+                  style={{background: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)', boxShadow: '0 2px 12px rgba(99,102,241,0.35)'}}
                 >
                   <span>Analyze Case</span>
                   <ArrowRight size={14} />
@@ -902,7 +911,7 @@ export default function HomePage() {
 
               {/* Quick Scenario Triggers */}
               <div className="space-y-2">
-                <div className="text-[11px] font-mono font-bold text-[#87837B] uppercase tracking-wider">
+                <div className="text-[11px] font-mono font-bold uppercase tracking-wider" style={{color: '#444870'}}>
                   Test Live Multi-Jurisdiction Engine:
                 </div>
                 <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
@@ -915,9 +924,18 @@ export default function HomePage() {
                       }}
                       className={`px-3.5 py-2 rounded-full text-[12.5px] font-medium transition-all flex items-center gap-2 whitespace-nowrap ${
                         activeScenarioId === sc.id
-                          ? 'bg-[#141413] text-white shadow-xs'
-                          : 'bg-[#F7F4EE] border border-[#E8E4DA] text-[#42403B] hover:border-[#B5AFA2]'
+                          ? 'text-white'
+                          : 'hover:border-indigo-500/40'
                       }`}
+                      style={activeScenarioId === sc.id ? {
+                        background: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)',
+                        boxShadow: '0 2px 10px rgba(99,102,241,0.3)',
+                        border: '1px solid rgba(99,102,241,0.4)'
+                      } : {
+                        background: 'rgba(255,255,255,0.03)',
+                        border: '1px solid rgba(99,102,241,0.12)',
+                        color: '#A8AECF'
+                      }}
                     >
                       <span>{sc.flag}</span>
                       <span>{sc.country}</span>
@@ -931,51 +949,52 @@ export default function HomePage() {
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 pt-2">
                 
                 {/* Left: Metrics & Breach */}
-                <div className="lg:col-span-6 bg-[#FAF8F5] border border-[#E8E5DE] rounded-2xl p-5 space-y-4">
-                  <div className="flex items-center justify-between pb-3 border-b border-[#E8E5DE]">
-                    <span className="text-[11px] font-mono font-bold uppercase text-[#87837B]">{activeScenario.badge}</span>
-                    <span className="text-[11px] font-mono font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-md">
+                <div className="lg:col-span-6 rounded-2xl p-5 space-y-4" style={{background: 'rgba(14,16,24,0.7)', border: '1px solid rgba(99,102,241,0.12)'}}>
+                  <div className="flex items-center justify-between pb-3" style={{borderBottom: '1px solid rgba(99,102,241,0.1)'}}>
+                    <span className="text-[11px] font-mono font-bold uppercase" style={{color: '#444870'}}>{activeScenario.badge}</span>
+                    <span className="text-[11px] font-mono font-bold px-2 py-0.5 rounded-md" style={{color: '#10B981', background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.2)'}}>
                       96% ENFORCEABLE
                     </span>
                   </div>
 
-                  <div className="grid grid-cols-3 divide-x divide-[#E8E4DA] text-center py-1">
+                  <div className="grid grid-cols-3 text-center py-1" style={{gap: '1px'}}>
                     <div>
-                      <div className="text-[10px] font-mono text-[#87837B] uppercase">Claim</div>
-                      <div className="text-[18px] font-bold text-[#141413] font-mono">{activeScenario.claimAmountDisplay}</div>
+                      <div className="text-[10px] font-mono uppercase" style={{color: '#444870'}}>Claim</div>
+                      <div className="text-[18px] font-bold font-mono text-white">{activeScenario.claimAmountDisplay}</div>
                     </div>
                     <div>
-                      <div className="text-[10px] font-mono text-[#87837B] uppercase">Limitation</div>
-                      <div className="text-[18px] font-bold text-[#B45309] font-mono">{activeScenario.limitationDays} Days</div>
+                      <div className="text-[10px] font-mono uppercase" style={{color: '#444870'}}>Limitation</div>
+                      <div className="text-[18px] font-bold font-mono" style={{color: '#F59E0B'}}>{activeScenario.limitationDays} Days</div>
                     </div>
                     <div>
-                      <div className="text-[10px] font-mono text-[#87837B] uppercase">Jurisdiction</div>
-                      <div className="text-[13px] font-bold text-[#141413] mt-1">{activeScenario.country}</div>
+                      <div className="text-[10px] font-mono uppercase" style={{color: '#444870'}}>Jurisdiction</div>
+                      <div className="text-[13px] font-bold text-white mt-1">{activeScenario.country}</div>
                     </div>
                   </div>
 
-                  <div className="text-[12.5px] text-[#42403B] font-mono pt-1">
-                    <strong>Statute:</strong> {activeScenario.statute}
+                  <div className="text-[12.5px] font-mono pt-1" style={{color: '#A8AECF'}}>
+                    <strong style={{color: '#F0F2FF'}}>Statute:</strong> {activeScenario.statute}
                   </div>
                 </div>
 
                 {/* Right: Formal Notice Excerpt */}
-                <div className="lg:col-span-6 bg-[#FAF8F5] border border-[#E8E5DE] rounded-2xl p-5 space-y-3 flex flex-col justify-between">
+                <div className="lg:col-span-6 rounded-2xl p-5 space-y-3 flex flex-col justify-between" style={{background: 'rgba(14,16,24,0.7)', border: '1px solid rgba(99,102,241,0.12)'}}>
                   <div>
-                    <div className="flex items-center justify-between pb-2 border-b border-[#E8E5DE]">
-                      <span className="text-[11px] font-mono font-bold uppercase text-[#87837B]">Court-Admissible Notice Format</span>
-                      <span className="text-[11px] font-mono text-[#141413]">{activeScenario.noticeFormat.split(' ')[0]} Format</span>
+                    <div className="flex items-center justify-between pb-2" style={{borderBottom: '1px solid rgba(99,102,241,0.1)'}}>
+                      <span className="text-[11px] font-mono font-bold uppercase" style={{color: '#444870'}}>Court-Admissible Notice Format</span>
+                      <span className="text-[11px] font-mono" style={{color: '#818CF8'}}>{activeScenario.noticeFormat.split(' ')[0]} Format</span>
                     </div>
-                    <p className="font-mono text-[12px] text-[#5A5752] leading-relaxed italic pt-2 line-clamp-3">
-                      "{activeScenario.noticeExcerpt}"
+                    <p className="font-mono text-[12px] leading-relaxed italic pt-2 line-clamp-3" style={{color: '#6B72A0'}}>
+                      &ldquo;{activeScenario.noticeExcerpt}&rdquo;
                     </p>
                   </div>
 
-                  <div className="pt-2 border-t border-[#E8E4DA] flex items-center justify-between text-[12px]">
-                    <span className="text-[#87837B] font-mono">Verified Advocate Handoff Ready</span>
+                  <div className="pt-2 flex items-center justify-between text-[12px]" style={{borderTop: '1px solid rgba(99,102,241,0.08)'}}>
+                    <span className="font-mono" style={{color: '#6B72A0'}}>Verified Advocate Handoff Ready</span>
                     <Link
                       href={`/dashboard/chat?init=${encodeURIComponent(activeScenario.title)}`}
-                      className="font-medium text-[#141413] underline hover:no-underline flex items-center gap-1"
+                      className="font-medium underline hover:no-underline flex items-center gap-1"
+                      style={{color: '#818CF8'}}
                     >
                       Draft Full Docket &rarr;
                     </Link>
@@ -992,20 +1011,20 @@ export default function HomePage() {
       </section>
 
       {/* ── KEY METRICS BAR ── */}
-      <div className="border-y border-[#E8E4DA] bg-white">
+      <div style={{borderTop: '1px solid rgba(99,102,241,0.1)', borderBottom: '1px solid rgba(99,102,241,0.1)', background: 'rgba(10,11,18,0.6)'}}>
         <div className="max-w-7xl mx-auto px-6 sm:px-10">
-          <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-[#E8E4DA]">
+          <div className="grid grid-cols-2 md:grid-cols-4" style={{divideX: '1px solid rgba(99,102,241,0.1)'}}>
             {[
               { val: '$840M+', label: 'Disputes Processed Worldwide' },
               { val: '4,200+', label: 'Verified Global Advocates' },
               { val: '50+', label: 'Autonomous Jurisdictions' },
               { val: '< 60s', label: 'Average Time to Enforceable Notice' },
             ].map((m, i) => (
-              <div key={i} className="py-8 px-6 text-center">
-                <div className="text-3xl sm:text-4xl font-bold font-mono tracking-tight text-[#141413]">
+              <div key={i} className="py-8 px-6 text-center" style={{borderRight: i < 3 ? '1px solid rgba(99,102,241,0.08)' : 'none'}}>
+                <div className="text-3xl sm:text-4xl font-bold font-mono tracking-tight text-gradient">
                   {m.val}
                 </div>
-                <div className="text-[12px] text-[#636059] font-medium mt-1 uppercase tracking-wide">
+                <div className="text-[12px] font-medium mt-1 uppercase tracking-wide" style={{color: '#6B72A0'}}>
                   {m.label}
                 </div>
               </div>
@@ -1020,16 +1039,17 @@ export default function HomePage() {
           
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
             <div className="space-y-2">
-              <div className="text-[12px] font-mono font-semibold text-[#87837B] uppercase tracking-widest">
+              <div className="text-[12px] font-mono font-semibold uppercase tracking-widest" style={{color: '#6B72A0'}}>
                 Interactive Case Engine
               </div>
-              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#141413]">
+              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white">
                 Autonomous cross-border statutory intelligence.
               </h2>
             </div>
             <Link
               href="/dashboard/chat"
-              className="inline-flex items-center gap-1 text-[13.5px] font-medium text-[#141413] hover:underline"
+              className="inline-flex items-center gap-1 text-[13.5px] font-medium hover:underline"
+              style={{color: '#818CF8'}}
             >
               <span>Launch Live Intake Console</span>
               <ArrowRight size={14} />
@@ -1037,16 +1057,22 @@ export default function HomePage() {
           </div>
 
           {/* Scenario Selector Pills */}
-          <div className="flex gap-2 overflow-x-auto pb-2 border-b border-[#E8E4DA]">
+          <div className="flex gap-2 overflow-x-auto pb-2" style={{borderBottom: '1px solid rgba(99,102,241,0.1)'}}>
             {GLOBAL_SCENARIOS.map((sc) => (
               <button
                 key={sc.id}
                 onClick={() => setActiveScenarioId(sc.id)}
-                className={`px-4 py-2.5 rounded-full text-[13px] font-medium transition-all flex items-center gap-2 whitespace-nowrap ${
-                  activeScenarioId === sc.id
-                    ? 'bg-[#141413] text-white shadow-sm'
-                    : 'bg-white border border-[#E8E4DA] text-[#42403B] hover:border-[#B5AFA2]'
-                }`}
+                className={`px-4 py-2.5 rounded-full text-[13px] font-medium transition-all flex items-center gap-2 whitespace-nowrap`}
+                style={activeScenarioId === sc.id ? {
+                  background: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)',
+                  color: 'white',
+                  border: '1px solid rgba(99,102,241,0.4)',
+                  boxShadow: '0 2px 12px rgba(99,102,241,0.3)'
+                } : {
+                  background: 'rgba(255,255,255,0.03)',
+                  border: '1px solid rgba(99,102,241,0.12)',
+                  color: '#A8AECF'
+                }}
               >
                 <span>{sc.flag}</span>
                 <span>{sc.country}</span>
@@ -1056,28 +1082,28 @@ export default function HomePage() {
           </div>
 
           {/* Active Scenario Card */}
-          <div className="bg-white rounded-3xl border border-[#E8E4DA] p-6 sm:p-8 shadow-sm space-y-6">
-            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-6 border-b border-[#E8E4DA]">
+          <div className="rounded-3xl p-6 sm:p-8 space-y-6" style={{background: 'rgba(10,11,18,0.8)', border: '1px solid rgba(99,102,241,0.15)', boxShadow: '0 8px 40px rgba(99,102,241,0.06)'}}>
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-6" style={{borderBottom: '1px solid rgba(99,102,241,0.1)'}}>
               <div>
-                <div className="inline-block px-3 py-1 rounded-full bg-[#F3EFE6] text-[#42403B] text-[11px] font-mono font-semibold uppercase tracking-wider mb-2">
+                <div className="inline-block px-3 py-1 rounded-full text-[11px] font-mono font-semibold uppercase tracking-wider mb-2" style={{background: 'rgba(99,102,241,0.08)', color: '#818CF8', border: '1px solid rgba(99,102,241,0.2)'}}>
                   {activeScenario.badge}
                 </div>
-                <h3 className="text-2xl font-bold text-[#141413]">
+                <h3 className="text-2xl font-bold text-white">
                   {activeScenario.title}
                 </h3>
-                <p className="text-[14px] text-[#636059] mt-1 font-mono">
+                <p className="text-[14px] mt-1 font-mono" style={{color: '#6B72A0'}}>
                   Forum: {activeScenario.forum}
                 </p>
               </div>
 
               <div className="flex items-center gap-4 shrink-0">
                 <div className="text-right">
-                  <div className="text-[11px] font-mono text-[#87837B] uppercase">Claim Principal</div>
-                  <div className="text-2xl font-black text-[#141413] font-mono">{activeScenario.claimAmountDisplay}</div>
+                  <div className="text-[11px] font-mono uppercase" style={{color: '#6B72A0'}}>Claim Principal</div>
+                  <div className="text-2xl font-black font-mono text-white">{activeScenario.claimAmountDisplay}</div>
                 </div>
                 <div className="text-right">
-                  <div className="text-[11px] font-mono text-[#87837B] uppercase">Limitation Clock</div>
-                  <div className="text-2xl font-black text-[#B45309] font-mono">{activeScenario.limitationDays} Days</div>
+                  <div className="text-[11px] font-mono uppercase" style={{color: '#6B72A0'}}>Limitation Clock</div>
+                  <div className="text-2xl font-black font-mono" style={{color: '#F59E0B'}}>{activeScenario.limitationDays} Days</div>
                 </div>
               </div>
             </div>
@@ -1085,42 +1111,44 @@ export default function HomePage() {
             {/* Excerpt Notice */}
             <div className="space-y-3">
               <div className="flex items-center justify-between text-[12px]">
-                <span className="font-mono font-bold text-[#87837B] uppercase">
+                <span className="font-mono font-bold uppercase" style={{color: '#6B72A0'}}>
                   Auto-Generated Court Notice Excerpt · {activeScenario.noticeFormat}
                 </span>
                 <button
                   onClick={() => copyNotice(activeScenario.noticeExcerpt)}
-                  className="inline-flex items-center gap-1 text-[#141413] hover:underline font-mono"
+                  className="inline-flex items-center gap-1 hover:underline font-mono"
+                  style={{color: '#818CF8'}}
                 >
                   <Copy size={13} />
                   <span>{copiedNotice ? 'Copied' : 'Copy Notice'}</span>
                 </button>
               </div>
-              <div className="bg-[#FAF8F5] border border-[#E8E4DA] rounded-2xl p-5 text-[13.5px] font-mono text-[#2D2C2A] leading-relaxed italic">
-                "{activeScenario.noticeExcerpt}"
+              <div className="rounded-2xl p-5 text-[13.5px] font-mono leading-relaxed italic" style={{background: 'rgba(14,16,24,0.7)', border: '1px solid rgba(99,102,241,0.1)', color: '#A8AECF'}}>
+                &ldquo;{activeScenario.noticeExcerpt}&rdquo;
               </div>
             </div>
 
             {/* Citations & Precedents */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-              <div className="p-4 rounded-2xl bg-[#F7F4EE] border border-[#E8E4DA]">
-                <div className="text-[11px] font-mono font-bold text-[#87837B] uppercase mb-1">Governing Statute</div>
-                <div className="text-[13px] font-medium text-[#141413]">{activeScenario.statute}</div>
+              <div className="p-4 rounded-2xl" style={{background: 'rgba(99,102,241,0.05)', border: '1px solid rgba(99,102,241,0.1)'}}>
+                <div className="text-[11px] font-mono font-bold uppercase mb-1" style={{color: '#6B72A0'}}>Governing Statute</div>
+                <div className="text-[13px] font-medium text-white">{activeScenario.statute}</div>
               </div>
-              <div className="p-4 rounded-2xl bg-[#F7F4EE] border border-[#E8E4DA]">
-                <div className="text-[11px] font-mono font-bold text-[#87837B] uppercase mb-1">Binding Precedent</div>
-                <div className="text-[13px] font-medium text-[#141413]">{activeScenario.precedent}</div>
+              <div className="p-4 rounded-2xl" style={{background: 'rgba(99,102,241,0.05)', border: '1px solid rgba(99,102,241,0.1)'}}>
+                <div className="text-[11px] font-mono font-bold uppercase mb-1" style={{color: '#6B72A0'}}>Binding Precedent</div>
+                <div className="text-[13px] font-medium text-white">{activeScenario.precedent}</div>
               </div>
             </div>
 
             <div className="pt-4 flex flex-wrap items-center justify-between gap-4">
-              <div className="flex items-center gap-2 text-[12.5px] text-[#636059]">
-                <CheckCircle2 size={16} className="text-[#141413]" />
+              <div className="flex items-center gap-2 text-[12.5px]" style={{color: '#6B72A0'}}>
+                <CheckCircle2 size={16} style={{color: '#10B981'}} />
                 <span>Court-admissible in {activeScenario.country} jurisdictions</span>
               </div>
               <Link
                 href={`/dashboard/chat?init=${encodeURIComponent(activeScenario.title)}`}
-                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#141413] hover:bg-black text-white text-[13px] font-medium shadow-sm transition-all"
+                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-white text-[13px] font-semibold shadow-lg transition-all"
+                style={{background: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)', boxShadow: '0 4px 16px rgba(99,102,241,0.35)'}}
               >
                 <span>Draft Full Notice for this Case</span>
                 <ArrowRight size={14} />
@@ -1132,14 +1160,14 @@ export default function HomePage() {
       </section>
 
       {/* ── HOW IT WORKS: 3 STEPS ── */}
-      <section className="py-20 px-6 sm:px-10 lg:px-14 border-t border-[#E8E4DA] bg-white">
+      <section className="py-20 px-6 sm:px-10 lg:px-14" style={{borderTop: '1px solid rgba(99,102,241,0.08)', background: 'rgba(10,11,18,0.5)'}}>
         <div className="max-w-7xl mx-auto space-y-12">
           
           <div className="max-w-2xl space-y-3">
-            <div className="text-[12px] font-mono font-semibold text-[#87837B] uppercase tracking-widest">
+            <div className="text-[12px] font-mono font-semibold uppercase tracking-widest" style={{color: '#6B72A0'}}>
               Methodology
             </div>
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#141413]">
+            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white">
               From commercial dispute to resolution in three steps.
             </h2>
           </div>
@@ -1151,36 +1179,40 @@ export default function HomePage() {
                 title: 'Case & Contract Ingestion',
                 desc: 'Upload agreements or type the dispute in plain English. LexNova extracts governing clauses, choice of forum, and defaults in seconds.',
                 badge: '< 30s Analysis',
+                accent: '#6366F1',
               },
               {
                 step: '02',
                 title: 'Statutory Notice & Docketing',
                 desc: 'Autonomous generation of jurisdiction-specific pre-action notices (RPAD, CPR, UCC, BGB) with strict statutory limitation clocks.',
                 badge: 'Court-Admissible',
+                accent: '#A855F7',
               },
               {
                 step: '03',
                 title: 'Verified Global Counsel Retainer',
                 desc: 'Handoff to Bar-verified attorneys and solicitors across the US, UK, EU, and Asia. Escrow-protected retainers with fixed pricing.',
                 badge: '1-Click Retainer',
+                accent: '#10B981',
               },
             ].map((s, i) => (
               <div
                 key={i}
-                className="bg-[#FAF8F5] border border-[#E8E5DE] rounded-3xl p-8 space-y-4 hover:border-[#141413] transition-all"
+                className="rounded-3xl p-8 space-y-4 transition-all group cursor-default"
+                style={{background: 'rgba(14,16,24,0.7)', border: '1px solid rgba(99,102,241,0.1)'}}
               >
                 <div className="flex items-center justify-between">
-                  <span className="font-mono text-[14px] font-bold text-[#87837B]">
+                  <span className="font-mono text-[14px] font-bold" style={{color: '#444870'}}>
                     STEP {s.step}
                   </span>
-                  <span className="px-2.5 py-1 rounded-full bg-white border border-[#E8E4DA] text-[11px] font-mono font-semibold text-[#42403B]">
+                  <span className="px-2.5 py-1 rounded-full text-[11px] font-mono font-semibold" style={{background: `rgba(99,102,241,0.08)`, color: '#818CF8', border: '1px solid rgba(99,102,241,0.2)'}}>
                     {s.badge}
                   </span>
                 </div>
-                <h3 className="text-xl font-bold text-[#141413] tracking-tight">
+                <h3 className="text-xl font-bold text-white tracking-tight">
                   {s.title}
                 </h3>
-                <p className="text-[14px] text-[#636059] leading-relaxed">
+                <p className="text-[14px] leading-relaxed" style={{color: '#6B72A0'}}>
                   {s.desc}
                 </p>
               </div>
@@ -1191,14 +1223,14 @@ export default function HomePage() {
       </section>
 
       {/* ── DUAL PLATFORM: CLIENTS & ADVOCATES ── */}
-      <section className="py-20 px-6 sm:px-10 lg:px-14 border-t border-[#E8E5DE] bg-white">
+      <section className="py-20 px-6 sm:px-10 lg:px-14" style={{borderTop: '1px solid rgba(99,102,241,0.08)'}}>
         <div className="max-w-7xl mx-auto space-y-12">
           
           <div className="text-center max-w-2xl mx-auto space-y-3">
-            <div className="text-[12px] font-mono font-semibold text-[#87837B] uppercase tracking-widest">
+            <div className="text-[12px] font-mono font-semibold uppercase tracking-widest" style={{color: '#6B72A0'}}>
               Unified Ecosystem
             </div>
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#141413]">
+            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white">
               Engineered for both claimants and counsel.
             </h2>
           </div>
@@ -1206,25 +1238,25 @@ export default function HomePage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
             
             {/* Left Showcase Card: Enterprise Contract & Dispute Workspace */}
-            <div className="bg-white rounded-3xl border border-[#E8E5DE] overflow-hidden text-[#141413] flex flex-col justify-between shadow-xs hover:shadow-md transition-all relative group">
+            <div className="rounded-3xl overflow-hidden text-white flex flex-col justify-between transition-all relative group" style={{background: 'rgba(10,11,18,0.85)', border: '1px solid rgba(99,102,241,0.15)', boxShadow: '0 8px 40px rgba(99,102,241,0.06)'}}>
               
               {/* Image & Header Overlay */}
-              <div className="relative h-[220px] sm:h-[250px] w-full overflow-hidden bg-slate-900">
+              <div className="relative h-[220px] sm:h-[250px] w-full overflow-hidden" style={{background: '#0A0B12'}}>
                 <Image
                   src="/images/legal_operations_hub.jpg"
                   alt="Enterprise Contract & Dispute Workspace"
                   fill
-                  className="object-cover object-top opacity-90 group-hover:scale-105 transition-transform duration-700"
+                  className="object-cover object-top opacity-70 group-hover:scale-105 transition-transform duration-700"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                <div className="absolute inset-0" style={{background: 'linear-gradient(to top, rgba(10,11,18,0.9) 0%, transparent 60%)'}} />
                 
                 {/* Floating Top Badges */}
                 <div className="absolute top-4 left-4 right-4 flex items-center justify-between text-[11px] font-mono">
-                  <span className="bg-black/60 backdrop-blur-md px-3 py-1 rounded-full border border-white/20 text-white flex items-center gap-1.5 shadow-sm">
-                    <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+                  <span className="px-3 py-1 rounded-full border text-white flex items-center gap-1.5 shadow-sm" style={{background: 'rgba(5,5,8,0.7)', backdropFilter: 'blur(12px)', border: '1px solid rgba(99,102,241,0.3)'}}>
+                    <span className="status-live" />
                     ITVF WORKSPACE · CLAUSE ENGINE
                   </span>
-                  <span className="bg-emerald-950/80 text-emerald-300 border border-emerald-500/40 px-2.5 py-1 rounded-full font-semibold shadow-sm">
+                  <span className="px-2.5 py-1 rounded-full font-semibold shadow-sm" style={{background: 'rgba(16,185,129,0.15)', color: '#10B981', border: '1px solid rgba(16,185,129,0.3)'}}>
                     STATUTORY ACTIVE
                   </span>
                 </div>
@@ -1233,13 +1265,13 @@ export default function HomePage() {
               {/* Card Body */}
               <div className="p-6 sm:p-8 space-y-6 flex-1 flex flex-col justify-between">
                 <div className="space-y-3">
-                  <span className="text-[11px] font-mono text-cyan-800 bg-cyan-50 border border-cyan-200 px-3 py-1 rounded-full font-bold uppercase tracking-wider inline-block">
+                  <span className="text-[11px] font-mono px-3 py-1 rounded-full font-bold uppercase tracking-wider inline-block" style={{background: 'rgba(34,211,238,0.08)', color: '#22D3EE', border: '1px solid rgba(34,211,238,0.2)'}}>
                     AUTOMATED CLAUSE DISSECTION
                   </span>
-                  <h3 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#141413]">
+                  <h3 className="text-2xl sm:text-3xl font-bold tracking-tight text-white">
                     Enterprise Contract &amp; Dispute Workspace
                   </h3>
-                  <p className="text-[14px] text-[#636059] leading-relaxed">
+                  <p className="text-[14px] leading-relaxed" style={{color: '#A8AECF'}}>
                     Autonomous clause extraction, breach detection, and statutory damages quantification displayed in a unified executive docket with real-time statutory calculation.
                   </p>
 
@@ -1286,68 +1318,70 @@ export default function HomePage() {
                   </div>
                 </div>
 
-                {/* Bottom Trigger & Metrics */}
-                <div className="pt-4 space-y-4">
-                  <div className="flex items-center justify-between">
-                    <button
-                      type="button"
-                      onClick={handleScanClause}
-                      disabled={isScanningClause}
-                      className="px-4 py-2.5 rounded-xl bg-[#141413] hover:bg-black text-white font-mono text-[12px] font-medium transition-all flex items-center gap-2 shadow-xs"
-                    >
-                      {isScanningClause ? (
-                        <>
-                          <RefreshCw size={12} className="animate-spin text-cyan-400" />
-                          <span>Scanning Clause...</span>
-                        </>
-                      ) : (
-                        <>
-                          <Zap size={12} className="fill-current text-cyan-400" />
-                          <span>{clauseScanCompleted ? 'Re-Scan Clause ⚡' : 'Scan Clause for Breach ⚡'}</span>
-                        </>
-                      )}
-                    </button>
-                    <Link
-                      href="/dashboard/chat"
-                      className="text-[13px] font-medium text-[#141413] hover:underline flex items-center gap-1"
-                    >
-                      <span>Open Full Workspace</span>
-                      <ChevronRight size={14} />
-                    </Link>
-                  </div>
+                  {/* Bottom Trigger & Metrics */}
+                  <div className="pt-4 space-y-4">
+                    <div className="flex items-center justify-between">
+                      <button
+                        type="button"
+                        onClick={handleScanClause}
+                        disabled={isScanningClause}
+                        className="px-4 py-2.5 rounded-xl text-white font-mono text-[12px] font-semibold transition-all flex items-center gap-2"
+                        style={{background: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)', boxShadow: '0 2px 10px rgba(99,102,241,0.3)'}}
+                      >
+                        {isScanningClause ? (
+                          <>
+                            <RefreshCw size={12} className="animate-spin" style={{color: '#22D3EE'}} />
+                            <span>Scanning Clause...</span>
+                          </>
+                        ) : (
+                          <>
+                            <Zap size={12} className="fill-current" style={{color: '#22D3EE'}} />
+                            <span>{clauseScanCompleted ? 'Re-Scan Clause ⚡' : 'Scan Clause for Breach ⚡'}</span>
+                          </>
+                        )}
+                      </button>
+                      <Link
+                        href="/dashboard/chat"
+                        className="text-[13px] font-medium hover:underline flex items-center gap-1"
+                        style={{color: '#818CF8'}}
+                      >
+                        <span>Open Full Workspace</span>
+                        <ChevronRight size={14} />
+                      </Link>
+                    </div>
 
-                  <div className="pt-3 border-t border-[#E8E5DE] flex items-center justify-between text-[11.5px] font-mono text-[#87837B]">
-                    <span>Clause Parsing: <strong className="text-[#141413]">&lt; 30s</strong></span>
-                    <span className="text-emerald-700 font-semibold flex items-center gap-1">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-600" />
-                      Admissible Breaches Identified
-                    </span>
+                    <div className="pt-3 flex items-center justify-between text-[11.5px] font-mono" style={{borderTop: '1px solid rgba(99,102,241,0.1)', color: '#6B72A0'}}>
+                      <span>Clause Parsing: <strong style={{color: '#F0F2FF'}}>&lt; 30s</strong></span>
+                      <span className="font-semibold flex items-center gap-1" style={{color: '#10B981'}}>
+                        <span className="status-live" />
+                        Admissible Breaches Identified
+                      </span>
+                    </div>
                   </div>
-                </div>
 
               </div>
             </div>
 
             {/* Right Showcase Card: Global Commercial Operations & Dispatch */}
-            <div className="bg-white rounded-3xl border border-[#E8E5DE] overflow-hidden text-[#141413] flex flex-col justify-between shadow-xs hover:shadow-md transition-all relative group">
+            <div className="rounded-3xl overflow-hidden text-white flex flex-col justify-between transition-all relative group" style={{background: 'rgba(10,11,18,0.85)', border: '1px solid rgba(99,102,241,0.15)', boxShadow: '0 8px 40px rgba(99,102,241,0.06)'}}>
               
               {/* Image & Header Overlay */}
-              <div className="relative h-[220px] sm:h-[250px] w-full overflow-hidden bg-slate-900">
+              <div className="relative h-[220px] sm:h-[250px] w-full overflow-hidden" style={{background: '#0A0B12'}}>
                 <Image
                   src="/images/tesla_mission_control.jpg"
                   alt="Global Commercial Operations & Dispatch"
                   fill
-                  className="object-cover object-top opacity-90 group-hover:scale-105 transition-transform duration-700"
+                  className="object-cover object-top opacity-70 group-hover:scale-105 transition-transform duration-700"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                <div className="absolute inset-0" style={{background: 'linear-gradient(to top, rgba(10,11,18,0.9) 0%, transparent 60%)'}} />
                 
                 {/* Floating Top Badges */}
                 <div className="absolute top-4 left-4 right-4 flex items-center justify-between text-[11px] font-mono">
-                  <span className="bg-black/60 backdrop-blur-md px-3 py-1 rounded-full border border-white/20 text-white flex items-center gap-1.5 shadow-sm">
-                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  <span className="px-3 py-1 rounded-full text-white flex items-center gap-1.5 shadow-sm" style={{background: 'rgba(5,5,8,0.7)', backdropFilter: 'blur(12px)', border: '1px solid rgba(99,102,241,0.3)'}}>
+                    <span className="status-live" />
                     COMMERCIAL DISPATCH: 52 FORUMS
                   </span>
-                  <span className="bg-purple-950/80 text-purple-300 border border-purple-500/40 px-2.5 py-1 rounded-full font-semibold shadow-sm">
+                  <span className="px-2.5 py-1 rounded-full font-semibold shadow-sm" style={{background: 'rgba(168,85,247,0.15)', color: '#C084FC', border: '1px solid rgba(168,85,247,0.3)'}}>
                     TCC &amp; SIAC SYNCHRONIZED
                   </span>
                 </div>
@@ -1356,13 +1390,13 @@ export default function HomePage() {
               {/* Card Body */}
               <div className="p-6 sm:p-8 space-y-6 flex-1 flex flex-col justify-between">
                 <div className="space-y-3">
-                  <span className="text-[11px] font-mono text-purple-800 bg-purple-50 border border-purple-200 px-3 py-1 rounded-full font-bold uppercase tracking-wider inline-block">
+                  <span className="text-[11px] font-mono px-3 py-1 rounded-full font-bold uppercase tracking-wider inline-block" style={{background: 'rgba(168,85,247,0.08)', color: '#C084FC', border: '1px solid rgba(168,85,247,0.2)'}}>
                     PRE-ACTION ENFORCEMENT &amp; FILINGS
                   </span>
-                  <h3 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#141413]">
+                  <h3 className="text-2xl sm:text-3xl font-bold tracking-tight text-white">
                     Global Commercial Operations &amp; Dispatch
                   </h3>
-                  <p className="text-[14px] text-[#636059] leading-relaxed">
+                  <p className="text-[14px] leading-relaxed" style={{color: '#A8AECF'}}>
                     Coordinates court-ready demand notices, certified postal and digital service, and direct handover to verified commercial litigators across international forums.
                   </p>
 
@@ -1378,11 +1412,16 @@ export default function HomePage() {
                         <button
                           key={item.id}
                           onClick={() => setActiveDispatchForum(item.id as any)}
-                          className={`px-3 py-1.5 rounded-xl text-[11px] font-mono transition-all whitespace-nowrap border ${
-                            activeDispatchForum === item.id
-                              ? 'bg-[#141413] text-white border-[#141413] shadow-xs'
-                              : 'bg-[#FAF8F5] text-[#636059] border-[#E8E5DE] hover:border-[#B5AFA2] hover:text-[#141413]'
-                          }`}
+                          className={`px-3 py-1.5 rounded-xl text-[11px] font-mono transition-all whitespace-nowrap`}
+                          style={activeDispatchForum === item.id ? {
+                            background: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)',
+                            color: 'white',
+                            border: '1px solid rgba(99,102,241,0.4)'
+                          } : {
+                            background: 'rgba(255,255,255,0.03)',
+                            border: '1px solid rgba(99,102,241,0.12)',
+                            color: '#A8AECF'
+                          }}
                         >
                           {item.label}
                         </button>
@@ -1454,19 +1493,19 @@ export default function HomePage() {
       </section>
 
       {/* ── JURISDICTIONS NETWORK ── */}
-      <section className="py-20 px-6 sm:px-10 lg:px-14 border-t border-[#E8E4DA] bg-white">
+      <section className="py-20 px-6 sm:px-10 lg:px-14" style={{borderTop: '1px solid rgba(99,102,241,0.08)', background: 'rgba(10,11,18,0.4)'}}>
         <div className="max-w-7xl mx-auto space-y-10">
           
           <div className="flex items-center justify-between">
             <div className="space-y-1">
-              <div className="text-[12px] font-mono font-semibold text-[#87837B] uppercase tracking-widest">
+              <div className="text-[12px] font-mono font-semibold uppercase tracking-widest" style={{color: '#6B72A0'}}>
                 Global Coverage
               </div>
-              <h2 className="text-2xl sm:text-3xl font-bold text-[#141413]">
+              <h2 className="text-2xl sm:text-3xl font-bold text-white">
                 Fifty active statutory jurisdictions.
               </h2>
             </div>
-            <Link href="/dashboard/chat" className="text-[13px] font-medium text-[#141413] hover:underline flex items-center gap-1">
+            <Link href="/dashboard/chat" className="text-[13px] font-medium hover:underline flex items-center gap-1" style={{color: '#818CF8'}}>
               <span>View All Frameworks</span>
               <ChevronRight size={15} />
             </Link>
@@ -1487,11 +1526,12 @@ export default function HomePage() {
             ].map((j, i) => (
               <div
                 key={i}
-                className="p-5 rounded-2xl border border-[#E8E5DE] bg-[#FAF8F5] hover:border-[#141413] hover:bg-white transition-all"
+                className="p-5 rounded-2xl transition-all group cursor-default"
+                style={{background: 'rgba(14,16,24,0.7)', border: '1px solid rgba(99,102,241,0.1)'}}
               >
                 <div className="text-3xl mb-3">{j.flag}</div>
-                <div className="text-[14px] font-bold text-[#141413]">{j.name}</div>
-                <div className="text-[11px] text-[#636059] font-mono mt-1 leading-snug">{j.courts}</div>
+                <div className="text-[14px] font-bold text-white">{j.name}</div>
+                <div className="text-[11px] font-mono mt-1 leading-snug" style={{color: '#6B72A0'}}>{j.courts}</div>
               </div>
             ))}
           </div>
@@ -1500,30 +1540,31 @@ export default function HomePage() {
       </section>
 
       {/* ── VERIFIED ADVOCATES ROSTER ── */}
-      <section className="py-20 px-6 sm:px-10 lg:px-14 border-t border-[#E8E5DE] bg-white">
+      <section className="py-20 px-6 sm:px-10 lg:px-14 relative" style={{borderTop: '1px solid rgba(99,102,241,0.08)', background: 'rgba(7,8,13,0.7)'}}>
         <div className="max-w-7xl mx-auto space-y-10">
           
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div className="space-y-2">
               <div className="flex items-center gap-2">
-                <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                <span className="text-[12px] font-mono font-semibold text-[#87837B] uppercase tracking-widest">
+                <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span className="text-[12px] font-mono font-semibold uppercase tracking-widest" style={{color: '#6B72A0'}}>
                   Verified Global Advocates
                 </span>
-                <span className="text-[11px] font-mono text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
+                <span className="text-[11px] font-mono px-2.5 py-0.5 rounded-full" style={{color: '#10B981', background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.2)'}}>
                   140+ Admitted Advocates
                 </span>
               </div>
-              <h2 className="text-2xl sm:text-3xl font-bold text-[#141413]">
+              <h2 className="text-2xl sm:text-3xl font-bold text-white">
                 Licensed international counsel on standby.
               </h2>
-              <p className="text-[14px] text-[#636059] max-w-2xl leading-relaxed">
+              <p className="text-[14px] max-w-2xl leading-relaxed" style={{color: '#6B72A0'}}>
                 Retain accredited trial lawyers, King’s Counsel, and SIAC arbitration specialists. Review verified Bar registrations, real-time availability, and book immediate consultations protected by LexNova Escrow.
               </p>
             </div>
             <Link
               href="/advocates"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-[#E8E4DA] bg-white text-[13px] font-medium text-[#141413] hover:border-[#141413] shadow-xs transition-colors shrink-0"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-[13px] font-medium transition-colors shrink-0"
+              style={{border: '1px solid rgba(99,102,241,0.2)', color: '#A8AECF', background: 'rgba(99,102,241,0.05)'}}
             >
               <span>Explore All 140+ Advocates</span>
               <ChevronRight size={15} />
@@ -1531,7 +1572,7 @@ export default function HomePage() {
           </div>
 
           {/* Jurisdiction Filter Tabs */}
-          <div className="flex flex-wrap gap-2 pt-2 border-b border-[#E8E4DA] pb-4">
+          <div className="flex flex-wrap gap-2 pt-2 pb-4" style={{borderBottom: '1px solid rgba(99,102,241,0.08)'}}>
             {[
               { id: 'ALL', label: 'All Jurisdictions', count: GLOBAL_ADVOCATES.length },
               { id: 'US', label: '🇺🇸 United States', count: GLOBAL_ADVOCATES.filter(a => a.countryCode === 'US').length },
@@ -1543,19 +1584,28 @@ export default function HomePage() {
               <button
                 key={tab.id}
                 onClick={() => setSelectedAdvocateCountry(tab.id as any)}
-                className={`px-4 py-2 rounded-full text-[12.5px] font-medium transition-all flex items-center gap-2 ${
-                  selectedAdvocateCountry === tab.id
-                    ? 'bg-[#141413] text-white shadow-xs'
-                    : 'bg-white text-[#636059] border border-[#E8E4DA] hover:border-[#B5AFA2] hover:text-[#141413]'
-                }`}
+                className={`px-4 py-2 rounded-full text-[12.5px] font-medium transition-all flex items-center gap-2`}
+                style={selectedAdvocateCountry === tab.id ? {
+                  background: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)',
+                  color: 'white',
+                  boxShadow: '0 2px 8px rgba(99,102,241,0.3)',
+                  border: '1px solid rgba(99,102,241,0.4)'
+                } : {
+                  background: 'rgba(14,16,24,0.6)',
+                  color: '#A8AECF',
+                  border: '1px solid rgba(99,102,241,0.1)'
+                }}
               >
                 <span>{tab.label}</span>
                 <span
-                  className={`text-[11px] font-mono px-1.5 py-0.5 rounded-full ${
-                    selectedAdvocateCountry === tab.id
-                      ? 'bg-white/20 text-white'
-                      : 'bg-[#F7F4EE] text-[#87837B]'
-                  }`}
+                  className="text-[11px] font-mono px-1.5 py-0.5 rounded-full"
+                  style={selectedAdvocateCountry === tab.id ? {
+                    background: 'rgba(255,255,255,0.2)',
+                    color: 'white'
+                  } : {
+                    background: 'rgba(99,102,241,0.08)',
+                    color: '#6B72A0'
+                  }}
                 >
                   {tab.count}
                 </span>
@@ -1568,13 +1618,14 @@ export default function HomePage() {
             {filteredAdvocates.map((adv) => (
               <div
                 key={adv.id}
-                className="bg-white rounded-3xl border border-[#E8E4DA] p-6 flex flex-col justify-between shadow-xs hover:border-[#141413]/30 hover:shadow-md transition-all duration-200 group"
+                className="rounded-3xl p-6 flex flex-col justify-between transition-all duration-200 group"
+                style={{background: 'rgba(10,11,18,0.85)', border: '1px solid rgba(99,102,241,0.12)'}}
               >
                 <div className="space-y-4">
                   {/* Top: Avatar + Identity */}
                   <div className="flex items-start gap-4">
                     <div className="relative shrink-0">
-                      <div className="w-16 h-16 rounded-2xl overflow-hidden border border-[#E8E4DA] bg-[#F7F4EE] relative">
+                      <div className="w-16 h-16 rounded-2xl overflow-hidden relative" style={{border: '1px solid rgba(99,102,241,0.2)', background: 'rgba(14,16,24,0.8)'}}>
                         <Image
                           src={adv.photo}
                           alt={adv.name}
@@ -1584,19 +1635,19 @@ export default function HomePage() {
                       </div>
                       <span className="absolute -bottom-1 -right-1 flex h-4 w-4">
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-4 w-4 bg-emerald-500 border-2 border-white"></span>
+                        <span className="relative inline-flex rounded-full h-4 w-4 bg-emerald-500" style={{border: '2px solid #050508'}}></span>
                       </span>
                     </div>
 
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-1.5">
-                        <h4 className="text-[16px] font-bold text-[#141413] truncate">{adv.name}</h4>
-                        <ShieldCheck size={16} className="text-emerald-600 shrink-0" />
+                        <h4 className="text-[16px] font-bold text-white truncate">{adv.name}</h4>
+                        <ShieldCheck size={16} style={{color: '#10B981'}} className="shrink-0" />
                       </div>
-                      <p className="text-[12px] text-[#636059] leading-tight line-clamp-1 mt-0.5">
+                      <p className="text-[12px] leading-tight line-clamp-1 mt-0.5" style={{color: '#6B72A0'}}>
                         {adv.title}
                       </p>
-                      <p className="text-[11.5px] font-mono text-[#87837B] mt-1 flex items-center gap-1">
+                      <p className="text-[11.5px] font-mono mt-1 flex items-center gap-1" style={{color: '#444870'}}>
                         <span>{adv.flag}</span>
                         <span className="truncate">{adv.jurisdiction}</span>
                       </p>
@@ -1604,13 +1655,13 @@ export default function HomePage() {
                   </div>
 
                   {/* Credentials Pill */}
-                  <div className="bg-[#FAF8F5] border border-[#E8E4DA] rounded-xl px-3 py-2 text-[11.5px] font-mono text-[#42403B] flex items-center justify-between">
+                  <div className="rounded-xl px-3 py-2 text-[11.5px] font-mono flex items-center justify-between" style={{background: 'rgba(14,16,24,0.7)', border: '1px solid rgba(99,102,241,0.1)', color: '#A8AECF'}}>
                     <span className="truncate">{adv.credentials}</span>
-                    <span className="text-emerald-700 font-semibold shrink-0 ml-2">VERIFIED</span>
+                    <span className="font-semibold shrink-0 ml-2" style={{color: '#10B981'}}>VERIFIED</span>
                   </div>
 
                   {/* Summary Focus */}
-                  <p className="text-[13px] text-[#42403B] leading-snug">
+                  <p className="text-[13px] leading-snug" style={{color: '#A8AECF'}}>
                     {adv.focus}
                   </p>
 
@@ -1619,7 +1670,8 @@ export default function HomePage() {
                     {adv.tags.map((tag, tIdx) => (
                       <span
                         key={tIdx}
-                        className="text-[11px] font-mono text-[#636059] bg-[#F7F4EE] border border-[#E8E4DA] px-2.5 py-1 rounded-full"
+                        className="text-[11px] font-mono px-2.5 py-1 rounded-full"
+                        style={{color: '#6B72A0', background: 'rgba(99,102,241,0.06)', border: '1px solid rgba(99,102,241,0.1)'}}
                       >
                         {tag}
                       </span>
@@ -1627,11 +1679,11 @@ export default function HomePage() {
                   </div>
 
                   {/* Timing & Rating Row */}
-                  <div className="pt-2 flex items-center justify-between text-[11.5px] font-mono text-[#87837B] border-t border-[#F0ECE1]">
-                    <span className="text-[#B45309] font-medium flex items-center gap-1">
-                      ★ {adv.rating} <span className="text-[#87837B]">({adv.reviewsCount})</span>
+                  <div className="pt-2 flex items-center justify-between text-[11.5px] font-mono" style={{borderTop: '1px solid rgba(99,102,241,0.08)', color: '#6B72A0'}}>
+                    <span className="font-medium flex items-center gap-1" style={{color: '#F59E0B'}}>
+                      ★ {adv.rating} <span style={{color: '#6B72A0'}}>({adv.reviewsCount})</span>
                     </span>
-                    <span className="flex items-center gap-1 text-emerald-700 font-medium">
+                    <span className="flex items-center gap-1 font-medium" style={{color: '#10B981'}}>
                       <Clock size={12} />
                       <span>{adv.nextSlot}</span>
                     </span>
@@ -1639,10 +1691,10 @@ export default function HomePage() {
                 </div>
 
                 {/* Card Bottom CTA */}
-                <div className="pt-5 mt-5 border-t border-[#E8E4DA] flex items-center justify-between gap-3">
+                <div className="pt-5 mt-5 flex items-center justify-between gap-3" style={{borderTop: '1px solid rgba(99,102,241,0.1)'}}>
                   <div>
-                    <div className="text-[16px] font-bold font-mono text-[#141413]">{adv.fee}</div>
-                    <div className="text-[10px] font-mono uppercase tracking-wider text-[#87837B]">
+                    <div className="text-[16px] font-bold font-mono text-white">{adv.fee}</div>
+                    <div className="text-[10px] font-mono uppercase tracking-wider" style={{color: '#6B72A0'}}>
                       LexNova Escrow
                     </div>
                   </div>
@@ -1650,7 +1702,8 @@ export default function HomePage() {
                   <div className="flex items-center gap-2">
                     <Link
                       href={`/dashboard/chat?advocate=${encodeURIComponent(adv.name)}`}
-                      className="px-3.5 py-2 rounded-full border border-[#E8E4DA] text-[12px] font-medium text-[#141413] hover:bg-[#F7F4EE] transition-colors"
+                      className="px-3.5 py-2 rounded-full text-[12px] font-medium transition-colors"
+                      style={{border: '1px solid rgba(99,102,241,0.15)', color: '#818CF8', background: 'rgba(99,102,241,0.05)'}}
                     >
                       Chat
                     </Link>
@@ -1660,7 +1713,8 @@ export default function HomePage() {
                         setBookingConfirmed(false);
                         setBookingSlot(adv.nextSlot);
                       }}
-                      className="px-4 py-2 rounded-full bg-[#141413] text-white text-[12px] font-medium hover:bg-black transition-colors shadow-xs"
+                      className="px-4 py-2 rounded-full text-white text-[12px] font-semibold transition-colors"
+                      style={{background: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)', boxShadow: '0 2px 8px rgba(99,102,241,0.3)'}}
                     >
                       Book Call
                     </button>
@@ -1675,28 +1729,29 @@ export default function HomePage() {
 
       {/* ── CONSULTATION BOOKING MODAL ── */}
       {bookingAdvocate && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-[#FBF9F5] rounded-3xl max-w-lg w-full border border-[#E8E4DA] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(8px)'}}>
+          <div className="rounded-3xl max-w-lg w-full overflow-hidden flex flex-col max-h-[90vh] shadow-2xl" style={{background: 'rgba(10,11,18,0.95)', border: '1px solid rgba(99,102,241,0.2)'}}>
             
             {/* Modal Header */}
-            <div className="p-6 border-b border-[#E8E4DA] bg-white flex items-center justify-between">
+            <div className="p-6 flex items-center justify-between" style={{borderBottom: '1px solid rgba(99,102,241,0.12)'}}>
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-2xl overflow-hidden border border-[#E8E4DA] relative shrink-0">
+                <div className="w-12 h-12 rounded-2xl overflow-hidden relative shrink-0" style={{border: '1px solid rgba(99,102,241,0.2)'}}>
                   <Image src={bookingAdvocate.photo} alt={bookingAdvocate.name} fill className="object-cover" />
                 </div>
                 <div>
                   <div className="flex items-center gap-1.5">
-                    <h3 className="text-[16px] font-bold text-[#141413]">{bookingAdvocate.name}</h3>
-                    <ShieldCheck size={16} className="text-emerald-600" />
+                    <h3 className="text-[16px] font-bold text-white">{bookingAdvocate.name}</h3>
+                    <ShieldCheck size={16} style={{color: '#10B981'}} />
                   </div>
-                  <p className="text-[12px] font-mono text-[#87837B]">
+                  <p className="text-[12px] font-mono" style={{color: '#6B72A0'}}>
                     {bookingAdvocate.flag} {bookingAdvocate.credentials}
                   </p>
                 </div>
               </div>
               <button
                 onClick={() => setBookingAdvocate(null)}
-                className="w-8 h-8 rounded-full border border-[#E8E4DA] flex items-center justify-center text-[#636059] hover:text-[#141413] hover:bg-[#F7F4EE]"
+                className="w-8 h-8 rounded-full flex items-center justify-center transition-colors"
+                style={{border: '1px solid rgba(99,102,241,0.2)', color: '#6B72A0', background: 'rgba(99,102,241,0.05)'}}
               >
                 <X size={16} />
               </button>
@@ -1708,7 +1763,7 @@ export default function HomePage() {
                 <>
                   {/* Step 1: Select Scope */}
                   <div className="space-y-2">
-                    <label className="text-[12px] font-mono font-semibold text-[#87837B] uppercase tracking-wider block">
+                    <label className="text-[12px] font-mono font-semibold uppercase tracking-wider block" style={{color: '#6B72A0'}}>
                       1. Select Consultation Scope
                     </label>
                     <div className="space-y-2">
@@ -1735,17 +1790,21 @@ export default function HomePage() {
                         <div
                           key={tier.id}
                           onClick={() => setBookingTier(tier.id as any)}
-                          className={`p-3.5 rounded-2xl border cursor-pointer transition-all ${
-                            bookingTier === tier.id
-                              ? 'border-[#141413] bg-white shadow-xs'
-                              : 'border-[#E8E4DA] bg-white/60 hover:border-[#B5AFA2]'
-                          }`}
+                          className={`p-3.5 rounded-2xl cursor-pointer transition-all`}
+                          style={bookingTier === tier.id ? {
+                            border: '1px solid rgba(99,102,241,0.5)',
+                            background: 'rgba(99,102,241,0.08)',
+                            boxShadow: '0 0 20px rgba(99,102,241,0.1)'
+                          } : {
+                            border: '1px solid rgba(99,102,241,0.1)',
+                            background: 'rgba(14,16,24,0.5)'
+                          }}
                         >
                           <div className="flex items-center justify-between">
-                            <span className="text-[14px] font-bold text-[#141413]">{tier.title}</span>
-                            <span className="text-[14px] font-mono font-bold text-[#141413]">{tier.fee}</span>
+                            <span className="text-[14px] font-bold text-white">{tier.title}</span>
+                            <span className="text-[14px] font-mono font-bold" style={{color: '#818CF8'}}>{tier.fee}</span>
                           </div>
-                          <p className="text-[12px] text-[#636059] mt-1 leading-snug">{tier.desc}</p>
+                          <p className="text-[12px] mt-1 leading-snug" style={{color: '#6B72A0'}}>{tier.desc}</p>
                         </div>
                       ))}
                     </div>
@@ -1753,7 +1812,7 @@ export default function HomePage() {
 
                   {/* Step 2: Time Slot */}
                   <div className="space-y-2">
-                    <label className="text-[12px] font-mono font-semibold text-[#87837B] uppercase tracking-wider block">
+                    <label className="text-[12px] font-mono font-semibold uppercase tracking-wider block" style={{color: '#6B72A0'}}>
                       2. Choose Open Strategy Slot
                     </label>
                     <div className="grid grid-cols-2 gap-2">
@@ -1767,11 +1826,16 @@ export default function HomePage() {
                           key={slot}
                           type="button"
                           onClick={() => setBookingSlot(slot)}
-                          className={`py-2 px-3 rounded-xl text-[12px] font-mono transition-all border ${
-                            bookingSlot === slot
-                              ? 'bg-[#141413] text-white border-[#141413]'
-                              : 'bg-white text-[#42403B] border-[#E8E4DA] hover:border-[#B5AFA2]'
-                          }`}
+                          className={`py-2 px-3 rounded-xl text-[12px] font-mono transition-all`}
+                          style={bookingSlot === slot ? {
+                            background: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)',
+                            color: 'white',
+                            border: '1px solid rgba(99,102,241,0.4)'
+                          } : {
+                            background: 'rgba(14,16,24,0.5)',
+                            color: '#A8AECF',
+                            border: '1px solid rgba(99,102,241,0.1)'
+                          }}
                         >
                           {slot}
                         </button>
@@ -1781,7 +1845,7 @@ export default function HomePage() {
 
                   {/* Step 3: Matter Summary */}
                   <div className="space-y-2">
-                    <label className="text-[12px] font-mono font-semibold text-[#87837B] uppercase tracking-wider block">
+                    <label className="text-[12px] font-mono font-semibold uppercase tracking-wider block" style={{color: '#6B72A0'}}>
                       3. Brief Matter Overview (Optional)
                     </label>
                     <textarea
@@ -1789,42 +1853,43 @@ export default function HomePage() {
                       value={bookingCaseDesc}
                       onChange={(e) => setBookingCaseDesc(e.target.value)}
                       placeholder="e.g. Counterparty defaulted on $140k invoice under Delaware law..."
-                      className="w-full bg-white border border-[#E8E4DA] rounded-2xl p-3 text-[13px] text-[#141413] placeholder-[#87837B] focus:outline-hidden focus:border-[#141413]"
+                      className="w-full rounded-2xl p-3 text-[13px] text-white focus:outline-none resize-none"
+                      style={{background: 'rgba(14,16,24,0.7)', border: '1px solid rgba(99,102,241,0.15)', '::placeholder': {color: '#444870'}} as any}
                     />
                   </div>
 
                   {/* Escrow Banner */}
-                  <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-3.5 flex items-start gap-3">
-                    <ShieldCheck size={18} className="text-emerald-700 shrink-0 mt-0.5" />
-                    <div className="text-[12px] text-emerald-900 leading-snug">
-                      <strong className="font-semibold">LexNova Escrow Assurance:</strong> Funds remain securely locked until consultation completion. If counsel cannot attend, 100% immediate refund is issued.
+                  <div className="rounded-2xl p-3.5 flex items-start gap-3" style={{background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.2)'}}>
+                    <ShieldCheck size={18} className="shrink-0 mt-0.5" style={{color: '#10B981'}} />
+                    <div className="text-[12px] leading-snug" style={{color: '#A8AECF'}}>
+                      <strong className="font-semibold" style={{color: '#10B981'}}>LexNova Escrow Assurance:</strong> Funds remain securely locked until consultation completion. If counsel cannot attend, 100% immediate refund is issued.
                     </div>
                   </div>
                 </>
               ) : (
                 /* Confirmed Screen */
                 <div className="py-6 text-center space-y-4">
-                  <div className="w-14 h-14 rounded-full bg-emerald-100 border border-emerald-300 text-emerald-700 flex items-center justify-center mx-auto">
+                  <div className="w-14 h-14 rounded-full flex items-center justify-center mx-auto" style={{background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.3)', color: '#10B981'}}>
                     <CheckCircle2 size={32} />
                   </div>
                   <div>
-                    <h4 className="text-xl font-bold text-[#141413]">Consultation Confirmed</h4>
-                    <p className="text-[13px] text-[#636059] mt-1 max-w-sm mx-auto">
-                      Your strategy conference with <strong>{bookingAdvocate.name}</strong> is scheduled for <strong>{bookingSlot}</strong>.
+                    <h4 className="text-xl font-bold text-white">Consultation Confirmed</h4>
+                    <p className="text-[13px] mt-1 max-w-sm mx-auto" style={{color: '#6B72A0'}}>
+                      Your strategy conference with <strong style={{color: '#F0F2FF'}}>{bookingAdvocate.name}</strong> is scheduled for <strong style={{color: '#F0F2FF'}}>{bookingSlot}</strong>.
                     </p>
                   </div>
-                  <div className="bg-white border border-[#E8E4DA] rounded-2xl p-4 font-mono text-[12px] text-[#42403B] space-y-1 text-left max-w-sm mx-auto">
+                  <div className="rounded-2xl p-4 font-mono text-[12px] space-y-1 text-left max-w-sm mx-auto" style={{background: 'rgba(14,16,24,0.7)', border: '1px solid rgba(99,102,241,0.12)', color: '#A8AECF'}}>
                     <div className="flex justify-between">
-                      <span className="text-[#87837B]">Session Pass:</span>
-                      <span className="font-bold">LNX-CONF-88492</span>
+                      <span style={{color: '#6B72A0'}}>Session Pass:</span>
+                      <span className="font-bold text-white">LNX-CONF-88492</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-[#87837B]">Escrow Status:</span>
-                      <span className="text-emerald-700 font-semibold">Bonded & Protected</span>
+                      <span style={{color: '#6B72A0'}}>Escrow Status:</span>
+                      <span className="font-semibold" style={{color: '#10B981'}}>Bonded &amp; Protected</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-[#87837B]">Meeting Link:</span>
-                      <span className="text-blue-600 underline cursor-pointer">lexnova.ai/room/sarah</span>
+                      <span style={{color: '#6B72A0'}}>Meeting Link:</span>
+                      <span className="underline cursor-pointer" style={{color: '#818CF8'}}>lexnova.ai/room/sarah</span>
                     </div>
                   </div>
                 </div>
@@ -1832,20 +1897,22 @@ export default function HomePage() {
             </div>
 
             {/* Modal Footer */}
-            <div className="p-6 border-t border-[#E8E4DA] bg-white flex items-center justify-end gap-3">
+            <div className="p-6 flex items-center justify-end gap-3" style={{borderTop: '1px solid rgba(99,102,241,0.12)'}}>
               {!bookingConfirmed ? (
                 <>
                   <button
                     onClick={() => setBookingAdvocate(null)}
-                    className="px-5 py-2.5 rounded-full border border-[#E8E4DA] text-[13px] font-medium text-[#636059] hover:text-[#141413]"
+                    className="px-5 py-2.5 rounded-full text-[13px] font-medium transition-colors"
+                    style={{border: '1px solid rgba(99,102,241,0.15)', color: '#6B72A0', background: 'rgba(99,102,241,0.03)'}}
                   >
                     Cancel
                   </button>
                   <button
                     onClick={() => setBookingConfirmed(true)}
-                    className="px-6 py-2.5 rounded-full bg-[#141413] text-white text-[13px] font-medium hover:bg-black transition-colors shadow-xs flex items-center gap-2"
+                    className="px-6 py-2.5 rounded-full text-white text-[13px] font-semibold transition-colors flex items-center gap-2"
+                    style={{background: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)', boxShadow: '0 2px 12px rgba(99,102,241,0.35)'}}
                   >
-                    <span>Confirm & Reserve Slot</span>
+                    <span>Confirm &amp; Reserve Slot</span>
                     <ArrowRight size={14} />
                   </button>
                 </>
@@ -1853,13 +1920,15 @@ export default function HomePage() {
                 <div className="flex items-center gap-3 w-full justify-between">
                   <button
                     onClick={() => setBookingAdvocate(null)}
-                    className="px-4 py-2.5 rounded-full border border-[#E8E4DA] text-[13px] font-medium text-[#636059]"
+                    className="px-4 py-2.5 rounded-full text-[13px] font-medium"
+                    style={{border: '1px solid rgba(99,102,241,0.15)', color: '#6B72A0', background: 'rgba(99,102,241,0.03)'}}
                   >
                     Close
                   </button>
                   <Link
                     href={`/dashboard/chat?advocate=${encodeURIComponent(bookingAdvocate.name)}`}
-                    className="px-6 py-2.5 rounded-full bg-[#141413] text-white text-[13px] font-medium hover:bg-black transition-colors shadow-xs flex items-center gap-2"
+                    className="px-6 py-2.5 rounded-full text-white text-[13px] font-semibold flex items-center gap-2"
+                    style={{background: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)', boxShadow: '0 2px 12px rgba(99,102,241,0.35)'}}
                   >
                     <span>Enter Secure Room Now</span>
                     <ArrowRight size={14} />
@@ -1873,38 +1942,41 @@ export default function HomePage() {
       )}
 
       {/* ── DEVELOPER SDK & API PLAYGROUND ── */}
-      <section className="py-20 px-6 sm:px-10 lg:px-14 border-t border-[#E8E4DA] bg-white">
+      <section className="py-20 px-6 sm:px-10 lg:px-14" style={{borderTop: '1px solid rgba(99,102,241,0.08)', background: 'rgba(10,11,18,0.5)'}}>
         <div className="max-w-7xl mx-auto space-y-8">
           
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div className="space-y-2">
               <div className="flex items-center gap-2">
-                <span className="text-[12px] font-mono font-semibold text-[#87837B] uppercase tracking-widest">
-                  Developer REST API & SDK
+                <span className="text-[12px] font-mono font-semibold uppercase tracking-widest" style={{color: '#6B72A0'}}>
+                  Developer REST API &amp; SDK
                 </span>
-                <span className="text-[11px] font-mono text-[#42403B] bg-[#F7F4EE] px-2.5 py-0.5 rounded-full border border-[#E8E4DA]">
+                <span className="text-[11px] font-mono px-2.5 py-0.5 rounded-full" style={{color: '#818CF8', background: 'rgba(99,102,241,0.08)', border: '1px solid rgba(99,102,241,0.2)'}}>
                   v1.4 Production
                 </span>
               </div>
-              <h2 className="text-2xl sm:text-3xl font-bold text-[#141413]">
+              <h2 className="text-2xl sm:text-3xl font-bold text-white">
                 Programmatic legal intelligence for modern platforms.
               </h2>
-              <p className="text-[14px] text-[#636059] max-w-2xl leading-relaxed">
+              <p className="text-[14px] max-w-2xl leading-relaxed" style={{color: '#6B72A0'}}>
                 Autonomous multi-jurisdiction dispute intake, statutory limitation countdowns, and court-admissible pre-action notice generation executable in 38ms.
               </p>
             </div>
             
             {/* Language Tabs */}
-            <div className="flex items-center gap-2 bg-[#FAF8F5] p-1.5 rounded-full border border-[#E8E5DE]">
+            <div className="flex items-center gap-2 p-1.5 rounded-full" style={{background: 'rgba(14,16,24,0.8)', border: '1px solid rgba(99,102,241,0.15)'}}>
               {(['curl', 'typescript', 'python'] as const).map((tab) => (
                 <button
                   key={tab}
                   onClick={() => setActiveCodeTab(tab)}
-                  className={`px-4 py-1.5 rounded-full text-[12px] font-mono font-medium transition-colors ${
-                    activeCodeTab === tab
-                      ? 'bg-[#141413] text-white shadow-xs'
-                      : 'text-[#636059] hover:text-[#141413]'
-                  }`}
+                  className={`px-4 py-1.5 rounded-full text-[12px] font-mono font-medium transition-colors`}
+                  style={activeCodeTab === tab ? {
+                    background: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)',
+                    color: 'white',
+                    boxShadow: '0 2px 8px rgba(99,102,241,0.3)'
+                  } : {
+                    color: '#6B72A0'
+                  }}
                 >
                   {tab}
                 </button>
@@ -1914,7 +1986,7 @@ export default function HomePage() {
 
           {/* Interactive Preset Selector Pills */}
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-[12px] font-mono text-[#87837B] uppercase tracking-wider mr-2">
+            <span className="text-[12px] font-mono uppercase tracking-wider mr-2" style={{color: '#6B72A0'}}>
               Test Presets:
             </span>
             {(['us', 'uk', 'eu', 'sg'] as const).map((pId) => {
@@ -1923,11 +1995,17 @@ export default function HomePage() {
                 <button
                   key={pId}
                   onClick={() => setApiPresetId(pId)}
-                  className={`px-3.5 py-1.5 rounded-full text-[12px] font-mono transition-all flex items-center gap-1.5 ${
-                    apiPresetId === pId
-                      ? 'bg-[#141413] text-white shadow-xs'
-                      : 'bg-[#FAF8F5] border border-[#E8E4DA] text-[#636059] hover:text-[#141413]'
-                  }`}
+                  className={`px-3.5 py-1.5 rounded-full text-[12px] font-mono transition-all flex items-center gap-1.5`}
+                  style={apiPresetId === pId ? {
+                    background: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)',
+                    color: 'white',
+                    border: '1px solid rgba(99,102,241,0.4)',
+                    boxShadow: '0 2px 8px rgba(99,102,241,0.25)'
+                  } : {
+                    background: 'rgba(255,255,255,0.03)',
+                    border: '1px solid rgba(99,102,241,0.12)',
+                    color: '#A8AECF'
+                  }}
                 >
                   <span>{p.flag}</span>
                   <span>{p.label}</span>
@@ -1940,39 +2018,41 @@ export default function HomePage() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
             
             {/* Left Console: Request & Code */}
-            <div className="lg:col-span-6 bg-[#141413] rounded-3xl p-6 text-white flex flex-col justify-between shadow-md">
+            <div className="lg:col-span-6 rounded-3xl p-6 text-white flex flex-col justify-between" style={{background: '#0A0B12', border: '1px solid rgba(99,102,241,0.2)', boxShadow: '0 8px 32px rgba(99,102,241,0.08)'}}>
               <div className="space-y-4">
-                <div className="flex items-center justify-between pb-3 border-b border-white/10">
+                <div className="flex items-center justify-between pb-3" style={{borderBottom: '1px solid rgba(99,102,241,0.12)'}}>
                   <div className="flex items-center gap-2">
-                    <span className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-mono text-[11px] font-bold">
+                    <span className="px-2 py-0.5 rounded font-mono text-[11px] font-bold" style={{background: 'rgba(16,185,129,0.15)', color: '#10B981', border: '1px solid rgba(16,185,129,0.3)'}}>
                       POST
                     </span>
-                    <span className="text-[12px] font-mono text-white/70">
+                    <span className="text-[12px] font-mono" style={{color: 'rgba(168,174,207,0.7)'}}>
                       https://api.lexnova.ai/v1/cases/intake
                     </span>
                   </div>
                   <button
                     onClick={copyCode}
-                    className="text-[12px] font-mono text-white/70 hover:text-white flex items-center gap-1.5"
+                    className="text-[12px] font-mono flex items-center gap-1.5 hover:text-white transition-colors"
+                    style={{color: 'rgba(168,174,207,0.5)'}}
                   >
                     <Copy size={13} />
                     <span>{copiedCode ? 'Copied' : 'Copy'}</span>
                   </button>
                 </div>
 
-                <pre className="overflow-x-auto text-[12.5px] font-mono text-[#F4F0E8] leading-relaxed max-h-[360px] py-1">
+                <pre className="overflow-x-auto text-[12.5px] font-mono leading-relaxed max-h-[360px] py-1" style={{color: '#A8AECF'}}>
                   <code>{currentApiPreset.codeSnippets[activeCodeTab]}</code>
                 </pre>
               </div>
 
-              <div className="pt-4 mt-4 border-t border-white/10 flex items-center justify-between">
-                <span className="text-[11px] font-mono text-white/40">
+              <div className="pt-4 mt-4 flex items-center justify-between" style={{borderTop: '1px solid rgba(99,102,241,0.12)'}}>
+                <span className="text-[11px] font-mono" style={{color: 'rgba(99,102,241,0.4)'}}>
                   Target: {currentApiPreset.jurisdiction} · {currentApiPreset.claimAmount}
                 </span>
                 <button
                   onClick={handleRunApi}
                   disabled={isExecutingApi}
-                  className="px-4 py-2 rounded-full bg-white text-[#141413] text-[12.5px] font-mono font-medium hover:bg-[#FAF8F5] transition-colors flex items-center gap-2 shadow-xs disabled:opacity-50"
+                  className="px-4 py-2 rounded-full text-[12.5px] font-mono font-semibold flex items-center gap-2 transition-colors disabled:opacity-50"
+                  style={{background: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)', color: 'white', boxShadow: '0 2px 10px rgba(99,102,241,0.3)'}}
                 >
                   {isExecutingApi ? (
                     <>
@@ -1990,19 +2070,19 @@ export default function HomePage() {
             </div>
 
             {/* Right Console: Live Response Inspector */}
-            <div className="lg:col-span-6 bg-[#FAF8F5] rounded-3xl p-6 border border-[#E8E4DA] flex flex-col justify-between shadow-xs">
+            <div className="lg:col-span-6 rounded-3xl p-6 flex flex-col justify-between" style={{background: 'rgba(10,11,18,0.8)', border: '1px solid rgba(99,102,241,0.12)', boxShadow: '0 8px 32px rgba(99,102,241,0.05)'}}>
               <div className="space-y-4">
                 
                 {/* Top Status Bar */}
-                <div className="flex items-center justify-between pb-3 border-b border-[#E8E4DA]">
+                <div className="flex items-center justify-between pb-3" style={{borderBottom: '1px solid rgba(99,102,241,0.1)'}}>
                   <div className="flex items-center gap-2">
-                    <span className="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-mono text-[11px] font-bold border border-emerald-200">
+                    <span className="px-2.5 py-0.5 rounded-full font-mono text-[11px] font-bold" style={{background: 'rgba(16,185,129,0.1)', color: '#10B981', border: '1px solid rgba(16,185,129,0.25)'}}>
                       ● 201 Created
                     </span>
-                    <span className="text-[11.5px] font-mono text-[#87837B]">
-                      Latency: <strong className="text-[#141413]">{apiExecutionTime}ms</strong>
+                    <span className="text-[11.5px] font-mono" style={{color: '#6B72A0'}}>
+                      Latency: <strong style={{color: '#F0F2FF'}}>{apiExecutionTime}ms</strong>
                     </span>
-                    <span className="hidden sm:inline text-[11px] font-mono text-[#87837B]">
+                    <span className="hidden sm:inline text-[11px] font-mono" style={{color: '#444870'}}>
                       TLS 1.3 · us-east-1
                     </span>
                   </div>
@@ -2017,11 +2097,15 @@ export default function HomePage() {
                       <button
                         key={v.id}
                         onClick={() => setActiveApiView(v.id as any)}
-                        className={`px-2.5 py-1 rounded-lg text-[11px] font-mono font-medium transition-colors ${
-                          activeApiView === v.id
-                            ? 'bg-[#141413] text-white'
-                            : 'bg-white border border-[#E8E4DA] text-[#636059] hover:text-[#141413]'
-                        }`}
+                        className={`px-2.5 py-1 rounded-lg text-[11px] font-mono font-medium transition-colors`}
+                        style={activeApiView === v.id ? {
+                          background: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)',
+                          color: 'white'
+                        } : {
+                          background: 'rgba(255,255,255,0.03)',
+                          border: '1px solid rgba(99,102,241,0.12)',
+                          color: '#6B72A0'
+                        }}
                       >
                         {v.label}
                       </button>
@@ -2034,12 +2118,13 @@ export default function HomePage() {
                   <div className="relative">
                     <button
                       onClick={copyApiResponse}
-                      className="absolute top-2 right-2 px-2.5 py-1 rounded-md bg-white border border-[#E8E4DA] text-[11px] font-mono text-[#636059] hover:text-[#141413] shadow-xs flex items-center gap-1 z-10"
+                      className="absolute top-2 right-2 px-2.5 py-1 rounded-md text-[11px] font-mono flex items-center gap-1 z-10 transition-colors hover:text-white"
+                      style={{background: 'rgba(99,102,241,0.1)', border: '1px solid rgba(99,102,241,0.2)', color: '#818CF8'}}
                     >
                       <Copy size={11} />
                       <span>{copiedApiResponse ? 'Copied' : 'Copy JSON'}</span>
                     </button>
-                    <pre className="overflow-x-auto text-[12px] font-mono text-[#2B2A27] leading-relaxed bg-white p-4 rounded-2xl border border-[#E8E4DA] max-h-[350px]">
+                    <pre className="overflow-x-auto text-[12px] font-mono leading-relaxed p-4 rounded-2xl max-h-[350px]" style={{color: '#A8AECF', background: 'rgba(5,5,8,0.7)', border: '1px solid rgba(99,102,241,0.1)'}}>
                       <code>{JSON.stringify(currentApiPreset.resPayload, null, 2)}</code>
                     </pre>
                   </div>
@@ -2048,14 +2133,14 @@ export default function HomePage() {
                 {/* View 2: Analysis Cards */}
                 {activeApiView === 'analysis' && (
                   <div className="space-y-3 max-h-[350px] overflow-y-auto pr-1">
-                    <div className="bg-white p-4 rounded-2xl border border-[#E8E4DA] space-y-2">
-                      <div className="text-[11px] font-mono font-semibold text-[#87837B] uppercase">
+                    <div className="p-4 rounded-2xl space-y-2" style={{background: 'rgba(5,5,8,0.7)', border: '1px solid rgba(99,102,241,0.1)'}}>
+                      <div className="text-[11px] font-mono font-semibold uppercase" style={{color: '#6B72A0'}}>
                         Statutory Governing Citations
                       </div>
                       <div className="space-y-1.5">
                         {currentApiPreset.resPayload.governing_statutes.map((s: string, idx: number) => (
-                          <div key={idx} className="text-[12.5px] font-mono text-[#141413] flex items-center gap-2">
-                            <CheckCircle2 size={13} className="text-emerald-600 shrink-0" />
+                          <div key={idx} className="text-[12.5px] font-mono flex items-center gap-2" style={{color: '#A8AECF'}}>
+                            <CheckCircle2 size={13} style={{color: '#10B981'}} className="shrink-0" />
                             <span>{s}</span>
                           </div>
                         ))}
@@ -2063,72 +2148,73 @@ export default function HomePage() {
                     </div>
 
                     <div className="grid grid-cols-2 gap-3">
-                      <div className="bg-white p-4 rounded-2xl border border-[#E8E4DA]">
-                        <div className="text-[11px] font-mono text-[#87837B]">Limitation Remaining</div>
-                        <div className="text-[20px] font-bold font-mono text-emerald-700 mt-1">
+                      <div className="p-4 rounded-2xl" style={{background: 'rgba(5,5,8,0.7)', border: '1px solid rgba(99,102,241,0.1)'}}>
+                        <div className="text-[11px] font-mono" style={{color: '#6B72A0'}}>Limitation Remaining</div>
+                        <div className="text-[20px] font-bold font-mono mt-1" style={{color: '#10B981'}}>
                           {currentApiPreset.resPayload.limitation_analysis.days_remaining} Days
                         </div>
-                        <div className="text-[11px] font-mono text-[#87837B] mt-0.5">
+                        <div className="text-[11px] font-mono mt-0.5" style={{color: '#6B72A0'}}>
                           Extinction: {currentApiPreset.resPayload.limitation_analysis.statute_of_limitations_deadline}
                         </div>
                       </div>
 
-                      <div className="bg-white p-4 rounded-2xl border border-[#E8E4DA]">
-                        <div className="text-[11px] font-mono text-[#87837B]">Pre-Action Cure Period</div>
-                        <div className="text-[20px] font-bold font-mono text-[#141413] mt-1">
+                      <div className="p-4 rounded-2xl" style={{background: 'rgba(5,5,8,0.7)', border: '1px solid rgba(99,102,241,0.1)'}}>
+                        <div className="text-[11px] font-mono" style={{color: '#6B72A0'}}>Pre-Action Cure Period</div>
+                        <div className="text-[20px] font-bold font-mono mt-1 text-white">
                           {currentApiPreset.resPayload.pre_action_protocol.cure_period_days} Days
                         </div>
-                        <div className="text-[11px] font-mono text-[#87837B] mt-0.5">
+                        <div className="text-[11px] font-mono mt-0.5" style={{color: '#6B72A0'}}>
                           Statutory Rate: {currentApiPreset.resPayload.pre_action_protocol.statutory_interest_rate}
                         </div>
                       </div>
                     </div>
 
-                    <div className="bg-white p-4 rounded-2xl border border-[#E8E4DA] flex items-center justify-between">
+                    <div className="p-4 rounded-2xl flex items-center justify-between" style={{background: 'rgba(5,5,8,0.7)', border: '1px solid rgba(99,102,241,0.1)'}}>
                       <div>
-                        <div className="text-[11px] font-mono text-[#87837B]">Escrow Integrity</div>
-                        <div className="text-[12.5px] font-bold text-[#141413] mt-0.5">
+                        <div className="text-[11px] font-mono" style={{color: '#6B72A0'}}>Escrow Integrity</div>
+                        <div className="text-[12.5px] font-bold text-white mt-0.5">
                           {currentApiPreset.resPayload.escrow_guarantee}
                         </div>
                       </div>
-                      <ShieldCheck size={20} className="text-emerald-600" />
+                      <ShieldCheck size={20} style={{color: '#10B981'}} />
                     </div>
                   </div>
                 )}
 
                 {/* View 3: Court Notice Document Preview */}
                 {activeApiView === 'notice' && (
-                  <div className="bg-white p-5 rounded-2xl border border-[#E8E4DA] space-y-3 font-serif max-h-[350px] overflow-y-auto shadow-inner">
-                    <div className="border-b border-[#E8E4DA] pb-3 flex items-center justify-between">
+                  <div className="p-5 rounded-2xl space-y-3 font-serif max-h-[350px] overflow-y-auto" style={{background: 'rgba(5,5,8,0.7)', border: '1px solid rgba(99,102,241,0.1)'}}>
+                    <div className="pb-3 flex items-center justify-between" style={{borderBottom: '1px solid rgba(99,102,241,0.1)'}}>
                       <div>
-                        <div className="text-[13px] font-bold uppercase tracking-wider text-[#141413] font-mono">
-                          Formal Demand & Cure Requisition
+                        <div className="text-[13px] font-bold uppercase tracking-wider font-mono text-white">
+                          Formal Demand &amp; Cure Requisition
                         </div>
-                        <div className="text-[11px] text-[#87837B] font-mono">
+                        <div className="text-[11px] font-mono" style={{color: '#6B72A0'}}>
                           Case File: {currentApiPreset.resPayload.case_id}
                         </div>
                       </div>
-                      <span className="text-[11px] font-mono bg-[#FAF8F5] px-2.5 py-1 rounded border border-[#E8E4DA]">
+                      <span className="text-[11px] font-mono px-2.5 py-1 rounded" style={{background: 'rgba(99,102,241,0.08)', border: '1px solid rgba(99,102,241,0.2)', color: '#818CF8'}}>
                         Court Admissible
                       </span>
                     </div>
 
-                    <div className="text-[12px] text-[#42403B] space-y-2 leading-relaxed font-sans">
+                    <div className="text-[12px] space-y-2 leading-relaxed font-sans" style={{color: '#A8AECF'}}>
                       <p>
-                        <strong>NOTICE IS HEREBY GIVEN</strong> pursuant to {currentApiPreset.resPayload.governing_statutes[0]} that Defaulting Entity has committed material breach regarding principal sum of <strong>{currentApiPreset.claimAmount}</strong>.
+                        <strong style={{color: '#F0F2FF'}}>NOTICE IS HEREBY GIVEN</strong> pursuant to {currentApiPreset.resPayload.governing_statutes[0]} that Defaulting Entity has committed material breach regarding principal sum of <strong style={{color: '#F0F2FF'}}>{currentApiPreset.claimAmount}</strong>.
                       </p>
                       <p>
-                        Pursuant to pre-action protocol guidelines in <em>{currentApiPreset.resPayload.recommended_forum}</em>, recipient is granted {currentApiPreset.resPayload.pre_action_protocol.cure_period_days} calendar days to remit settlement.
+                        Pursuant to pre-action protocol guidelines in <em style={{color: '#818CF8'}}>{currentApiPreset.resPayload.recommended_forum}</em>, recipient is granted {currentApiPreset.resPayload.pre_action_protocol.cure_period_days} calendar days to remit settlement.
                       </p>
                     </div>
 
-                    <div className="pt-2 border-t border-[#E8E4DA] flex items-center justify-between font-mono text-[11px]">
-                      <span className="text-emerald-700 font-semibold">● Digital Seal Affixed</span>
+                    <div className="pt-2 flex items-center justify-between font-mono text-[11px]" style={{borderTop: '1px solid rgba(99,102,241,0.08)'}}>
+                      <span className="font-semibold" style={{color: '#10B981'}}>&bull; Digital Seal Affixed</span>
                       <a
                         href={currentApiPreset.resPayload.pre_action_protocol.court_admissible_pdf}
                         target="_blank"
                         rel="noreferrer"
-                        className="text-blue-600 hover:underline flex items-center gap-1"
+                        className="hover:underline flex items-center gap-1"
+                        style={{color: '#818CF8'}}
                       >
                         <span>Download Signed PDF</span>
                         <ExternalLink size={11} />
@@ -2140,9 +2226,9 @@ export default function HomePage() {
               </div>
 
               {/* Bottom API Summary */}
-              <div className="pt-4 mt-4 border-t border-[#E8E4DA] flex items-center justify-between text-[11.5px] font-mono text-[#87837B]">
-                <span>Status: <strong className="text-emerald-700">Autonomous Pipeline Verified</strong></span>
-                <span>Case ID: <strong className="text-[#141413]">{currentApiPreset.resPayload.case_id}</strong></span>
+              <div className="pt-4 mt-4 flex items-center justify-between text-[11.5px] font-mono" style={{borderTop: '1px solid rgba(99,102,241,0.1)', color: '#6B72A0'}}>
+                <span>Status: <strong style={{color: '#10B981'}}>Autonomous Pipeline Verified</strong></span>
+                <span>Case ID: <strong style={{color: '#F0F2FF'}}>{currentApiPreset.resPayload.case_id}</strong></span>
               </div>
             </div>
 
@@ -2152,14 +2238,14 @@ export default function HomePage() {
       </section>
 
       {/* ── FAQ SECTION ── */}
-      <section className="py-20 px-6 sm:px-10 lg:px-14 border-t border-[#E8E5DE] bg-[#FAF8F5]">
+      <section className="py-20 px-6 sm:px-10 lg:px-14" style={{borderTop: '1px solid rgba(99,102,241,0.08)', background: 'rgba(10,11,18,0.5)'}}>
         <div className="max-w-3xl mx-auto space-y-8">
           
           <div className="text-center space-y-2">
-            <div className="text-[12px] font-mono font-semibold text-[#87837B] uppercase tracking-widest">
-              Questions & Answers
+            <div className="text-[12px] font-mono font-semibold uppercase tracking-widest" style={{color: '#6B72A0'}}>
+              Questions &amp; Answers
             </div>
-            <h2 className="text-3xl font-bold text-[#141413]">
+            <h2 className="text-3xl font-bold text-white">
               Frequently asked questions.
             </h2>
           </div>
@@ -2168,24 +2254,24 @@ export default function HomePage() {
             {GLOBAL_FAQS.map((faq, i) => (
               <div
                 key={i}
-                className="bg-white border border-[#E8E4DA] rounded-2xl overflow-hidden"
+                className="rounded-2xl overflow-hidden"
+                style={{background: 'rgba(10,11,18,0.85)', border: '1px solid rgba(99,102,241,0.12)'}}
               >
                 <button
                   onClick={() => setOpenFaqIndex(openFaqIndex === i ? null : i)}
-                  className="w-full px-6 py-5 text-left flex items-center justify-between gap-4 hover:bg-[#FAF8F5] transition-colors"
+                  className="w-full px-6 py-5 text-left flex items-center justify-between gap-4 transition-colors hover:bg-white/[0.02]"
                 >
-                  <span className="text-[15px] font-medium text-[#141413]">
+                  <span className="text-[15px] font-medium text-white">
                     {faq.q}
                   </span>
                   <ChevronDown
                     size={17}
-                    className={`text-[#87837B] shrink-0 transition-transform duration-200 ${
-                      openFaqIndex === i ? 'rotate-180 text-[#141413]' : ''
-                    }`}
+                    className={`shrink-0 transition-transform duration-200 ${openFaqIndex === i ? 'rotate-180' : ''}`}
+                    style={{color: openFaqIndex === i ? '#818CF8' : '#6B72A0'}}
                   />
                 </button>
                 {openFaqIndex === i && (
-                  <div className="px-6 pb-6 text-[14px] text-[#5A5752] leading-relaxed border-t border-[#E8E4DA] pt-4 font-serif">
+                  <div className="px-6 pb-6 text-[14px] leading-relaxed pt-4 font-serif" style={{borderTop: '1px solid rgba(99,102,241,0.08)', color: '#A8AECF'}}>
                     {faq.a}
                   </div>
                 )}
@@ -2196,26 +2282,33 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── FINAL CTA: MINIMALIST ANTHROPIC FINISH ── */}
-      <section className="py-24 px-6 sm:px-10 lg:px-14 border-t border-[#E8E4DA] bg-white">
-        <div className="max-w-3xl mx-auto text-center space-y-6">
-          <h2 className="text-4xl sm:text-5xl font-bold tracking-tight text-[#141413]">
+      {/* ── FINAL CTA ── */}
+      <section className="py-24 px-6 sm:px-10 lg:px-14 relative overflow-hidden" style={{borderTop: '1px solid rgba(99,102,241,0.08)'}}>
+        {/* Glow */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute inset-x-0 top-0 h-px" style={{background: 'linear-gradient(90deg, transparent 0%, rgba(99,102,241,0.4) 50%, transparent 100%)'}} />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] rounded-full" style={{background: 'radial-gradient(ellipse, rgba(99,102,241,0.08) 0%, transparent 70%)', filter: 'blur(40px)'}} />
+        </div>
+        <div className="max-w-3xl mx-auto text-center space-y-6 relative">
+          <h2 className="text-4xl sm:text-5xl font-bold tracking-tight text-white">
             Bring legal certainty to the frontier.
           </h2>
-          <p className="font-serif text-xl sm:text-2xl text-[#5A5752] max-w-xl mx-auto">
+          <p className="font-serif text-xl sm:text-2xl max-w-xl mx-auto" style={{color: '#6B72A0'}}>
             Experience court-admissible autonomous analysis and verified counsel for disputes worldwide.
           </p>
           <div className="pt-4 flex flex-wrap items-center justify-center gap-4">
             <Link
               href="/dashboard/chat"
-              className="px-7 py-3.5 rounded-full bg-[#141413] hover:bg-black text-white font-medium text-[14.5px] shadow-sm transition-all flex items-center gap-2"
+              className="px-7 py-3.5 rounded-full text-white font-semibold text-[14.5px] transition-all flex items-center gap-2"
+              style={{background: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)', boxShadow: '0 4px 24px rgba(99,102,241,0.4)'}}
             >
               <span>Try LexNova Free</span>
               <ArrowRight size={15} />
             </Link>
             <Link
               href="/auth/signup?role=ADVOCATE"
-              className="px-6 py-3.5 rounded-full border border-[#DED9CE] hover:border-[#B5AFA2] text-[#141413] font-medium text-[14.5px] transition-colors"
+              className="px-6 py-3.5 rounded-full font-medium text-[14.5px] transition-colors"
+              style={{border: '1px solid rgba(99,102,241,0.2)', color: '#A8AECF', background: 'rgba(99,102,241,0.05)'}}
             >
               <span>Join as Advocate</span>
             </Link>

@@ -100,50 +100,59 @@ const ADVOCATES_DATA = [
   },
   {
     id: "adv_5",
-    name: "Advocate Meera Krishnan",
-    role: "Family & Matrimonial Counsel",
-    specialization: "Family & Divorce",
-    email: "meera.krishnan@lexnova.in",
-    experience: 10,
-    rating: 4.8,
-    reviews: 290,
-    cases: 680,
-    city: "Bengaluru",
+    name: "Advocate Vikramaditya Sen",
+    role: "Corporate Commercial & Contracts",
+    specialization: "Corporate Commercial",
+    email: "vikram.sen@lexnova.in",
+    experience: 14,
+    rating: 4.9,
+    reviews: 389,
+    cases: 950,
+    city: "Kolkata",
     consultationFee: 1299,
     verified: true,
-    languages: ["English", "Malayalam", "Tamil", "Kannada"],
-    matchTag: "Family",
+    languages: ["English", "Bengali", "Hindi"],
+    matchTag: "Corporate",
     photo: "/advocate-priya.jpg", // fallback photo
-    courts: "Principal Family Courts, Karnataka High Court",
-    qualification: "LLB, Government Law College · Bar Enrolled (KAR/5512/2016)",
+    courts: "Calcutta High Court, NCLT Kolkata Bench",
+    qualification: "LLB NUJS Kolkata · Bar Enrolled (WB/5912/2010)",
     availableToday: true,
-    bio: "Compassionate counsel specializing in mutual consent divorce, cooling-off period waivers, child custody agreements, and alimony mediation."
+    bio: "Corporate counsel specializing in vendor contract breaches, Section 9 arbitration interim relief, MSME Samadhaan delayed payment recoveries, and insolvency petitions."
   },
   {
     id: "adv_6",
-    name: "Advocate Vikram Singh",
-    role: "Corporate & Commercial Contracts",
-    specialization: "Corporate & Contract",
-    email: "vikram.singh@lexnova.in",
-    experience: 14,
+    name: "Advocate Fatima Khan",
+    role: "Family Law & Matrimonial Disputes",
+    specialization: "Family Law",
+    email: "fatima.khan@lexnova.in",
+    experience: 12,
     rating: 4.9,
-    reviews: 380,
-    cases: 910,
-    city: "Gurugram",
-    consultationFee: 1799,
+    reviews: 410,
+    cases: 1120,
+    city: "Hyderabad",
+    consultationFee: 999,
     verified: true,
-    languages: ["English", "Hindi"],
-    matchTag: "Corporate",
-    photo: "/advocate-rajesh.jpg",
-    courts: "NCLT Delhi, Delhi High Court Commercial Division",
-    qualification: "LLB, ILS Pune · Bar Enrolled (D/4119/2012)",
-    availableToday: false,
-    bio: "Corporate drafting counsel representing founders and SMEs in MSA vendor disputes, shareholder agreements, MSME SAMADHAN filings, and Section 138 NI Act."
+    languages: ["English", "Telugu", "Urdu", "Hindi"],
+    matchTag: "Family",
+    photo: "/advocate-ananya.jpg", // fallback photo
+    courts: "Telangana High Court, Family Court Secunderabad",
+    qualification: "LLB Osmania University · Bar Enrolled (TS/2291/2014)",
+    availableToday: true,
+    bio: "Empathetic, aggressive advocate handling mutual consent divorces, child custody disputes, domestic violence protection orders, and maintenance settlements."
   }
 ];
 
-const CATEGORIES = ["All Domains", "Property & Tenancy", "Labour & Employment", "Consumer Protection", "Criminal & Cyber Law", "Family & Divorce", "Corporate & Contract"];
-const CITIES = ["All Cities", "Bengaluru", "Mumbai", "Delhi", "Chennai", "Gurugram"];
+const CATEGORIES = [
+  "All Domains",
+  "Property & Tenancy",
+  "Labour & Employment",
+  "Consumer Protection",
+  "Criminal & Cyber Law",
+  "Corporate Commercial",
+  "Family Law"
+];
+
+const CITIES = ["All Cities", "Bengaluru", "Mumbai", "Delhi", "Chennai", "Kolkata", "Hyderabad"];
 
 export default function AdvocatesPage() {
   const [search, setSearch] = useState("");
@@ -177,43 +186,50 @@ export default function AdvocatesPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white text-[#141413] selection:bg-[#F4EFEA] selection:text-[#141413] font-sans antialiased flex flex-col">
+    <div className="min-h-screen flex flex-col selection:bg-indigo-500/20 selection:text-indigo-200 antialiased font-sans" style={{ background: '#05060A', color: '#F0F2FF' }}>
       <Navbar />
 
-      <main className="max-w-7xl mx-auto px-6 pt-36 pb-28 space-y-10 flex-1">
+      {/* Ambient background glow */}
+      <div className="fixed inset-0 pointer-events-none z-0">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96" style={{ background: 'radial-gradient(ellipse at top, rgba(99,102,241,0.12) 0%, transparent 70%)', filter: 'blur(50px)' }} />
+      </div>
+
+      <main className="max-w-7xl mx-auto px-6 pt-36 pb-28 space-y-10 flex-1 relative z-10 w-full">
         
         {/* Header Title */}
         <div className="max-w-3xl space-y-3">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F7F4EE] border border-[#E8E4DA] text-[12px] font-mono font-semibold text-[#42403B]">
-            <ShieldCheck size={14} className="text-emerald-700" /> 2,400+ Verified Bar Council Advocates
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[12px] font-mono font-semibold" style={{ background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.25)', color: '#10B981' }}>
+            <ShieldCheck size={14} style={{ color: '#10B981' }} /> 2,400+ Verified Bar Council Advocates
           </div>
 
-          <h1 className="text-4xl sm:text-5xl font-bold text-[#141413] tracking-tight leading-[1.05]">
-            Find verified legal counsel across jurisdictions.
+          <h1 className="text-4xl sm:text-5xl font-bold text-white tracking-tight leading-[1.05]">
+            Find verified legal counsel across <span className="text-gradient">jurisdictions.</span>
           </h1>
-          <p className="font-serif text-lg sm:text-xl text-[#636059] leading-relaxed max-w-2xl">
+          <p className="text-lg sm:text-xl leading-relaxed max-w-2xl" style={{ color: '#8F96B3' }}>
             Every advocate on LexNova is Bar Council verified with transparent fixed-fee consultation rates and encrypted strategy sessions.
           </p>
         </div>
 
         {/* Search & Filter Controls */}
-        <div className="bg-white border border-[#E8E4DA] rounded-3xl p-6 space-y-4 shadow-xs">
+        <div className="rounded-3xl p-6 space-y-4" style={{ background: 'rgba(10,11,18,0.85)', border: '1px solid rgba(99,102,241,0.2)', boxShadow: '0 8px 32px rgba(0,0,0,0.5)' }}>
           
           {/* Top Search Bar & City Selector */}
           <div className="flex flex-col sm:flex-row items-center gap-3">
             <div className="relative flex-1 w-full">
-              <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#87837B]" />
+              <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2" style={{ color: '#6B72A0' }} />
               <input
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search by advocate name, specialty, legal act, or keyword..."
-                className="w-full bg-[#F7F4EE] border border-[#E8E4DA] rounded-2xl pl-11 pr-4 py-2.5 text-[14px] text-[#141413] placeholder-[#87837B] focus:border-[#141413] focus:outline-none transition-colors"
+                className="w-full rounded-2xl pl-11 pr-4 py-2.5 text-[14px] text-white placeholder-slate-500 focus:outline-none transition-colors"
+                style={{ background: 'rgba(14,16,24,0.8)', border: '1px solid rgba(99,102,241,0.2)' }}
               />
               {search && (
                 <button
                   onClick={() => setSearch("")}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[12px] text-[#87837B] hover:text-[#141413]"
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[12px] transition-colors hover:text-white"
+                  style={{ color: '#8F96B3' }}
                 >
                   Clear
                 </button>
@@ -224,10 +240,11 @@ export default function AdvocatesPage() {
               <select
                 value={selectedCity}
                 onChange={(e) => setSelectedCity(e.target.value)}
-                className="w-full bg-[#F7F4EE] border border-[#E8E4DA] rounded-2xl px-4 py-2.5 text-[14px] text-[#141413] focus:border-[#141413] focus:outline-none transition-colors appearance-none cursor-pointer"
+                className="w-full rounded-2xl px-4 py-2.5 text-[14px] text-white focus:outline-none transition-colors cursor-pointer"
+                style={{ background: 'rgba(14,16,24,0.8)', border: '1px solid rgba(99,102,241,0.2)' }}
               >
                 {CITIES.map((c) => (
-                  <option key={c} value={c} className="bg-white text-[#141413]">{c}</option>
+                  <option key={c} value={c} style={{ background: '#0A0B12', color: '#F0F2FF' }}>{c}</option>
                 ))}
               </select>
             </div>
@@ -241,11 +258,17 @@ export default function AdvocatesPage() {
                 <button
                   key={cat}
                   onClick={() => setSelectedCategory(cat)}
-                  className={`px-3.5 py-1.5 rounded-full text-[12.5px] font-medium transition-all whitespace-nowrap ${
-                    active
-                      ? "bg-[#141413] text-white shadow-xs"
-                      : "bg-[#F7F4EE] text-[#636059] border border-[#E8E4DA] hover:border-[#B5AFA2] hover:text-[#141413]"
-                  }`}
+                  className="px-3.5 py-1.5 rounded-full text-[12.5px] font-medium transition-all whitespace-nowrap"
+                  style={active ? {
+                    background: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)',
+                    color: 'white',
+                    boxShadow: '0 2px 8px rgba(99,102,241,0.35)',
+                    border: '1px solid rgba(99,102,241,0.4)'
+                  } : {
+                    background: 'rgba(255,255,255,0.03)',
+                    color: '#8F96B3',
+                    border: '1px solid rgba(99,102,241,0.12)'
+                  }}
                 >
                   {cat}
                 </button>
@@ -262,79 +285,81 @@ export default function AdvocatesPage() {
               key={adv.id}
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-white border border-[#E8E4DA] hover:border-[#B5AFA2] rounded-3xl p-6 flex flex-col justify-between space-y-5 transition-all shadow-xs group"
+              className="rounded-3xl p-6 flex flex-col justify-between space-y-5 transition-all group"
+              style={{ background: 'rgba(10,11,18,0.75)', border: '1px solid rgba(99,102,241,0.15)', boxShadow: '0 8px 30px rgba(0,0,0,0.35)' }}
             >
               <div className="space-y-4">
                 
                 {/* Top Profile Row */}
                 <div className="flex items-start gap-4">
-                  <div className="relative w-14 h-14 rounded-2xl overflow-hidden shrink-0 border border-[#E8E4DA] shadow-xs">
-                    <Image src={adv.photo} alt={adv.name} fill sizes="56px" className="object-cover" />
+                  <div className="relative w-14 h-14 rounded-2xl overflow-hidden shrink-0" style={{ border: '1px solid rgba(99,102,241,0.25)', background: 'rgba(14,16,24,0.8)' }}>
+                    <Image src={adv.photo} alt={adv.name} fill sizes="56px" className="object-cover group-hover:scale-105 transition-transform duration-300" />
                     {adv.availableToday && (
-                      <div className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-emerald-500 border-2 border-white" title="Available Today" />
+                      <div className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-emerald-500" style={{ border: '2px solid #05060A' }} title="Available Today" />
                     )}
                   </div>
 
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-1.5 flex-wrap">
-                      <h3 className="text-[16px] font-bold text-[#141413] leading-snug">{adv.name}</h3>
+                      <h3 className="text-[16px] font-bold text-white leading-snug">{adv.name}</h3>
                       <span title="Verified Bar Council Enrolled">
-                        <ShieldCheck size={15} className="text-emerald-700 shrink-0" />
+                        <ShieldCheck size={15} style={{ color: '#10B981' }} className="shrink-0" />
                       </span>
                     </div>
-                    <p className="text-[12.5px] text-[#87837B] font-mono leading-tight mt-0.5">{adv.role}</p>
+                    <p className="text-[12px] font-mono leading-tight mt-0.5" style={{ color: '#818CF8' }}>{adv.role}</p>
                     
-                    <div className="flex items-center gap-2 mt-1.5 text-[12px] text-[#636059]">
+                    <div className="flex items-center gap-2 mt-1.5 text-[12px]" style={{ color: '#8F96B3' }}>
                       <div className="flex items-center gap-1">
-                        <Star size={12} className="text-amber-500 fill-amber-500" />
-                        <strong className="text-[#141413] font-semibold">{adv.rating}</strong>
-                        <span>({adv.reviews})</span>
+                        <Star size={12} className="text-amber-400 fill-amber-400" />
+                        <strong className="text-white font-semibold">{adv.rating}</strong>
+                        <span style={{ color: '#6B72A0' }}>({adv.reviews})</span>
                       </div>
                       <span>•</span>
                       <span className="flex items-center gap-1">
-                        <MapPin size={11} className="text-[#87837B]" /> {adv.city}
+                        <MapPin size={11} style={{ color: '#6B72A0' }} /> {adv.city}
                       </span>
                     </div>
                   </div>
                 </div>
 
                 {/* Bio Snippet */}
-                <p className="text-[13px] text-[#636059] leading-relaxed line-clamp-2">
+                <p className="text-[13px] leading-relaxed line-clamp-2" style={{ color: '#8F96B3' }}>
                   {adv.bio}
                 </p>
 
                 {/* Details Matrix */}
                 <div className="grid grid-cols-2 gap-2 pt-1 text-[12px]">
-                  <div className="bg-[#F7F4EE] border border-[#E8E4DA] rounded-xl p-2.5">
-                    <span className="text-[#87837B] uppercase font-mono font-bold text-[10px] block">Experience</span>
-                    <strong className="text-[#141413] font-semibold text-[13px] mt-0.5 block">{adv.experience} Years</strong>
+                  <div className="rounded-xl p-2.5" style={{ background: 'rgba(14,16,24,0.7)', border: '1px solid rgba(99,102,241,0.1)' }}>
+                    <span className="uppercase font-mono font-bold text-[10px] block" style={{ color: '#6B72A0' }}>Experience</span>
+                    <strong className="font-semibold text-[13px] mt-0.5 block text-white">{adv.experience} Years</strong>
                   </div>
 
-                  <div className="bg-[#F7F4EE] border border-[#E8E4DA] rounded-xl p-2.5">
-                    <span className="text-[#87837B] uppercase font-mono font-bold text-[10px] block">Cases Handled</span>
-                    <strong className="text-[#141413] font-semibold text-[13px] mt-0.5 block">{adv.cases}+ Matters</strong>
+                  <div className="rounded-xl p-2.5" style={{ background: 'rgba(14,16,24,0.7)', border: '1px solid rgba(99,102,241,0.1)' }}>
+                    <span className="uppercase font-mono font-bold text-[10px] block" style={{ color: '#6B72A0' }}>Cases Handled</span>
+                    <strong className="font-semibold text-[13px] mt-0.5 block text-white">{adv.cases}+ Matters</strong>
                   </div>
                 </div>
 
                 {/* Courts & Languages */}
-                <div className="text-[11.5px] text-[#636059] space-y-0.5 font-mono">
-                  <div><strong>Courts:</strong> {adv.courts}</div>
-                  <div><strong>Languages:</strong> {adv.languages.join(", ")}</div>
+                <div className="text-[11.5px] space-y-0.5 font-mono" style={{ color: '#6B72A0' }}>
+                  <div><strong style={{ color: '#8F96B3' }}>Courts:</strong> {adv.courts}</div>
+                  <div><strong style={{ color: '#8F96B3' }}>Languages:</strong> {adv.languages.join(", ")}</div>
                 </div>
 
               </div>
 
               {/* Bottom Fee & Action Row */}
-              <div className="pt-4 border-t border-[#E8E4DA] flex items-center justify-between gap-3">
+              <div className="pt-4 flex items-center justify-between gap-3" style={{ borderTop: '1px solid rgba(99,102,241,0.1)' }}>
                 <div>
-                  <span className="text-[10.5px] text-[#87837B] uppercase font-mono font-semibold block">Consultation</span>
-                  <div className="text-[17px] font-bold text-[#141413] font-mono leading-tight">₹{adv.consultationFee}</div>
-                  <span className="text-[10.5px] text-[#87837B]">60-min video</span>
+                  <span className="text-[10.5px] uppercase font-mono font-semibold block" style={{ color: '#6B72A0' }}>Consultation</span>
+                  <div className="text-[17px] font-bold font-mono leading-tight text-white">₹{adv.consultationFee}</div>
+                  <span className="text-[10.5px]" style={{ color: '#6B72A0' }}>60-min video</span>
                 </div>
 
                 <button
                   onClick={() => handleBook(adv)}
-                  className="bg-[#141413] hover:bg-black text-white text-[13px] font-medium px-4 py-2 rounded-full flex items-center gap-1.5 shadow-xs transition-all"
+                  className="text-white text-[13px] font-medium px-4 py-2 rounded-full flex items-center gap-1.5 transition-all"
+                  style={{ background: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)', boxShadow: '0 2px 10px rgba(99,102,241,0.3)' }}
                 >
                   <Video size={13} />
                   <span>Book Consult</span>
@@ -346,13 +371,14 @@ export default function AdvocatesPage() {
         </div>
 
         {filteredAdvocates.length === 0 && (
-          <div className="text-center py-20 bg-white border border-[#E8E4DA] rounded-3xl space-y-3">
-            <Scale size={36} className="text-[#87837B] mx-auto" />
-            <h3 className="text-[18px] font-bold text-[#141413]">No advocates matched your search criteria</h3>
-            <p className="text-[14px] text-[#636059]">Try clearing your search term or switching the city and domain filter.</p>
+          <div className="text-center py-20 rounded-3xl space-y-3" style={{ background: 'rgba(10,11,18,0.7)', border: '1px solid rgba(99,102,241,0.15)' }}>
+            <Scale size={36} className="mx-auto" style={{ color: '#6B72A0' }} />
+            <h3 className="text-[18px] font-bold text-white">No advocates matched your search criteria</h3>
+            <p className="text-[14px]" style={{ color: '#8F96B3' }}>Try clearing your search term or switching the city and domain filter.</p>
             <button
               onClick={() => { setSearch(""); setSelectedCategory("All Domains"); setSelectedCity("All Cities"); }}
-              className="btn-ghost text-[13px] px-5 py-2 mt-2"
+              className="text-[13px] px-5 py-2 mt-2 rounded-full transition-colors"
+              style={{ background: 'rgba(99,102,241,0.1)', border: '1px solid rgba(99,102,241,0.2)', color: '#818CF8' }}
             >
               Reset Filters
             </button>

@@ -8,8 +8,10 @@ import {
   Briefcase, Calendar, Clock, MapPin, Shield, FileText,
   MessageSquare, AlertCircle, CheckCircle2, Scale, Users,
   Plus, Video, Sparkles, ChevronRight, ArrowUpRight,
-  TrendingUp, Award, CheckSquare, ShieldCheck, Loader2
+  TrendingUp, Award, CheckSquare, ShieldCheck, Loader2,
+  ExternalLink, Zap, ArrowRight, Activity, AlertTriangle
 } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 interface Matter {
   id: string;
@@ -19,6 +21,7 @@ interface Matter {
   priority?: string;
   jurisdiction?: string;
   createdAt: string;
+  description?: string;
   advocate?: {
     name: string;
     specialization?: string;
@@ -31,6 +34,8 @@ interface Booking {
   date?: string;
   time?: string;
   status: string;
+  meetLink?: string;
+  confirmationCode?: string;
   advocate?: {
     name: string;
     specialization?: string;
@@ -82,323 +87,361 @@ export default function UserOverviewDashboard() {
   const nextBooking = activeBookings[0];
 
   return (
-    <div className="animate-fade-up" style={{ maxWidth: "1200px", margin: "0 auto", display: "flex", flexDirection: "column", gap: "26px" }}>
+    <div className="max-w-[1380px] mx-auto flex flex-col gap-7 pb-12">
       
-      {/* Dashboard Top Title Bar */}
-      <div style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "flex-start",
-        borderBottom: "1px solid #E2E8F0",
-        paddingBottom: "20px",
-        flexWrap: "wrap",
-        gap: "14px",
-      }}>
-        <div>
-          <div style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "7px",
-            fontSize: "12px",
-            fontWeight: "700",
-            color: "#2563EB",
-            textTransform: "uppercase",
-            letterSpacing: "0.08em",
-            marginBottom: "6px",
-          }}>
-            <Sparkles size={14} /> Enterprise Legal Command Center
-          </div>
-          <h1 style={{ fontSize: "32px", fontWeight: "700", color: "#0F172A", letterSpacing: "-0.03em" }}>
-            Welcome back, {session?.user?.name || session?.user?.email?.split('@')[0] || "User"}
-          </h1>
-          <p style={{ fontSize: "15px", color: "#64748B", marginTop: "4px" }}>
-            Overview of your active legal matters, court limitation windows, scheduled video consultations, and pending pleadings.
-          </p>
-        </div>
-
-        <div style={{ display: "flex", gap: "10px" }}>
-          <Link
-            href="/dashboard/documents"
-            className="btn-ghost"
-            style={{ fontSize: "13.5px", padding: "8px 16px", display: "flex", alignItems: "center", gap: "6px", height: "42px" }}
-          >
-            <FileText size={15} /> Document Studio
-          </Link>
-          <Link
-            href="/dashboard/chat"
-            className="btn-primary"
-            style={{ fontSize: "13.5px", padding: "8px 18px", display: "flex", alignItems: "center", gap: "6px", height: "42px" }}
-          >
-            <Plus size={15} /> New Case Intake
-          </Link>
-        </div>
-      </div>
-
-      {/* 4 Metric Stats */}
-      <div style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
-        gap: "16px",
-      }}>
-        <div style={{ background: "#FFFFFF", border: "1px solid #E2E8F0", borderRadius: "16px", padding: "20px", boxShadow: "0 1px 3px rgba(0,0,0,0.04)" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <span style={{ fontSize: "12px", color: "#64748B", fontWeight: "700", textTransform: "uppercase", letterSpacing: "0.06em" }}>Active Matters</span>
-            <Briefcase size={17} color="#2563EB" />
-          </div>
-          <div style={{ fontSize: "36px", fontWeight: "700", color: "#0F172A", marginTop: "6px" }}>
-            {loading ? '-' : activeMattersCount}
-          </div>
-          <div style={{ fontSize: "13px", color: "#2563EB", marginTop: "4px" }}>
-            {activeMattersCount > 0 ? `${activeMattersCount} Open Inquiries` : 'No active disputes'}
-          </div>
-        </div>
-
-        <div style={{ background: "#FFFFFF", border: "1px solid #E2E8F0", borderRadius: "16px", padding: "20px", boxShadow: "0 1px 3px rgba(0,0,0,0.04)" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <span style={{ fontSize: "12px", color: "#64748B", fontWeight: "700", textTransform: "uppercase", letterSpacing: "0.06em" }}>Limitation Deadlines</span>
-            <Clock size={17} color="#D97706" />
-          </div>
-          <div style={{ fontSize: "36px", fontWeight: "700", color: "#D97706", marginTop: "6px" }}>
-            {loading ? '-' : (activeMattersCount > 0 ? 'Protected' : 'N/A')}
-          </div>
-          <div style={{ fontSize: "13px", color: "#64748B", marginTop: "4px" }}>
-            {activeMattersCount > 0 ? 'Limitation Act Tracked' : 'No pending deadlines'}
-          </div>
-        </div>
-
-        <div style={{ background: "#FFFFFF", border: "1px solid #E2E8F0", borderRadius: "16px", padding: "20px", boxShadow: "0 1px 3px rgba(0,0,0,0.04)" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <span style={{ fontSize: "12px", color: "#64748B", fontWeight: "700", textTransform: "uppercase", letterSpacing: "0.06em" }}>Draft Notices</span>
-            <FileText size={17} color="#059669" />
-          </div>
-          <div style={{ fontSize: "36px", fontWeight: "700", color: "#059669", marginTop: "6px" }}>
-            {loading ? '-' : matters.length}
-          </div>
-          <div style={{ fontSize: "13px", color: "#64748B", marginTop: "4px" }}>
-            Court-Ready Templates
-          </div>
-        </div>
-
-        <div style={{ background: "#FFFFFF", border: "1px solid #E2E8F0", borderRadius: "16px", padding: "20px", boxShadow: "0 1px 3px rgba(0,0,0,0.04)" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <span style={{ fontSize: "12px", color: "#64748B", fontWeight: "700", textTransform: "uppercase", letterSpacing: "0.06em" }}>Consultations</span>
-            <Video size={17} color="#7C3AED" />
-          </div>
-          <div style={{ fontSize: "36px", fontWeight: "700", color: "#0F172A", marginTop: "6px" }}>
-            {loading ? '-' : activeBookings.length}
-          </div>
-          <div style={{ fontSize: "13px", color: activeBookings.length > 0 ? "#059669" : "#64748B", marginTop: "4px" }}>
-            {activeBookings.length > 0 ? 'Scheduled Advocate Calls' : 'No upcoming calls'}
-          </div>
-        </div>
-      </div>
-
-      {/* Main 2-Column Overview */}
-      <div style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr", gap: "24px", alignItems: "start" }}>
+      {/* ── Executive Hero Banner ─────────────────────────────────── */}
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-indigo-950 to-blue-950 p-8 sm:p-10 text-white shadow-xl border border-slate-800">
         
-        {/* Left Column: Active Matters */}
-        <div style={{
-          background: "#FFFFFF",
-          border: "1px solid #E2E8F0",
-          borderRadius: "16px",
-          padding: "24px",
-          display: "flex",
-          flexDirection: "column",
-          gap: "16px",
-          boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
-        }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <div style={{ fontSize: "16px", fontWeight: "700", color: "#0F172A", display: "flex", alignItems: "center", gap: "8px" }}>
-              <Briefcase size={16} color="#2563EB" /> Active Legal Matters
+        {/* Subtle Ambient Radial Glows */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-1/3 w-80 h-80 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+          <div className="max-w-2xl">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/20 border border-blue-400/30 text-blue-300 text-xs font-bold tracking-wide uppercase mb-3 backdrop-blur-md">
+              <Sparkles size={13} className="text-blue-400" />
+              <span>Institutional Legal Operating System</span>
             </div>
-            <Link href="/dashboard/matters" style={{ fontSize: "13px", color: "#2563EB", textDecoration: "none", fontWeight: "600" }}>
-              View All Matters →
+            <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
+              Welcome back, {session?.user?.name || session?.user?.email?.split('@')[0] || "Counsel"}
+            </h1>
+            <p className="text-slate-300 text-sm sm:text-base mt-2 leading-relaxed">
+              Your active case matters, limitation countdowns, and scheduled video consultations are synchronized with the Bar Council network.
+            </p>
+
+            <div className="flex items-center gap-4 mt-5 text-xs text-slate-300 font-medium">
+              <div className="flex items-center gap-1.5 bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-700">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span>Statutory Precedents: Online</span>
+              </div>
+              <div className="flex items-center gap-1.5 bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-700">
+                <ShieldCheck size={14} className="text-blue-400" />
+                <span>End-to-End Client Privilege Active</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-3">
+            <Link
+              href="/dashboard/documents"
+              className="px-5 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold text-sm transition-all border border-white/15 backdrop-blur-md flex items-center gap-2"
+            >
+              <FileText size={16} />
+              <span>Document Studio</span>
+            </Link>
+
+            <Link
+              href="/dashboard/chat"
+              className="px-5 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-sm transition-all shadow-lg shadow-blue-600/30 flex items-center gap-2"
+            >
+              <Plus size={16} />
+              <span>New Case Matter</span>
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      {/* ── 4 Key Performance & Telemetry Cards ────────────────────── */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+        
+        {/* Metric 1: Active Matters */}
+        <div className="glass-card-elevated p-5 sm:p-6 flex flex-col justify-between">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Active Matters</span>
+            <div className="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+              <Briefcase size={18} />
+            </div>
+          </div>
+          <div className="mt-4">
+            <div className="text-3xl font-extrabold text-slate-900">
+              {loading ? '-' : activeMattersCount}
+            </div>
+            <div className="flex items-center gap-1.5 text-xs text-blue-600 font-semibold mt-1">
+              <span>{activeMattersCount > 0 ? `${activeMattersCount} Active Disputes` : 'All Matters Cleared'}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Metric 2: Limitation Deadlines */}
+        <div className="glass-card-elevated p-5 sm:p-6 flex flex-col justify-between">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Limitation Shield</span>
+            <div className="w-9 h-9 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
+              <Clock size={18} />
+            </div>
+          </div>
+          <div className="mt-4">
+            <div className="text-3xl font-extrabold text-amber-600">
+              {loading ? '-' : (activeMattersCount > 0 ? 'Protected' : 'Clear')}
+            </div>
+            <div className="flex items-center gap-1.5 text-xs text-slate-500 mt-1">
+              <span>Limitation Act 1963 Tracked</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Metric 3: Draft Documents */}
+        <div className="glass-card-elevated p-5 sm:p-6 flex flex-col justify-between">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Legal Documents</span>
+            <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+              <FileText size={18} />
+            </div>
+          </div>
+          <div className="mt-4">
+            <div className="text-3xl font-extrabold text-emerald-700">
+              {loading ? '-' : matters.length}
+            </div>
+            <div className="flex items-center gap-1.5 text-xs text-slate-500 mt-1">
+              <span>Court-Admissible Notices</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Metric 4: Consultations */}
+        <div className="glass-card-elevated p-5 sm:p-6 flex flex-col justify-between">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Advocate Sessions</span>
+            <div className="w-9 h-9 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center">
+              <Video size={18} />
+            </div>
+          </div>
+          <div className="mt-4">
+            <div className="text-3xl font-extrabold text-purple-900">
+              {loading ? '-' : activeBookings.length}
+            </div>
+            <div className="flex items-center gap-1.5 text-xs text-purple-700 font-semibold mt-1">
+              <span>{activeBookings.length > 0 ? 'Upcoming Video Rooms' : 'Available for Booking'}</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      {/* ── Main 2-Column Content Grid ────────────────────────────── */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-7 items-start">
+        
+        {/* Left Column (8 Cols): Active Matters Docket */}
+        <div className="lg:col-span-8 flex flex-col gap-6">
+          
+          <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-7 shadow-xs">
+            <div className="flex items-center justify-between pb-5 border-b border-slate-100 mb-5">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
+                  <Scale size={18} />
+                </div>
+                <div>
+                  <h2 className="text-base font-bold text-slate-900">Active Matter Dockets</h2>
+                  <p className="text-xs text-slate-500">Live litigation and negotiation tracking</p>
+                </div>
+              </div>
+
+              <Link
+                href="/dashboard/matters"
+                className="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1"
+              >
+                <span>Full Docket List</span>
+                <ChevronRight size={14} />
+              </Link>
+            </div>
+
+            {loading ? (
+              <div className="py-12 flex flex-col items-center justify-center text-slate-400 gap-3">
+                <Loader2 size={24} className="animate-spin text-blue-600" />
+                <span className="text-xs">Synchronizing with legal repository...</span>
+              </div>
+            ) : matters.length === 0 ? (
+              <div className="py-12 text-center rounded-2xl bg-slate-50 border border-dashed border-slate-200 p-8">
+                <Briefcase size={36} className="mx-auto text-slate-300 mb-3" />
+                <h3 className="text-sm font-bold text-slate-700">No Active Case Matters</h3>
+                <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
+                  Initiate a new statutory case intake to analyze claims, calculate limitation deadlines, and match with High Court advocates.
+                </p>
+                <Link
+                  href="/dashboard/chat"
+                  className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-600 text-white text-xs font-bold hover:bg-blue-700 transition-all shadow-xs"
+                >
+                  <Plus size={14} />
+                  <span>Start First Case Intake</span>
+                </Link>
+              </div>
+            ) : (
+              <div className="space-y-3.5">
+                {matters.slice(0, 4).map((matter) => (
+                  <Link
+                    key={matter.id}
+                    href={`/dashboard/case/${matter.id}`}
+                    className="block p-4 rounded-2xl border border-slate-200 hover:border-blue-400 hover:shadow-sm transition-all group bg-white"
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs font-mono font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded border border-blue-200">
+                            {matter.id.substring(0, 10).toUpperCase()}
+                          </span>
+                          <span className={`text-[11px] font-bold px-2 py-0.5 rounded ${
+                            matter.status === 'ACTIVE' 
+                              ? 'text-emerald-700 bg-emerald-50 border border-emerald-200' 
+                              : 'text-amber-700 bg-amber-50 border border-amber-200'
+                          }`}>
+                            {matter.status}
+                          </span>
+                        </div>
+
+                        <h3 className="text-sm font-bold text-slate-900 group-hover:text-blue-600 transition-colors mt-2">
+                          {matter.title}
+                        </h3>
+
+                        {matter.description && (
+                          <p className="text-xs text-slate-500 mt-1 line-clamp-2 leading-relaxed">
+                            {matter.description}
+                          </p>
+                        )}
+                      </div>
+
+                      <div className="text-right shrink-0">
+                        <span className="text-[11px] text-slate-400 block font-mono">
+                          {new Date(matter.createdAt).toLocaleDateString('en-IN', { month: 'short', day: 'numeric' })}
+                        </span>
+                        <ChevronRight size={16} className="text-slate-300 group-hover:text-blue-600 group-hover:translate-x-1 transition-all mt-2 ml-auto" />
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Quick Action Matrix */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <Link
+              href="/dashboard/documents?template=legal-notice-tenant"
+              className="p-4 rounded-2xl bg-white border border-slate-200 hover:border-blue-400 hover:shadow-sm transition-all group"
+            >
+              <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center mb-2.5 group-hover:scale-110 transition-transform">
+                <FileText size={16} />
+              </div>
+              <h4 className="text-xs font-bold text-slate-900">Draft Security Notice</h4>
+              <p className="text-[11px] text-slate-500 mt-0.5">TPA §108 statutory format</p>
+            </Link>
+
+            <Link
+              href="/dashboard/documents?template=legal-notice-salary"
+              className="p-4 rounded-2xl bg-white border border-slate-200 hover:border-emerald-400 hover:shadow-sm transition-all group"
+            >
+              <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center mb-2.5 group-hover:scale-110 transition-transform">
+                <Briefcase size={16} />
+              </div>
+              <h4 className="text-xs font-bold text-slate-900">Recover Salary Dues</h4>
+              <p className="text-[11px] text-slate-500 mt-0.5">Payment of Wages Act §15</p>
+            </Link>
+
+            <Link
+              href="/dashboard/advocates"
+              className="p-4 rounded-2xl bg-white border border-slate-200 hover:border-purple-400 hover:shadow-sm transition-all group"
+            >
+              <div className="w-8 h-8 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center mb-2.5 group-hover:scale-110 transition-transform">
+                <Users size={16} />
+              </div>
+              <h4 className="text-xs font-bold text-slate-900">High Court Counsel</h4>
+              <p className="text-[11px] text-slate-500 mt-0.5">Instant Bar Council matching</p>
             </Link>
           </div>
 
-          {loading ? (
-            <div style={{ padding: "40px 0", textAlign: "center", color: "#64748B" }}>
-              <Loader2 size={24} className="animate-spin" style={{ margin: "0 auto 10px auto", color: "#2563EB" }} />
-              <p style={{ fontSize: "13px" }}>Loading your legal matters...</p>
-            </div>
-          ) : matters.length === 0 ? (
-            <div style={{
-              background: "#F8FAFC",
-              border: "1px dashed #CBD5E1",
-              borderRadius: "14px",
-              padding: "36px 20px",
-              textAlign: "center",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: "12px",
-            }}>
-              <div style={{
-                width: "48px",
-                height: "48px",
-                borderRadius: "12px",
-                background: "rgba(37, 99, 235, 0.08)",
-                border: "1px solid rgba(37, 99, 235, 0.2)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                color: "#2563EB",
-              }}>
-                <Briefcase size={22} />
-              </div>
-              <div>
-                <h4 style={{ fontSize: "15.5px", fontWeight: "700", color: "#0F172A", marginBottom: "4px" }}>
-                  No Active Legal Matters Yet
-                </h4>
-                <p style={{ fontSize: "13px", color: "#64748B", maxWidth: "380px", margin: "0 auto" }}>
-                  Start an AI Case Intake to evaluate your dispute, calculate statutory limitation periods, and connect with top advocates.
-                </p>
-              </div>
-              <Link
-                href="/dashboard/chat"
-                className="btn-primary"
-                style={{ fontSize: "13px", padding: "8px 18px", marginTop: "6px" }}
-              >
-                <Plus size={14} /> Start AI Case Intake
-              </Link>
-            </div>
-          ) : (
-            <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-              {matters.map((matter) => (
-                <Link
-                  key={matter.id}
-                  href={`/dashboard/matters/${matter.id}`}
-                  style={{
-                    textDecoration: "none",
-                    background: "#F8FAFC",
-                    border: "1px solid #E2E8F0",
-                    borderRadius: "14px",
-                    padding: "18px",
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "10px",
-                    transition: "all 0.15s ease",
-                  }}
-                  onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLElement).style.borderColor = "#CBD5E1";
-                    (e.currentTarget as HTMLElement).style.background = "#F1F5F9";
-                  }}
-                  onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLElement).style.borderColor = "#E2E8F0";
-                    (e.currentTarget as HTMLElement).style.background = "#F8FAFC";
-                  }}
-                >
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-                    <div>
-                      <span style={{ fontFamily: "var(--font-mono)", fontSize: "11.5px", color: "#2563EB", fontWeight: "700", background: "rgba(37, 99, 235, 0.1)", padding: "2px 7px", borderRadius: "4px" }}>
-                        {matter.id.slice(0, 10)}
-                      </span>
-                      <h4 style={{ fontSize: "16px", fontWeight: "700", color: "#0F172A", marginTop: "4px" }}>
-                        {matter.title}
-                      </h4>
-                      <p style={{ fontSize: "13px", color: "#475569", marginTop: "2px" }}>
-                        {matter.category || 'General Legal Dispute'} · Counsel: <strong style={{ color: "#0F172A" }}>{matter.advocate?.name || 'Assigned Counsel'}</strong>
-                      </p>
-                    </div>
-
-                    <span style={{ fontSize: "12px", color: "#059669", fontWeight: "700" }}>
-                      {matter.status}
-                    </span>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          )}
         </div>
 
-        {/* Right Column: Upcoming Consultation / Actions */}
-        <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+        {/* Right Column (4 Cols): Consultation Spotlight & Limitation Alert */}
+        <div className="lg:col-span-4 flex flex-col gap-6">
           
-          {/* Consultation Box */}
-          <div style={{ background: "#FFFFFF", border: "1px solid #E2E8F0", borderRadius: "16px", padding: "24px", boxShadow: "0 1px 3px rgba(0,0,0,0.04)" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "12px", fontWeight: "700", color: "#059669", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: "14px" }}>
-              <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#059669" }} />
-              Upcoming Video Consultation
+          {/* Upcoming Video Consultation Spotlight */}
+          <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-xs relative overflow-hidden">
+            <div className="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
+                <Video size={14} className="text-blue-600" />
+                <span>Next Consultation</span>
+              </span>
+              <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+                Confirmed
+              </span>
             </div>
 
-            {nextBooking ? (() => {
-              const rawDate = nextBooking.scheduledAt || nextBooking.date;
-              const parsed = rawDate ? new Date(rawDate) : null;
-              const isValid = parsed && !isNaN(parsed.getTime());
-              const dateStr = isValid ? parsed.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : (nextBooking.date || 'Today, 24 Aug 2026');
-              const timeStr = isValid && nextBooking.scheduledAt ? parsed.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : (nextBooking.time || '04:30 PM');
+            {nextBooking ? (
+              <div className="space-y-4">
+                <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+                  <div className="text-xs text-slate-500 font-medium">Assigned Legal Counsel</div>
+                  <div className="text-base font-bold text-slate-900 mt-0.5">
+                    {nextBooking.advocate?.name || "Advocate Vikram Singh"}
+                  </div>
+                  <div className="text-xs text-slate-600 mt-0.5">
+                    {nextBooking.advocate?.specialization || "High Court Trial Counsel"}
+                  </div>
 
-              return (
-              <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-                <h3 style={{ fontSize: "18px", fontWeight: "700", color: "#0F172A" }}>
-                  {nextBooking.advocate?.name || 'Advocate Rajesh Sharma'}
-                </h3>
-                <p style={{ fontSize: "13px", color: "#64748B" }}>
-                  {nextBooking.advocate?.specialization || 'Employment & Labour Counsel'}
-                </p>
-
-                <div style={{ background: "#F8FAFC", border: "1px solid #E2E8F0", borderRadius: "12px", padding: "12px 16px", display: "flex", justifyContent: "space-between", fontSize: "13px", color: "#334155" }}>
-                  <span>📅 {dateStr}</span>
-                  <span>⏰ {timeStr}</span>
+                  <div className="grid grid-cols-2 gap-2 mt-4 pt-3 border-t border-slate-200 text-xs">
+                    <div>
+                      <span className="text-slate-400 block font-mono">Date</span>
+                      <span className="font-bold text-slate-800">{nextBooking.date || "Scheduled"}</span>
+                    </div>
+                    <div>
+                      <span className="text-slate-400 block font-mono">Slot</span>
+                      <span className="font-bold text-slate-800">{nextBooking.time || "11:00 AM"}</span>
+                    </div>
+                  </div>
                 </div>
 
-                <Link
-                  href={`/dashboard/consultation/${nextBooking.id || 'MAT-1042'}`}
-                  className="btn-primary"
-                  style={{ width: "100%", textAlign: "center", display: "flex", justifyContent: "center", alignItems: "center", gap: "8px", padding: "12px", fontSize: "14px", marginTop: "4px" }}
-                >
-                  <Video size={16} /> Join Consultation Room
-                </Link>
+                {nextBooking.meetLink ? (
+                  <a
+                    href={nextBooking.meetLink}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-sm shadow-blue-500/25"
+                  >
+                    <Video size={14} />
+                    <span>Enter Secure Video Room</span>
+                    <ExternalLink size={13} />
+                  </a>
+                ) : (
+                  <Link
+                    href={`/dashboard/consultation/${nextBooking.id}`}
+                    className="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-sm shadow-blue-500/25"
+                  >
+                    <Video size={14} />
+                    <span>View Consultation Room</span>
+                  </Link>
+                )}
               </div>
-              );
-            })() : (
-              <div style={{ textAlign: "center", padding: "20px 0", display: "flex", flexDirection: "column", alignItems: "center", gap: "10px" }}>
-                <Video size={28} style={{ color: "#94A3B8" }} />
-                <p style={{ fontSize: "13px", color: "#64748B", margin: 0 }}>
-                  No scheduled consultations for today.
+            ) : (
+              <div className="text-center py-6">
+                <Calendar size={32} className="mx-auto text-slate-300 mb-2" />
+                <h4 className="text-xs font-bold text-slate-700">No Calls Scheduled Today</h4>
+                <p className="text-[11.5px] text-slate-500 mt-1">
+                  Book a 1-on-1 strategy session with verified High Court counsel.
                 </p>
                 <Link
-                  href="/advocates"
-                  className="btn-ghost"
-                  style={{ fontSize: "12.5px", padding: "6px 14px" }}
+                  href="/dashboard/advocates"
+                  className="mt-4 inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-slate-900 text-white text-xs font-semibold hover:bg-slate-800 transition-all shadow-xs"
                 >
-                  Book Advocate Consultation
+                  <Users size={13} />
+                  <span>Find an Advocate</span>
                 </Link>
               </div>
             )}
           </div>
 
-          {/* Quick Tools */}
-          <div style={{ background: "#FFFFFF", border: "1px solid #E2E8F0", borderRadius: "16px", padding: "24px", boxShadow: "0 1px 3px rgba(0,0,0,0.04)" }}>
-            <div style={{ fontSize: "12px", fontWeight: "700", color: "#64748B", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: "14px" }}>
-              Legal Workspace Tools
+          {/* Statutory Shield / Advisory Box */}
+          <div className="bg-gradient-to-br from-amber-500/10 via-amber-500/5 to-transparent border border-amber-200 rounded-3xl p-6 shadow-xs">
+            <div className="flex items-center gap-2 text-amber-900 text-xs font-bold uppercase tracking-wider mb-2">
+              <AlertTriangle size={15} className="text-amber-600" />
+              <span>Limitation Clock Monitor</span>
             </div>
-
-            <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-              <Link href="/dashboard/chat" style={{ textDecoration: "none", padding: "10px 14px", background: "#F8FAFC", border: "1px solid #E2E8F0", borderRadius: "10px", display: "flex", alignItems: "center", justifyContent: "space-between", color: "#334155", fontSize: "13.5px" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                  <MessageSquare size={16} color="#2563EB" />
-                  <span>AI Case Assessment</span>
-                </div>
-                <ChevronRight size={14} color="#2563EB" />
-              </Link>
-
-              <Link href="/dashboard/documents" style={{ textDecoration: "none", padding: "10px 14px", background: "#F8FAFC", border: "1px solid #E2E8F0", borderRadius: "10px", display: "flex", alignItems: "center", justifyContent: "space-between", color: "#334155", fontSize: "13.5px" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                  <FileText size={16} color="#059669" />
-                  <span>RPAD Notice Generator</span>
-                </div>
-                <ChevronRight size={14} color="#059669" />
-              </Link>
-
-              <Link href="/dashboard/advocates" style={{ textDecoration: "none", padding: "10px 14px", background: "#F8FAFC", border: "1px solid #E2E8F0", borderRadius: "10px", display: "flex", alignItems: "center", justifyContent: "space-between", color: "#334155", fontSize: "13.5px" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                  <Users size={16} color="#7C3AED" />
-                  <span>Find High Court Advocates</span>
-                </div>
-                <ChevronRight size={14} color="#7C3AED" />
-              </Link>
-            </div>
+            <p className="text-xs text-amber-950 leading-relaxed">
+              Under the Indian Limitation Act, 1963, debt recovery and summary suits must be initiated within <strong>3 years</strong> from the cause of action date.
+            </p>
+            <Link
+              href="/dashboard/chat"
+              className="mt-3 inline-flex items-center gap-1 text-xs font-bold text-amber-800 hover:text-amber-900 hover:underline"
+            >
+              <span>Calculate exact deadline for your claim →</span>
+            </Link>
           </div>
 
         </div>

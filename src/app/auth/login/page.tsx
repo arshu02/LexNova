@@ -7,7 +7,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Loader2, Mail, Lock, AlertCircle, Scale,
-  User, ShieldCheck, ArrowRight
+  User, ShieldCheck, ArrowRight, Sparkles, CheckCircle2
 } from 'lucide-react';
 import { supabase } from '@/lib/supabaseClient';
 
@@ -19,6 +19,8 @@ function LoginForm() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const successMessage = searchParams.get('success');
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -78,40 +80,56 @@ function LoginForm() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FBF9F5] text-[#141413] flex flex-col justify-center items-center px-4 py-12 relative">
+    <div className="min-h-screen flex flex-col justify-center items-center px-4 py-12 relative overflow-hidden" style={{ background: '#05060A', color: '#F0F2FF' }}>
+      {/* Ambient background glow */}
+      <div className="fixed inset-0 pointer-events-none">
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-96 h-96 rounded-full" style={{ background: 'radial-gradient(circle, rgba(99,102,241,0.12) 0%, transparent 70%)', filter: 'blur(60px)' }} />
+      </div>
+
       {/* Brand Header */}
-      <div className="text-center mb-8">
-        <Link href="/" className="inline-flex items-center gap-2 mb-2">
-          <span className="font-mono text-[22px] font-extrabold tracking-[0.18em] text-[#141413]">
+      <div className="text-center mb-8 relative z-10">
+        <Link href="/" className="inline-flex items-center gap-3 mb-2 group">
+          <div className="w-9 h-9 rounded-xl flex items-center justify-center font-bold text-white text-[15px] shadow-lg shadow-indigo-500/20" style={{ background: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)' }}>
+            LN
+          </div>
+          <span className="font-mono text-[22px] font-extrabold tracking-[0.16em] text-white group-hover:text-indigo-400 transition-colors">
             LEXNOV\A
           </span>
         </Link>
-        <p className="text-[13.5px] text-[#636059]">
+        <p className="text-[13.5px]" style={{ color: '#8F96B3' }}>
           Global Autonomous Legal Operating System
         </p>
       </div>
 
       {/* Role Selector */}
-      <div className="w-full max-w-[420px] mb-4 bg-[#F7F4EE] p-1 rounded-2xl border border-[#E8E4DA] flex">
+      <div className="w-full max-w-[420px] mb-4 p-1 rounded-2xl flex relative z-10" style={{ background: 'rgba(14,16,24,0.8)', border: '1px solid rgba(99,102,241,0.15)' }}>
         <button
           type="button"
           onClick={() => setRole('USER')}
-          className={`flex-1 py-2.5 rounded-xl text-[13px] font-medium flex items-center justify-center gap-2 transition-all ${
-            role === 'USER'
-              ? 'bg-white text-[#141413] shadow-xs border border-[#DED9CE]'
-              : 'text-[#636059] hover:text-[#141413]'
-          }`}
+          className="flex-1 py-2.5 rounded-xl text-[13px] font-medium flex items-center justify-center gap-2 transition-all"
+          style={role === 'USER' ? {
+            background: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)',
+            color: 'white',
+            boxShadow: '0 2px 8px rgba(99,102,241,0.35)',
+            border: '1px solid rgba(99,102,241,0.4)'
+          } : {
+            color: '#8F96B3'
+          }}
         >
-          <User size={15} /> Citizen & Business
+          <User size={15} /> Citizen &amp; Business
         </button>
         <button
           type="button"
           onClick={() => setRole('ADVOCATE')}
-          className={`flex-1 py-2.5 rounded-xl text-[13px] font-medium flex items-center justify-center gap-2 transition-all ${
-            role === 'ADVOCATE'
-              ? 'bg-white text-[#141413] shadow-xs border border-[#DED9CE]'
-              : 'text-[#636059] hover:text-[#141413]'
-          }`}
+          className="flex-1 py-2.5 rounded-xl text-[13px] font-medium flex items-center justify-center gap-2 transition-all"
+          style={role === 'ADVOCATE' ? {
+            background: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)',
+            color: 'white',
+            boxShadow: '0 2px 8px rgba(99,102,241,0.35)',
+            border: '1px solid rgba(99,102,241,0.4)'
+          } : {
+            color: '#8F96B3'
+          }}
         >
           <ShieldCheck size={15} /> Legal Advocate
         </button>
@@ -121,16 +139,25 @@ function LoginForm() {
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-[420px] bg-white border border-[#E8E4DA] rounded-3xl p-8 shadow-sm space-y-6"
+        className="w-full max-w-[420px] rounded-3xl p-8 space-y-6 relative z-10"
+        style={{ background: 'rgba(10,11,18,0.85)', border: '1px solid rgba(99,102,241,0.2)', boxShadow: '0 12px 40px rgba(0,0,0,0.6)' }}
       >
-        <div className="flex items-center justify-between">
-          <span className="text-[11px] font-mono font-bold tracking-[0.1em] uppercase text-[#87837B]">
+        <div className="flex items-center justify-between pb-2" style={{ borderBottom: '1px solid rgba(99,102,241,0.1)' }}>
+          <span className="text-[11px] font-mono font-bold tracking-[0.1em] uppercase" style={{ color: '#818CF8' }}>
             Authentication
           </span>
-          <span className="text-[11px] font-mono font-medium text-[#141413] bg-[#F7F4EE] border border-[#E8E4DA] px-2.5 py-0.5 rounded-full">
+          <span className="text-[11px] font-mono font-medium px-2.5 py-0.5 rounded-full" style={{ background: 'rgba(99,102,241,0.1)', border: '1px solid rgba(99,102,241,0.2)', color: '#A8AECF' }}>
             {role === 'USER' ? 'Client Portal' : 'Advocate Console'}
           </span>
         </div>
+
+        {/* Success Alert */}
+        {successMessage && (
+          <div className="p-3.5 rounded-xl text-[13px] flex items-center gap-2.5" style={{ background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.25)', color: '#10B981' }}>
+            <CheckCircle2 size={16} className="shrink-0" />
+            <span>{successMessage}</span>
+          </div>
+        )}
 
         {/* Error Alert */}
         <AnimatePresence>
@@ -139,9 +166,10 @@ function LoginForm() {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className="p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-[13px] flex items-center gap-2.5"
+              className="p-3.5 rounded-xl text-[13px] flex items-center gap-2.5"
+              style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.25)', color: '#F87171' }}
             >
-              <AlertCircle size={16} className="shrink-0 text-red-600" />
+              <AlertCircle size={16} className="shrink-0" />
               <span>{error}</span>
             </motion.div>
           )}
@@ -149,40 +177,42 @@ function LoginForm() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="text-[12.5px] font-medium text-[#42403B] block mb-1.5">
+            <label className="text-[12.5px] font-medium block mb-1.5" style={{ color: '#A8AECF' }}>
               Account Email
             </label>
             <div className="relative">
-              <Mail size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#87837B]" />
+              <Mail size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2" style={{ color: '#6B72A0' }} />
               <input
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="name@company.com"
-                className="w-full bg-white border border-[#DED9CE] rounded-xl pl-10 pr-3.5 py-2.5 text-[14px] text-[#141413] placeholder-[#87837B] focus:border-[#141413] focus:outline-none transition-colors"
+                className="w-full rounded-xl pl-10 pr-3.5 py-2.5 text-[14px] text-white placeholder-slate-500 focus:outline-none transition-colors"
+                style={{ background: 'rgba(14,16,24,0.8)', border: '1px solid rgba(99,102,241,0.2)' }}
               />
             </div>
           </div>
 
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <label className="text-[12.5px] font-medium text-[#42403B]">
+              <label className="text-[12.5px] font-medium" style={{ color: '#A8AECF' }}>
                 Password
               </label>
-              <Link href="/auth/forgot-password" className="text-[11.5px] text-[#141413] hover:underline font-medium">
+              <Link href="/auth/forgot-password" className="text-[11.5px] hover:underline font-medium" style={{ color: '#818CF8' }}>
                 Forgot?
               </Link>
             </div>
             <div className="relative">
-              <Lock size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#87837B]" />
+              <Lock size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2" style={{ color: '#6B72A0' }} />
               <input
                 type="password"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full bg-white border border-[#DED9CE] rounded-xl pl-10 pr-3.5 py-2.5 text-[14px] text-[#141413] placeholder-[#87837B] focus:border-[#141413] focus:outline-none transition-colors"
+                className="w-full rounded-xl pl-10 pr-3.5 py-2.5 text-[14px] text-white placeholder-slate-500 focus:outline-none transition-colors"
+                style={{ background: 'rgba(14,16,24,0.8)', border: '1px solid rgba(99,102,241,0.2)' }}
               />
             </div>
           </div>
@@ -190,7 +220,8 @@ function LoginForm() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-[#141413] hover:bg-black text-white text-[14px] font-medium py-3 rounded-xl flex items-center justify-center gap-2 shadow-xs transition-all mt-2"
+            className="w-full text-white text-[14px] font-medium py-3 rounded-xl flex items-center justify-center gap-2 transition-all mt-2"
+            style={{ background: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)', boxShadow: '0 4px 16px rgba(99,102,241,0.35)' }}
           >
             {loading ? (
               <Loader2 size={16} className="animate-spin text-white" />
@@ -206,16 +237,17 @@ function LoginForm() {
         {/* Google OAuth */}
         <div className="space-y-3 pt-2">
           <div className="flex items-center gap-3">
-            <div className="flex-1 h-px bg-[#E8E4DA]" />
-            <span className="text-[11px] text-[#87837B] uppercase tracking-wider font-mono">Or continue with</span>
-            <div className="flex-1 h-px bg-[#E8E4DA]" />
+            <div className="flex-1 h-px" style={{ background: 'rgba(99,102,241,0.15)' }} />
+            <span className="text-[11px] uppercase tracking-wider font-mono" style={{ color: '#6B72A0' }}>Or continue with</span>
+            <div className="flex-1 h-px" style={{ background: 'rgba(99,102,241,0.15)' }} />
           </div>
 
           <button
             type="button"
             onClick={handleGoogleSignIn}
             disabled={loading}
-            className="w-full flex items-center justify-center gap-3 py-2.5 rounded-xl border border-[#DED9CE] bg-white hover:bg-[#F7F4EE] text-[#141413] text-[13.5px] font-medium transition-colors"
+            className="w-full flex items-center justify-center gap-3 py-2.5 rounded-xl text-white text-[13.5px] font-medium transition-colors hover:bg-white/[0.04]"
+            style={{ background: 'rgba(14,16,24,0.8)', border: '1px solid rgba(99,102,241,0.2)' }}
           >
             <svg className="w-4 h-4" viewBox="0 0 24 24">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -228,9 +260,9 @@ function LoginForm() {
         </div>
 
         {/* Footer Link */}
-        <div className="text-center text-[13px] text-[#636059] pt-1">
+        <div className="text-center text-[13px] pt-1" style={{ color: '#8F96B3' }}>
           Don&apos;t have an account?{' '}
-          <Link href="/auth/signup" className="text-[#141413] hover:underline font-semibold">
+          <Link href="/auth/signup" className="hover:underline font-semibold" style={{ color: '#818CF8' }}>
             Sign up
           </Link>
         </div>
@@ -242,7 +274,7 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-[#FBF9F5]" />}>
+    <Suspense fallback={<div className="min-h-screen" style={{ background: '#05060A' }} />}>
       <LoginForm />
     </Suspense>
   );

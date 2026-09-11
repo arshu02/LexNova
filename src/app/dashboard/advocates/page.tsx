@@ -5,9 +5,11 @@ import Link from 'next/link';
 import {
   Users, Search, Filter, Star, ShieldCheck, MapPin,
   Calendar, ArrowUpDown, ChevronRight, Award, Check,
-  Clock, Sparkles, SlidersHorizontal, BookOpen, X, Video
+  Clock, Sparkles, SlidersHorizontal, BookOpen, X, Video,
+  CheckCircle2, Shield, ArrowRight, MessageSquare, Scale
 } from 'lucide-react';
 import BookingModal from '@/components/BookingModal';
+import { motion } from 'framer-motion';
 
 interface Advocate {
   id: string;
@@ -36,7 +38,7 @@ const ADVOCATES_DATA: Advocate[] = [
     id: "adv_1",
     name: "Advocate Priya Mehta",
     specialization: "Property & Tenancy Specialist",
-    practiceAreas: ["Property", "Tenancy", "RERA", "Civil Recovery"],
+    practiceAreas: ["Property Dispute", "Tenancy", "RERA Litigation", "Civil Recovery"],
     experienceYears: 9,
     rating: 4.8,
     reviewsCount: 142,
@@ -48,7 +50,7 @@ const ADVOCATES_DATA: Advocate[] = [
     verificationStatus: "VERIFIED",
     responseTime: "< 15 mins",
     profileCompletion: 100,
-    bio: "Advocate Priya Mehta specializes in real estate, tenancy disputes, builder delay claims under RERA, and illegal eviction matters. Over 9 years of trial practice with 850+ settled and argued matters.",
+    bio: "Specialist in real estate, tenancy disputes, builder delay claims under RERA, and illegal eviction matters. Over 9 years of trial practice with 850+ argued and settled matters.",
     isDemo: true,
     avatar: "PM",
     availability: "TODAY",
@@ -57,7 +59,7 @@ const ADVOCATES_DATA: Advocate[] = [
     id: "adv_2",
     name: "Advocate Rajesh Sharma",
     specialization: "Employment & Labour Counsel",
-    practiceAreas: ["Labour", "Employment", "Industrial Disputes", "Contracts"],
+    practiceAreas: ["Labour Code", "Unpaid Salary", "Industrial Disputes", "Non-Compete"],
     experienceYears: 12,
     rating: 4.9,
     reviewsCount: 210,
@@ -78,7 +80,7 @@ const ADVOCATES_DATA: Advocate[] = [
     id: "adv_3",
     name: "Advocate Ananya Iyer",
     specialization: "Consumer Protection Lawyer",
-    practiceAreas: ["Consumer", "E-Commerce", "Insurance Claims", "Medical Negligence"],
+    practiceAreas: ["Consumer Forum", "E-Commerce", "Insurance Claims", "Medical Negligence"],
     experienceYears: 6,
     rating: 4.7,
     reviewsCount: 88,
@@ -98,20 +100,20 @@ const ADVOCATES_DATA: Advocate[] = [
   {
     id: "adv_4",
     name: "Advocate Sanjay Gupta",
-    specialization: "Criminal & Cyber Law Expert",
-    practiceAreas: ["Criminal", "Cyber", "Financial Fraud", "IT Act"],
+    specialization: "Criminal & Cyber Defense",
+    practiceAreas: ["Cyber Crime", "Financial Fraud", "Bail Petitions", "IT Act §66D"],
     experienceYears: 15,
     rating: 4.9,
     reviewsCount: 310,
     consultationFee: 1999,
     city: "Delhi",
-    courts: ["Supreme Court of India", "Delhi High Court", "Patiala House District Courts"],
-    languages: ["English", "Hindi"],
-    barNumber: "D/4412/2009",
+    courts: ["Delhi High Court", "Patiala House Sessions Court", "Cyber Appellate Tribunal"],
+    languages: ["English", "Hindi", "Punjabi"],
+    barNumber: "D/1429/2009",
     verificationStatus: "VERIFIED",
-    responseTime: "< 5 mins",
+    responseTime: "< 15 mins",
     profileCompletion: 100,
-    bio: "15+ years defending complex cyber fraud matters, unauthorized banking transactions, Section 138 cheque bounces, and white collar criminal litigation across Delhi NCR.",
+    bio: "15+ years defending complex cyber banking fraud, unauthorized UPI phishing, crypto asset freezing, anticipatory bails, and criminal defense before High Court and Special Sessions Courts.",
     isDemo: true,
     avatar: "SG",
     availability: "TODAY",
@@ -119,56 +121,56 @@ const ADVOCATES_DATA: Advocate[] = [
   {
     id: "adv_5",
     name: "Advocate Meera Krishnan",
-    specialization: "Family & Matrimonial Counsel",
-    practiceAreas: ["Family", "Matrimonial", "Divorce", "Child Custody"],
+    specialization: "Family & Matrimonial Law",
+    practiceAreas: ["Family Court", "Mutual Divorce", "Child Custody", "Maintenance"],
     experienceYears: 8,
     rating: 4.8,
     reviewsCount: 165,
     consultationFee: 1299,
     city: "Bengaluru",
     courts: ["Karnataka High Court", "Principal Family Court Bengaluru"],
-    languages: ["English", "Malayalam", "Tamil", "Hindi"],
-    barNumber: "KAR/3120/2016",
+    languages: ["English", "Malayalam", "Tamil", "Kannada"],
+    barNumber: "KAR/3920/2016",
     verificationStatus: "VERIFIED",
     responseTime: "< 20 mins",
     profileCompletion: 98,
-    bio: "Empathetic family dispute advocate specializing in mutual consent divorce proceedings, Section 125 maintenance calculations, and domestic violence protection orders.",
+    bio: "Empathetic, highly effective trial counsel for mutual consent separation, contested divorces, domestic violence relief, child custody, and alimony settlement mediation.",
     isDemo: true,
     avatar: "MK",
-    availability: "THIS_WEEK",
+    availability: "TODAY",
   },
   {
     id: "adv_6",
     name: "Advocate Vikram Singh",
-    specialization: "Corporate & Commercial Advocate",
-    practiceAreas: ["Corporate", "Commercial", "Contracts", "MSME Dues"],
+    specialization: "Corporate & Contract Counsel",
+    practiceAreas: ["Corporate NDA", "Breach of Contract", "Arbitration", "Founder Disputes"],
     experienceYears: 11,
     rating: 4.7,
-    reviewsCount: 190,
+    reviewsCount: 178,
     consultationFee: 2499,
     city: "Mumbai",
-    courts: ["Bombay High Court", "NCLT Mumbai Bench", "MSEFC Commercial Tribunal"],
+    courts: ["Bombay High Court", "NCLT Mumbai Bench", "MCIA Arbitration Centre"],
     languages: ["English", "Hindi"],
-    barNumber: "MAH/9014/2013",
+    barNumber: "MAH/7641/2013",
     verificationStatus: "VERIFIED",
-    responseTime: "< 15 mins",
+    responseTime: "< 1 hour",
     profileCompletion: 100,
-    bio: "Advising startups and MSME founders on commercial contract enforcement, vendor invoicing recovery under MSMED Act, shareholder disputes, and NCLT insolvency proceedings.",
+    bio: "Advising startups, tech founders, and business enterprises on commercial breach of contract, shareholder disputes, IP assignments, and institutional arbitration.",
     isDemo: true,
     avatar: "VS",
     availability: "TOMORROW",
-  }
+  },
 ];
 
-export default function AdvocatesDirectoryPage() {
+export default function FindAdvocatePage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("ALL");
   const [selectedCity, setSelectedCity] = useState("ALL");
   const [sortBy, setSortBy] = useState<"MATCH" | "EXPERIENCE" | "RATING" | "FEE_LOW" | "AVAILABILITY">("MATCH");
   const [selectedAdvocate, setSelectedAdvocate] = useState<Advocate | null>(null);
-  const [bookingAdvocate, setBookingAdvocate] = useState<Advocate | null>(null);
+  const [bookingModalOpen, setBookingModalOpen] = useState(false);
 
-  const categories = ["ALL", "Property", "Labour", "Consumer", "Criminal", "Family", "Corporate"];
+  const categories = ["ALL", "Property", "Labour", "Consumer", "Cyber Crime", "Corporate"];
   const cities = ["ALL", "Bengaluru", "Mumbai", "Delhi", "Chennai"];
 
   const filteredAdvocates = useMemo(() => {
@@ -181,170 +183,110 @@ export default function AdvocatesDirectoryPage() {
 
       const matchesCategory =
         selectedCategory === "ALL" ||
-        adv.practiceAreas.includes(selectedCategory);
+        adv.practiceAreas.some((p) => p.toLowerCase().includes(selectedCategory.toLowerCase())) ||
+        adv.specialization.toLowerCase().includes(selectedCategory.toLowerCase());
 
-      const matchesCity =
-        selectedCity === "ALL" || adv.city.toLowerCase() === selectedCity.toLowerCase();
+      const matchesCity = selectedCity === "ALL" || adv.city.toLowerCase() === selectedCity.toLowerCase();
 
       return matchesSearch && matchesCategory && matchesCity;
     }).sort((a, b) => {
       if (sortBy === "EXPERIENCE") return b.experienceYears - a.experienceYears;
       if (sortBy === "RATING") return b.rating - a.rating;
       if (sortBy === "FEE_LOW") return a.consultationFee - b.consultationFee;
-      if (sortBy === "AVAILABILITY") {
-        const order = { TODAY: 1, TOMORROW: 2, THIS_WEEK: 3 };
-        return order[a.availability] - order[b.availability];
-      }
+      if (sortBy === "AVAILABILITY") return a.availability === "TODAY" ? -1 : 1;
       return 0;
     });
   }, [searchQuery, selectedCategory, selectedCity, sortBy]);
 
+  const handleBookAdvocate = (adv: Advocate) => {
+    setSelectedAdvocate(adv);
+    setBookingModalOpen(true);
+  };
+
   return (
-    <div className="animate-fade-up" style={{ maxWidth: "1200px", margin: "0 auto", display: "flex", flexDirection: "column", gap: "26px" }}>
+    <div className="max-w-[1380px] mx-auto flex flex-col gap-7 pb-12">
       
-      {/* Header */}
-      <div style={{
-        display: "flex",
-        alignItems: "flex-end",
-        justifyContent: "space-between",
-        borderBottom: "1px solid #E2E8F0",
-        paddingBottom: "20px",
-        flexWrap: "wrap",
-        gap: "14px",
-      }}>
+      {/* ── Marketplace Header ───────────────────────────────────── */}
+      <div className="flex items-end justify-between border-b border-slate-200/90 pb-6 flex-wrap gap-4">
         <div>
-          <div style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "7px",
-            fontSize: "12px",
-            fontWeight: "700",
-            color: "#059669",
-            textTransform: "uppercase",
-            letterSpacing: "0.08em",
-            marginBottom: "6px",
-          }}>
-            <ShieldCheck size={14} /> Bar Council Verified Network
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200/80 text-emerald-800 text-xs font-bold tracking-wide uppercase mb-2.5">
+            <ShieldCheck size={13} className="text-emerald-600" />
+            <span>Bar Council of India Verified Directory</span>
           </div>
-          <h1 style={{ fontSize: "32px", fontWeight: "700", color: "#0F172A", letterSpacing: "-0.03em" }}>
-            Find a Verified Advocate
+          <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight flex items-center gap-3">
+            <span>Find a Verified Advocate</span>
+            <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200">
+              High Court Counsel
+            </span>
           </h1>
-          <p style={{ fontSize: "15px", color: "#64748B", marginTop: "4px" }}>
-            Connect directly with verified Indian trial & high court advocates. Transparent fixed consultation fees with instant video bookings.
+          <p className="text-slate-600 text-sm mt-1.5 max-w-2xl">
+            Book direct 1-on-1 video consultations with verified Indian trial, appellate, and High Court advocates. Transparent fixed consultation fees with instant video meeting links.
           </p>
         </div>
 
-        <div style={{
-          display: "inline-flex",
-          alignItems: "center",
-          gap: "8px",
-          padding: "7px 16px",
-          borderRadius: "9999px",
-          background: "#ECFDF5",
-          border: "1px solid #A7F3D0",
-          fontSize: "13px",
-          fontWeight: "600",
-          color: "#059669",
-        }}>
-          <span style={{ width: "7px", height: "7px", borderRadius: "50%", background: "#059669" }} />
+        <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-700">
+          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
           <span>200+ Verified Advocates Active</span>
         </div>
       </div>
 
-      {/* Filter and Search Controls */}
-      <div style={{
-        display: "flex",
-        flexDirection: "column",
-        gap: "16px",
-        background: "#FFFFFF",
-        border: "1px solid #E2E8F0",
-        borderRadius: "16px",
-        padding: "20px 24px",
-        boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
-      }}>
-        <div style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "14px",
-          flexWrap: "wrap",
-          justifyContent: "space-between",
-        }}>
+      {/* ── Search & Filter Command Bar ──────────────────────────── */}
+      <div className="bg-white border border-slate-200 rounded-3xl p-5 sm:p-6 shadow-xs flex flex-col gap-4">
+        
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+          
           {/* Search Input */}
-          <div style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "10px",
-            background: "#F8FAFC",
-            border: "1px solid #E2E8F0",
-            borderRadius: "12px",
-            padding: "9px 16px",
-            flex: 1,
-            minWidth: "280px",
-          }}>
-            <Search size={15} color="#64748B" />
+          <div className="flex items-center gap-3 bg-slate-50 hover:bg-white focus-within:bg-white border border-slate-200 focus-within:border-blue-500 rounded-xl px-4 py-2.5 w-full sm:w-96 transition-all focus-within:ring-3 focus-within:ring-blue-500/15">
+            <Search size={16} className="text-slate-400 shrink-0" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search by advocate name, court, language, or specialty..."
-              style={{
-                background: "transparent",
-                border: "none",
-                outline: "none",
-                color: "#0F172A",
-                fontSize: "14px",
-                width: "100%",
-              }}
+              placeholder="Search by advocate, court, language, or specialty..."
+              className="bg-transparent border-none outline-none text-sm text-slate-900 placeholder:text-slate-400 w-full"
             />
+            {searchQuery && (
+              <button onClick={() => setSearchQuery("")} className="text-slate-400 hover:text-slate-600">
+                <X size={14} />
+              </button>
+            )}
           </div>
 
-          {/* Sort By Dropdown */}
-          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-            <span style={{ fontSize: "13px", color: "#64748B", display: "flex", alignItems: "center", gap: "4px" }}>
-              <ArrowUpDown size={13} /> Sort:
+          {/* Sort Controller */}
+          <div className="flex items-center gap-2 self-end sm:self-auto shrink-0">
+            <span className="text-xs text-slate-500 font-medium flex items-center gap-1.5">
+              <ArrowUpDown size={13} />
+              <span>Sort:</span>
             </span>
             <select
               value={sortBy}
               onChange={(e: any) => setSortBy(e.target.value)}
-              style={{
-                background: "#F8FAFC",
-                border: "1px solid #E2E8F0",
-                color: "#0F172A",
-                borderRadius: "10px",
-                padding: "8px 14px",
-                fontSize: "13px",
-                outline: "none",
-              }}
+              className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-900 outline-none focus:border-blue-500"
             >
               <option value="MATCH">Best Match Score</option>
-              <option value="EXPERIENCE">Years of Experience</option>
+              <option value="EXPERIENCE">Experience (High to Low)</option>
               <option value="RATING">Highest Rating</option>
-              <option value="FEE_LOW">Consultation Fee (Low to High)</option>
+              <option value="FEE_LOW">Consultation Fee (Lowest)</option>
               <option value="AVAILABILITY">Earliest Availability</option>
             </select>
           </div>
+
         </div>
 
-        {/* Category Pills & City Filter */}
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px", flexWrap: "wrap", borderTop: "1px solid #E2E8F0", paddingTop: "14px" }}>
+        {/* Category & City Pills */}
+        <div className="pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3">
           
           {/* Practice Area Pills */}
-          <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+          <div className="flex flex-wrap items-center gap-2">
             {categories.map((cat) => (
               <button
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}
-                style={{
-                  fontSize: "13px",
-                  fontWeight: selectedCategory === cat ? "600" : "500",
-                  padding: "6px 14px",
-                  borderRadius: "9999px",
-                  cursor: "pointer",
-                  background: selectedCategory === cat ? "#2563EB" : "#F8FAFC",
-                  color: selectedCategory === cat ? "#FFFFFF" : "#64748B",
-                  border: selectedCategory === cat ? "none" : "1px solid #E2E8F0",
-                  transition: "all 0.15s ease",
-                }}
+                className={`text-xs px-3.5 py-1.5 rounded-full font-medium transition-all ${
+                  selectedCategory === cat
+                    ? "bg-blue-600 text-white font-bold shadow-xs"
+                    : "bg-slate-50 hover:bg-slate-100 text-slate-600 border border-slate-200"
+                }`}
               >
                 {cat === "ALL" ? "All Practice Areas" : cat}
               </button>
@@ -352,278 +294,142 @@ export default function AdvocatesDirectoryPage() {
           </div>
 
           {/* City Filter Pills */}
-          <div style={{ display: "flex", gap: "6px", alignItems: "center", flexWrap: "wrap" }}>
-            <span style={{ fontSize: "12px", color: "#64748B", display: "flex", alignItems: "center", gap: "3px" }}>
-              <Filter size={12} /> City:
-            </span>
-            {cities.map((city: string) => (
-              <button
-                key={city}
-                onClick={() => setSelectedCity(city)}
-                style={{
-                  fontSize: "12px",
-                  fontWeight: selectedCity === city ? "600" : "500",
-                  padding: "4px 10px",
-                  borderRadius: "8px",
-                  cursor: "pointer",
-                  background: selectedCity === city ? "#0F172A" : "#F8FAFC",
-                  color: selectedCity === city ? "#FFFFFF" : "#64748B",
-                  border: `1px solid ${selectedCity === city ? "#0F172A" : "#E2E8F0"}`,
-                  transition: "all 0.15s ease",
-                }}
-              >
-                {city}
-              </button>
-            ))}
+          <div className="flex items-center gap-1.5 text-xs text-slate-500">
+            <MapPin size={13} className="text-slate-400 shrink-0" />
+            <span className="font-semibold text-slate-700">City:</span>
+            <div className="flex items-center gap-1">
+              {cities.map((city) => (
+                <button
+                  key={city}
+                  onClick={() => setSelectedCity(city)}
+                  className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all ${
+                    selectedCity === city
+                      ? "bg-slate-900 text-white font-bold"
+                      : "text-slate-600 hover:bg-slate-100"
+                  }`}
+                >
+                  {city}
+                </button>
+              ))}
+            </div>
           </div>
 
         </div>
+
       </div>
 
-      {/* Advocates Cards Grid */}
-      <div style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(360px, 1fr))",
-        gap: "20px",
-      }}>
+      {/* ── Advocates Grid ────────────────────────────────────────── */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredAdvocates.map((adv) => (
           <div
             key={adv.id}
-            style={{
-              background: "#FFFFFF",
-              border: "1px solid #E2E8F0",
-              borderRadius: "16px",
-              padding: "24px",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "space-between",
-              gap: "18px",
-              transition: "all 0.15s ease",
-              boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = "#CBD5E1";
-              e.currentTarget.style.boxShadow = "0 6px 20px rgba(0,0,0,0.06)";
-              e.currentTarget.style.transform = "translateY(-2px)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = "#E2E8F0";
-              e.currentTarget.style.boxShadow = "0 1px 3px rgba(0,0,0,0.04)";
-              e.currentTarget.style.transform = "translateY(0)";
-            }}
+            className="glass-card-elevated p-6 flex flex-col justify-between gap-5 relative overflow-hidden group"
           >
             <div>
-              
-              {/* Top Row: Avatar + Name + Verified Badge */}
-              <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "10px" }}>
-                <div style={{ display: "flex", gap: "14px", alignItems: "center" }}>
-                  <div style={{
-                    width: "48px", height: "48px",
-                    borderRadius: "14px",
-                    background: "#EFF6FF",
-                    border: "1px solid #DBEAFE",
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    fontSize: "15px", fontWeight: "700", color: "#2563EB",
-                    flexShrink: 0,
-                  }}>
+              {/* Header: Avatar, Name, Verified Badge */}
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex items-center gap-3.5">
+                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 text-white font-black text-base flex items-center justify-center shadow-md shadow-blue-500/20 shrink-0">
                     {adv.avatar}
                   </div>
                   <div>
-                    <h3 style={{ fontSize: "17px", fontWeight: "700", color: "#0F172A" }}>
-                      {adv.name}
+                    <h3 className="text-base font-bold text-slate-900 group-hover:text-blue-600 transition-colors flex items-center gap-1.5">
+                      <span>{adv.name}</span>
                     </h3>
-                    <p style={{ fontSize: "13.5px", color: "#64748B", marginTop: "1px" }}>
+                    <p className="text-xs text-slate-500 font-medium mt-0.5">
                       {adv.specialization}
                     </p>
                   </div>
                 </div>
 
-                <div style={{ textAlign: "right" }}>
-                  <span style={{
-                    fontSize: "11.5px",
-                    fontWeight: "600",
-                    padding: "3px 8px",
-                    borderRadius: "6px",
-                    background: "#ECFDF5",
-                    color: "#059669",
-                    border: "1px solid #A7F3D0",
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: "4px",
-                  }}>
-                    <Check size={12} strokeWidth={3} /> Verified
+                <span className="text-[11px] font-bold px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200 shrink-0 flex items-center gap-1">
+                  <ShieldCheck size={12} className="text-emerald-600" />
+                  <span>Verified</span>
+                </span>
+              </div>
+
+              {/* Bio Excerpt */}
+              <p className="text-xs text-slate-600 mt-3.5 leading-relaxed line-clamp-3">
+                {adv.bio}
+              </p>
+
+              {/* Rating, Experience, City */}
+              <div className="grid grid-cols-3 gap-2 mt-4 pt-3.5 border-t border-slate-100 text-xs">
+                <div>
+                  <span className="text-[10.5px] uppercase font-bold text-slate-400 block font-mono">Rating</span>
+                  <div className="flex items-center gap-1 font-bold text-slate-900 mt-0.5">
+                    <Star size={13} className="text-amber-500 fill-amber-500" />
+                    <span>{adv.rating}</span>
+                    <span className="text-[11px] text-slate-400">({adv.reviewsCount})</span>
+                  </div>
+                </div>
+
+                <div>
+                  <span className="text-[10.5px] uppercase font-bold text-slate-400 block font-mono">Experience</span>
+                  <span className="font-bold text-slate-900 mt-0.5 block">
+                    {adv.experienceYears} Years
+                  </span>
+                </div>
+
+                <div>
+                  <span className="text-[10.5px] uppercase font-bold text-slate-400 block font-mono">Jurisdiction</span>
+                  <span className="font-bold text-slate-900 mt-0.5 block truncate">
+                    {adv.city}
                   </span>
                 </div>
               </div>
 
-              {/* Bar Number & City */}
-              <div style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "12px",
-                fontSize: "13px",
-                color: "#64748B",
-                marginTop: "14px",
-              }}>
-                <span>Bar Enrolled: <strong style={{ color: "#0F172A" }}>{adv.barNumber}</strong></span>
-                <span>•</span>
-                <span><MapPin size={12} style={{ display: "inline" }} /> {adv.city}</span>
-              </div>
-
-              {/* Rating + Experience + Fee Box */}
-              <div style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr 1fr",
-                gap: "10px",
-                background: "#F8FAFC",
-                border: "1px solid #E2E8F0",
-                borderRadius: "12px",
-                padding: "12px",
-                marginTop: "14px",
-                textAlign: "center",
-              }}>
-                <div>
-                  <div style={{ fontSize: "14px", fontWeight: "700", color: "#D97706", display: "flex", alignItems: "center", justifyContent: "center", gap: "4px" }}>
-                    <Star size={13} fill="#D97706" /> {adv.rating}
-                  </div>
-                  <div style={{ fontSize: "11px", color: "#64748B", marginTop: "2px" }}>{adv.reviewsCount} reviews</div>
-                </div>
-
-                <div style={{ borderLeft: "1px solid #E2E8F0", borderRight: "1px solid #E2E8F0" }}>
-                  <div style={{ fontSize: "14px", fontWeight: "700", color: "#0F172A" }}>
-                    {adv.experienceYears} Yrs
-                  </div>
-                  <div style={{ fontSize: "11px", color: "#64748B", marginTop: "2px" }}>Trial Practice</div>
-                </div>
-
-                <div>
-                  <div style={{ fontSize: "15px", fontWeight: "700", color: "#059669" }}>
-                    ₹{adv.consultationFee}
-                  </div>
-                  <div style={{ fontSize: "11px", color: "#64748B", marginTop: "2px" }}>60-min video</div>
-                </div>
-              </div>
-
-            </div>
-
-            {/* Actions: View Profile + Book Video Consultation */}
-            <div style={{ display: "flex", gap: "10px", borderTop: "1px solid #F1F5F9", paddingTop: "16px" }}>
-              <button
-                onClick={() => setSelectedAdvocate(adv)}
-                className="btn-ghost"
-                style={{ flex: 1, fontSize: "13.5px", height: "40px" }}
-              >
-                View Profile
-              </button>
-              <button
-                onClick={() => setBookingAdvocate(adv)}
-                className="btn-primary"
-                style={{ flex: 1, fontSize: "13.5px", height: "40px", display: "flex", alignItems: "center", justifyContent: "center", gap: "6px" }}
-              >
-                <Video size={14} /> Book Now
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Slide-in Advocate Profile Modal */}
-      {selectedAdvocate && (
-        <div style={{
-          position: "fixed",
-          inset: 0,
-          background: "rgba(15, 23, 42, 0.6)",
-          backdropFilter: "blur(6px)",
-          zIndex: 60,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          padding: "20px",
-        }}>
-          <div style={{
-            background: "#FFFFFF",
-            border: "1px solid #E2E8F0",
-            borderRadius: "20px",
-            width: "100%",
-            maxWidth: "600px",
-            padding: "32px",
-            boxShadow: "0 20px 60px rgba(0, 0, 0, 0.15)",
-            display: "flex",
-            flexDirection: "column",
-            gap: "22px",
-          }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-              <div style={{ display: "flex", gap: "16px", alignItems: "center" }}>
-                <div style={{
-                  width: "56px", height: "56px",
-                  borderRadius: "16px",
-                  background: "#EFF6FF",
-                  border: "1px solid #DBEAFE",
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  fontSize: "18px", fontWeight: "700", color: "#2563EB",
-                }}>
-                  {selectedAdvocate.avatar}
-                </div>
-                <div>
-                  <h2 style={{ fontSize: "22px", fontWeight: "700", color: "#0F172A" }}>{selectedAdvocate.name}</h2>
-                  <p style={{ fontSize: "14px", color: "#64748B" }}>{selectedAdvocate.specialization}</p>
-                  <span style={{ fontSize: "12px", color: "#059669", fontWeight: "600" }}>✓ Bar Enrolled: {selectedAdvocate.barNumber}</span>
-                </div>
-              </div>
-
-              <button
-                onClick={() => setSelectedAdvocate(null)}
-                style={{ background: "none", border: "none", color: "#64748B", cursor: "pointer" }}
-              >
-                <X size={22} />
-              </button>
-            </div>
-
-            <p style={{ fontSize: "14.5px", color: "#D7DCE5", lineHeight: "1.6" }}>
-              {selectedAdvocate.bio}
-            </p>
-
-            <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-              <div style={{ fontSize: "12px", fontWeight: "700", color: "#9AA5B5", textTransform: "uppercase" }}>Courts Admitted</div>
-              <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
-                {selectedAdvocate.courts.map((court, i) => (
-                  <span key={i} style={{ fontSize: "13px", background: "rgba(59, 130, 246, 0.16)", color: "#60A5FA", border: "1px solid rgba(59, 130, 246, 0.3)", padding: "4px 10px", borderRadius: "8px" }}>
+              {/* Courts Admitted */}
+              <div className="mt-3.5 flex flex-wrap gap-1.5">
+                {adv.courts.slice(0, 2).map((court, i) => (
+                  <span
+                    key={i}
+                    className="text-[10.5px] font-medium px-2 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200/80"
+                  >
                     {court}
                   </span>
                 ))}
               </div>
             </div>
 
-            <div style={{ display: "flex", gap: "12px", marginTop: "10px" }}>
+            {/* Footer: Fee & Booking Button */}
+            <div className="pt-4 border-t border-slate-100 flex items-center justify-between gap-3">
+              <div>
+                <span className="text-[10.5px] uppercase font-bold text-slate-400 block font-mono">Fixed Fee</span>
+                <div className="text-base font-extrabold text-slate-900">
+                  ₹{adv.consultationFee}
+                  <span className="text-xs font-normal text-slate-400">/session</span>
+                </div>
+              </div>
+
               <button
-                onClick={() => setSelectedAdvocate(null)}
-                className="btn-ghost"
-                style={{ flex: 1, height: "46px" }}
+                onClick={() => handleBookAdvocate(adv)}
+                className="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-all shadow-sm shadow-blue-500/20 flex items-center gap-1.5 group-hover:shadow-md"
               >
-                Close
-              </button>
-              <button
-                onClick={() => {
-                  const adv = selectedAdvocate;
-                  setSelectedAdvocate(null);
-                  setBookingAdvocate(adv);
-                }}
-                className="btn-primary"
-                style={{ flex: 2, height: "46px" }}
-              >
-                Book Video Consultation · ₹{selectedAdvocate.consultationFee}
+                <Video size={14} />
+                <span>Book Video Consult</span>
               </button>
             </div>
+
           </div>
-        </div>
-      )}
+        ))}
+      </div>
 
       {/* Booking Modal */}
-      {bookingAdvocate && (
+      {bookingModalOpen && selectedAdvocate && (
         <BookingModal
-          advocate={bookingAdvocate}
-          isOpen={!!bookingAdvocate}
-          onClose={() => setBookingAdvocate(null)}
+          advocate={{
+            id: selectedAdvocate.id,
+            name: selectedAdvocate.name,
+            specialization: selectedAdvocate.specialization,
+            rating: selectedAdvocate.rating,
+            consultationFee: selectedAdvocate.consultationFee,
+          }}
+          isOpen={bookingModalOpen}
+          onClose={() => {
+            setBookingModalOpen(false);
+            setSelectedAdvocate(null);
+          }}
         />
       )}
 

@@ -247,7 +247,7 @@ export function DashboardNavbar() {
                 <div style={{ fontSize: '12px', color: '#64748B', marginTop: '1px' }}>{session?.user?.email || ''}</div>
               </div>
 
-              {(session?.user as any)?.role === 'ADMIN' && (
+              {['ADMIN', 'SUPER_ADMIN'].includes((session?.user as any)?.role) && (
                 <Link
                   href="/admin"
                   onClick={() => setShowProfileMenu(false)}
@@ -257,15 +257,15 @@ export function DashboardNavbar() {
                     alignItems: 'center',
                     gap: '8px',
                     fontSize: '13.5px',
-                    color: '#D97706',
+                    color: '#B45309',
                     fontWeight: '700',
-                    padding: '6px 8px',
-                    borderRadius: '8px',
+                    padding: '8px 10px',
+                    borderRadius: '10px',
                     background: '#FEF3C7',
                     border: '1px solid #FDE68A',
                   }}
                 >
-                  <FileText size={15} color="#D97706" /> Institutional Admin
+                  <FileText size={15} color="#B45309" /> Institutional Admin
                 </Link>
               )}
 

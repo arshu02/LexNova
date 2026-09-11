@@ -18,8 +18,11 @@ async function seedAdmin() {
       role: "SUPER_ADMIN",
       plan: "ENTERPRISE",
       name: "Arshu Singh",
+      passwordHash,
       isActive: true,
       isBanned: false,
+      loginAttempts: 0,
+      lockedUntil: null,
       emailVerified: new Date(),
     },
     create: {

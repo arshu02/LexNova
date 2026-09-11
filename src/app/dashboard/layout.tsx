@@ -21,7 +21,7 @@ export default function DashboardLayout({
       <Sidebar />
       <div style={{
         flex: 1,
-        marginLeft: '250px',
+        marginLeft: '260px',
         display: 'flex',
         flexDirection: 'column',
         minHeight: '100vh',

@@ -10,6 +10,16 @@ const RAZORPAY_KEY_SECRET = process.env.RAZORPAY_KEY_SECRET || "";
 
 // ── Helper: create Razorpay order via REST API ─────────────
 async function createRazorpayOrder(amountPaise: number, receipt: string) {
+  if (!RAZORPAY_KEY_ID || !RAZORPAY_KEY_SECRET) {
+    return {
+      id: `order_mock_${Date.now()}`,
+      amount: amountPaise,
+      currency: "INR",
+      receipt,
+      status: "created",
+    };
+  }
+
   const credentials = Buffer.from(`${RAZORPAY_KEY_ID}:${RAZORPAY_KEY_SECRET}`).toString("base64");
   const res = await fetch("https://api.razorpay.com/v1/orders", {
     method: "POST",

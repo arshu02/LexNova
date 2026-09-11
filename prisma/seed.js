@@ -148,6 +148,7 @@ async function main() {
       passwordHash: passwordHash,
       role: "USER",
       city: "Mumbai",
+      emailVerified: new Date(),
     },
   });
   console.log("  ✅ Citizen user created (citizen@example.com / password123)");
@@ -161,6 +162,7 @@ async function main() {
         passwordHash: passwordHash,
         role: "ADVOCATE",
         city: adv.location,
+        emailVerified: new Date(),
       },
     });
 
