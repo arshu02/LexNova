@@ -1,13 +1,14 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import { useSession } from "next-auth/react";
 import {
-  User, Mail, MapPin, CheckCircle2, Copy, Check, Save, ShieldCheck
+  User, Mail, MapPin, CheckCircle2, Copy, Check, Save, ShieldCheck, Loader2
 } from "lucide-react";
 
 export default function SettingsPage() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const user = session?.user;
 
   const [name, setName] = useState(user?.name || "");
@@ -20,6 +21,7 @@ export default function SettingsPage() {
 
   useEffect(() => {
     if (user?.email) {
+      if (user.name && !name) setName(user.name);
       fetch(`/api/user/profile`)
         .then((res) => res.json())
         .then((data) => {
@@ -31,13 +33,14 @@ export default function SettingsPage() {
         })
         .catch(console.error)
         .finally(() => setLoading(false));
-    } else {
+    } else if (status !== "loading") {
       setLoading(false);
     }
-  }, [user?.email]);
+  }, [user?.email, user?.name, status]);
 
   const handleCopyId = () => {
-    const idToCopy = profileData?.id || (session?.user as any)?.id || "usr_lexnova_091823";
+    const idToCopy = profileData?.id || (session?.user as any)?.id || "";
+    if (!idToCopy) return;
     navigator.clipboard.writeText(idToCopy);
     setCopiedId(true);
     setTimeout(() => setCopiedId(false), 2000);
@@ -69,10 +72,43 @@ export default function SettingsPage() {
     }
   };
 
-  const userId = profileData?.id || (session?.user as any)?.id || "usr_lexnova_091823";
-  const userEmail = user?.email || "arshusingh28@gmail.com";
-  const userName = name || user?.name || "Arshu Singh";
-  const userInitial = userName[0]?.toUpperCase() || "A";
+  if (status === "loading" || (user && loading)) {
+    return (
+      <div className="flex flex-col items-center justify-center py-24 gap-3">
+        <Loader2 className="w-7 h-7 text-indigo-600 animate-spin" />
+        <p className="text-xs font-semibold text-slate-500">Loading profile configuration...</p>
+      </div>
+    );
+  }
+
+  if (status === "unauthenticated" || !user) {
+    return (
+      <div className="max-w-2xl mx-auto py-16 text-center space-y-5 bg-white border border-slate-200/90 rounded-3xl p-8 shadow-xs">
+        <div className="w-14 h-14 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 mx-auto">
+          <User size={26} />
+        </div>
+        <div>
+          <h2 className="text-xl font-bold text-slate-900">Authentication Required</h2>
+          <p className="text-sm text-slate-500 mt-1 max-w-md mx-auto leading-relaxed">
+            You are currently browsing as an anonymous guest. Please sign in with your verified account to access and edit your personal profile, credentials, and settings.
+          </p>
+        </div>
+        <div className="pt-2">
+          <Link
+            href="/auth/login?callbackUrl=/dashboard/settings"
+            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold transition-all shadow-xs"
+          >
+            <span>Sign In to Account</span>
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  const userId = profileData?.id || (session?.user as any)?.id || "—";
+  const userEmail = user?.email || profileData?.email || "";
+  const userName = name || profileData?.name || user?.name || userEmail.split("@")[0] || "User";
+  const userInitial = userName ? userName[0].toUpperCase() : "U";
 
   return (
     <div className="max-w-3xl space-y-6 pb-12 animate-fade-up">
@@ -114,13 +150,15 @@ export default function SettingsPage() {
               <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">User ID</p>
               <code className="text-xs font-mono text-blue-700 font-semibold">{userId}</code>
             </div>
-            <button
-              onClick={handleCopyId}
-              className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-200 transition-colors"
-              title="Copy ID"
-            >
-              {copiedId ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
-            </button>
+            {userId !== "—" && (
+              <button
+                onClick={handleCopyId}
+                className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-200 transition-colors"
+                title="Copy ID"
+              >
+                {copiedId ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -150,7 +188,7 @@ export default function SettingsPage() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 className="w-full text-sm outline-none rounded-xl px-4 py-2.5 text-slate-900 bg-slate-50 border border-slate-200 focus:bg-white focus:border-blue-500 transition-colors"
-                placeholder="Arshu Singh"
+                placeholder="Enter your legal name"
               />
             </div>
 
@@ -173,7 +211,7 @@ export default function SettingsPage() {
                 value={city}
                 onChange={(e) => setCity(e.target.value)}
                 className="w-full text-sm outline-none rounded-xl px-4 py-2.5 text-slate-900 bg-slate-50 border border-slate-200 focus:bg-white focus:border-blue-500 transition-colors"
-                placeholder="New Delhi"
+                placeholder="e.g. New Delhi, Bengaluru, Mumbai"
               />
             </div>
           </div>

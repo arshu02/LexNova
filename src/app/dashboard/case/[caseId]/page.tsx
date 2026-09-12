@@ -272,8 +272,7 @@ function TimelineTab({ hearings }: { hearings: Hearing[] }) {
                   <div className="flex flex-wrap gap-1.5">
                     {isUpcoming && (
                       <span
-                        className="text-[10px] font-bold px-2 py-0.5 rounded-full"
-                        style={{ background: "rgba(124,58,237,0.15)", color: "#a78bfa", border: "1px solid rgba(124,58,237,0.3)" }}
+                        className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 border border-blue-200"
                       >
                         Upcoming
                       </span>
@@ -595,13 +594,12 @@ function CaseRoomPage() {
   if (error || !caseData) {
     return (
       <div className="flex flex-col items-center gap-4 py-20 text-center">
-        <AlertTriangle className="w-8 h-8 text-red-400" />
-        <p className="text-base font-bold text-white">Unable to Load Case</p>
-        <p className="text-xs text-slate-400">{error || "Case not found."}</p>
+        <AlertTriangle className="w-8 h-8 text-red-500" />
+        <p className="text-base font-bold text-slate-900">Unable to Load Case</p>
+        <p className="text-xs text-slate-500">{error || "Case not found."}</p>
         <Link
           href="/dashboard/user"
-          className="px-4 py-2 rounded-xl text-xs font-semibold text-white"
-          style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.1)" }}
+          className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 transition-colors shadow-xs"
         >
           ← Back to Dashboard
         </Link>
@@ -800,7 +798,7 @@ function CaseRoomPage() {
                       {color.label}
                     </span>
                   </div>
-                  <p className="text-sm font-bold text-white mt-0.5">
+                  <p className="text-sm font-bold text-slate-900 mt-0.5">
                     {expired
                       ? "Filing period has expired"
                       : critical
@@ -832,7 +830,7 @@ function CaseRoomPage() {
                       <span>Time used</span>
                       <span className="font-bold" style={{ color: color.text }}>{pct}%</span>
                     </div>
-                    <div className="w-full h-2 rounded-full" style={{ background: "rgba(255,255,255,0.06)" }}>
+                    <div className="w-full h-2 rounded-full bg-slate-200">
                       <div
                         className="h-2 rounded-full transition-all"
                         style={{

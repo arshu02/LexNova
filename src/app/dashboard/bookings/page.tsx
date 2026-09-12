@@ -6,11 +6,12 @@ import {
   Calendar, Clock, Video, Star, 
   RotateCcw, XCircle, AlertCircle, CheckCircle2, 
   IndianRupee, Loader2, Sparkles, ArrowRight, 
-  ExternalLink, User, Shield, X
+  ExternalLink, User, Shield, X, ShieldCheck,
+  CalendarDays, VideoOff, MessageSquare, AlertTriangle
 } from "lucide-react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { differenceInDays, differenceInMinutes } from "date-fns";
+import { differenceInMinutes } from "date-fns";
 import { PaymentButton } from "@/components/PaymentModal";
 
 interface Booking {
@@ -149,329 +150,379 @@ export default function BookingsPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           bookingId,
-          action: "CANCEL",
-          reason: cancelReasonInput || "Cancelled by client",
+          status: "CANCELLED",
+          cancelReason: cancelReasonInput.trim() || "Cancelled by client",
+          cancelledBy: "USER",
         }),
       });
 
       if (res.ok) {
-        setNotification({ type: "success", message: "Booking cancelled successfully." });
+        setNotification({ type: "success", message: "Consultation cancelled successfully. Funds released as per escrow policy." });
         setCancellingId(null);
         setCancelReasonInput("");
         fetchBookings();
       } else {
-        const err = await res.json();
-        setNotification({ type: "error", message: err.error || "Failed to cancel." });
+        const errData = await res.json();
+        setNotification({ type: "error", message: errData.error || "Failed to cancel consultation." });
       }
-    } catch {
-      setNotification({ type: "error", message: "Network error." });
+    } catch (err) {
+      setNotification({ type: "error", message: "Network error while cancelling." });
     } finally {
       setCancelLoading(false);
-      setTimeout(() => setNotification(null), 5000);
+      setTimeout(() => setNotification(null), 4000);
     }
   };
 
-  const currentList = activeTab === "UPCOMING" 
-    ? upcomingBookings 
-    : activeTab === "PAST" 
-      ? pastBookings 
-      : cancelledBookings;
+  const currentList = activeTab === "UPCOMING" ? upcomingBookings : activeTab === "PAST" ? pastBookings : cancelledBookings;
 
   return (
-    <div className="animate-fade-up" style={{ maxWidth: "1100px", margin: "0 auto", display: "flex", flexDirection: "column", gap: "24px" }}>
+    <div className="max-w-[1200px] mx-auto flex flex-col gap-6 pb-16">
       
-      {/* PAGE HEADER */}
-      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: "16px" }}>
+      {/* ── PAGE HEADER ── */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-slate-200">
         <div>
-          <h1 style={{ fontSize: "24px", fontWeight: "700", color: "var(--text-primary)", letterSpacing: "-0.5px" }}>
-            Consultations
+          <div className="flex items-center gap-2 mb-1">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-indigo-600">
+              Bar Council Strategy Sessions
+            </span>
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+            Consultations &amp; Strategy Rooms
           </h1>
-          <p style={{ fontSize: "14px", color: "var(--text-secondary)", marginTop: "4px" }}>
-            Manage video consultations, schedules, and past legal session notes.
+          <p className="text-xs sm:text-sm text-slate-500 mt-1">
+            Manage scheduled advocate video calls, escrow payments, and post-session strategy briefings.
           </p>
         </div>
+
         <Link
           href="/dashboard/advocates"
-          className="btn-accent"
-          style={{ textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "8px", fontSize: "13px" }}
+          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-semibold shadow-xs hover:shadow-md transition-all self-start sm:self-center"
         >
-          <Sparkles size={14} /> Find a Lawyer
+          <Sparkles size={15} />
+          <span>Find an Advocate</span>
         </Link>
       </div>
 
-      {/* STATS ROW: 3 Small number boxes (Total | Upcoming | Spent) */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "16px" }}>
-        <div style={{ background: "var(--bg-card)", border: "1px solid var(--border-subtle)", borderRadius: "var(--radius-lg)", padding: "18px 20px" }}>
-          <span style={{ fontSize: "11px", fontWeight: "600", color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.5px" }}>Total Consultations</span>
-          <div style={{ fontSize: "26px", fontWeight: "700", color: "var(--text-primary)", marginTop: "6px" }}>{totalConsultations}</div>
+      {/* ── 3 TELEMETRY STAT CARDS ── */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        
+        {/* Metric 1: Total Consultations */}
+        <div className="p-5 rounded-2xl bg-white border border-slate-200/90 shadow-xs flex flex-col justify-between">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+              Total Consultations
+            </span>
+            <div className="w-9 h-9 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center">
+              <CalendarDays size={18} />
+            </div>
+          </div>
+          <div className="mt-3">
+            <div className="text-3xl font-black text-slate-900 tracking-tight">
+              {loading ? "-" : totalConsultations}
+            </div>
+            <div className="text-[11px] text-slate-500 mt-1 font-medium">
+              Historical &amp; active docket bookings
+            </div>
+          </div>
         </div>
 
-        <div style={{ background: "var(--bg-card)", border: "1px solid var(--border-subtle)", borderRadius: "var(--radius-lg)", padding: "18px 20px" }}>
-          <span style={{ fontSize: "11px", fontWeight: "600", color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.5px" }}>Upcoming</span>
-          <div style={{ fontSize: "26px", fontWeight: "700", color: "#60A5FA", marginTop: "6px" }}>{upcomingCount}</div>
+        {/* Metric 2: Upcoming */}
+        <div className="p-5 rounded-2xl bg-white border border-slate-200/90 shadow-xs flex flex-col justify-between">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+              Upcoming Strategy Calls
+            </span>
+            <div className="w-9 h-9 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
+              <Clock size={18} />
+            </div>
+          </div>
+          <div className="mt-3">
+            <div className="text-3xl font-black text-indigo-600 tracking-tight">
+              {loading ? "-" : upcomingCount}
+            </div>
+            <div className="text-[11px] text-emerald-600 font-semibold mt-1 flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+              <span>{upcomingCount > 0 ? "Advocate standby active" : "No upcoming calls"}</span>
+            </div>
+          </div>
         </div>
 
-        <div style={{ background: "var(--bg-card)", border: "1px solid var(--border-subtle)", borderRadius: "var(--radius-lg)", padding: "18px 20px" }}>
-          <span style={{ fontSize: "11px", fontWeight: "600", color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.5px" }}>Total Spent</span>
-          <div style={{ fontSize: "26px", fontWeight: "700", color: "var(--text-primary)", marginTop: "6px" }}>₹{totalSpent.toLocaleString("en-IN")}</div>
+        {/* Metric 3: Total Spent */}
+        <div className="p-5 rounded-2xl bg-white border border-slate-200/90 shadow-xs flex flex-col justify-between">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+              Total Retainer Volume
+            </span>
+            <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center">
+              <ShieldCheck size={18} />
+            </div>
+          </div>
+          <div className="mt-3">
+            <div className="text-3xl font-black text-slate-900 tracking-tight">
+              {loading ? "-" : `₹${totalSpent.toLocaleString("en-IN")}`}
+            </div>
+            <div className="text-[11px] text-emerald-700 font-semibold mt-1 flex items-center gap-1">
+              <Shield size={12} />
+              <span>100% LexNova Escrow Protected</span>
+            </div>
+          </div>
         </div>
+
       </div>
 
-      {/* Notification toast */}
+      {/* ── NOTIFICATION TOAST ── */}
       <AnimatePresence>
         {notification && (
           <motion.div
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
-            style={{
-              padding: "12px 16px",
-              borderRadius: "var(--radius-md)",
-              fontSize: "13px",
-              fontWeight: "500",
-              background: notification.type === "success" ? "var(--success-subtle)" : "var(--danger-subtle)",
-              border: `1px solid ${notification.type === "success" ? "var(--success)" : "var(--danger)"}`,
-              color: notification.type === "success" ? "var(--success)" : "var(--danger)",
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-            }}
+            className={`p-3.5 rounded-xl text-xs font-semibold flex items-center gap-2.5 shadow-sm border ${
+              notification.type === "success"
+                ? "bg-emerald-50 text-emerald-800 border-emerald-200"
+                : "bg-rose-50 text-rose-800 border-rose-200"
+            }`}
           >
             {notification.type === "success" ? <CheckCircle2 size={16} /> : <AlertCircle size={16} />}
-            {notification.message}
+            <span>{notification.message}</span>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* TABS: Upcoming | Past | Cancelled */}
-      <div style={{ display: "flex", borderBottom: "1px solid var(--border-subtle)", gap: "24px" }}>
+      {/* ── TAB SWITCHER ── */}
+      <div className="flex items-center gap-2 border-b border-slate-200 pb-3">
         {[
-          { key: "UPCOMING", label: `Upcoming (${upcomingBookings.length})` },
-          { key: "PAST", label: `Past (${pastBookings.length})` },
-          { key: "CANCELLED", label: `Cancelled (${cancelledBookings.length})` },
+          { key: "UPCOMING", label: "Upcoming Consultations", count: upcomingBookings.length },
+          { key: "PAST", label: "Completed & Past", count: pastBookings.length },
+          { key: "CANCELLED", label: "Cancelled", count: cancelledBookings.length },
         ].map((tab) => {
           const isActive = activeTab === tab.key;
           return (
             <button
               key={tab.key}
               onClick={() => setActiveTab(tab.key as TabType)}
-              style={{
-                background: "transparent",
-                border: "none",
-                padding: "10px 4px 14px",
-                fontSize: "14px",
-                fontWeight: isActive ? "600" : "500",
-                color: isActive ? "var(--text-primary)" : "var(--text-muted)",
-                cursor: "pointer",
-                position: "relative",
-                transition: "color 0.15s ease",
-              }}
+              className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-2 ${
+                isActive
+                  ? "bg-slate-900 text-white shadow-xs"
+                  : "bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 hover:text-slate-900"
+              }`}
             >
-              {tab.label}
-              {isActive && (
-                <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: "2px", background: "#2563EB" }} />
-              )}
+              <span>{tab.label}</span>
+              <span
+                className={`text-[11px] font-mono px-1.5 py-0.5 rounded-md ${
+                  isActive ? "bg-white/20 text-white" : "bg-slate-100 text-slate-600"
+                }`}
+              >
+                {tab.count}
+              </span>
             </button>
           );
         })}
       </div>
 
-      {/* BOOKING CARDS */}
+      {/* ── BOOKING CARDS LIST ── */}
       {loading ? (
-        <div style={{ padding: "60px 0", textAlign: "center", color: "var(--text-muted)" }}>
-          <Loader2 size={24} className="animate-spin" style={{ margin: "0 auto 10px" }} />
-          <p style={{ fontSize: "13px" }}>Loading consultations...</p>
+        <div className="py-24 text-center space-y-3 bg-white border border-slate-200/90 rounded-2xl">
+          <Loader2 size={28} className="animate-spin text-indigo-600 mx-auto" />
+          <p className="text-xs font-semibold text-slate-500">Synchronizing consultation dockets with Bar Council...</p>
         </div>
       ) : currentList.length === 0 ? (
-        /* EMPTY STATE */
-        <div style={{
-          background: "var(--bg-card)",
-          border: "1px solid var(--border-subtle)",
-          borderRadius: "var(--radius-xl)",
-          padding: "60px 24px",
-          textAlign: "center",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: "12px",
-        }}>
-          <div style={{
-            width: "56px", height: "56px", borderRadius: "50%",
-            background: "var(--bg-tertiary)",
-            display: "flex", alignItems: "center", justifyContent: "center",
-            color: "var(--text-muted)",
-          }}>
+        /* ── EMPTY STATE ── */
+        <div className="py-20 px-6 text-center space-y-4 bg-white border border-slate-200/90 rounded-2xl flex flex-col items-center">
+          <div className="w-14 h-14 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600">
             <Calendar size={24} />
           </div>
-          <h3 style={{ fontSize: "16px", fontWeight: "600", color: "var(--text-secondary)" }}>
-            No consultations yet
-          </h3>
-          <p style={{ fontSize: "13px", color: "var(--text-muted)", maxWidth: "320px" }}>
-            Book your first consultation with a Bar Council verified advocate.
-          </p>
-          <Link
-            href="/dashboard/advocates"
-            className="btn-accent"
-            style={{ textDecoration: "none", fontSize: "13px", marginTop: "8px", padding: "8px 18px" }}
-          >
-            Find a Lawyer →
-          </Link>
+          <div>
+            <h3 className="text-base font-bold text-slate-900">
+              {activeTab === "UPCOMING" ? "No upcoming strategy sessions" : activeTab === "PAST" ? "No past consultations recorded" : "No cancelled consultations"}
+            </h3>
+            <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto leading-relaxed">
+              {activeTab === "UPCOMING"
+                ? "Schedule your 1-on-1 strategy call with verified trial counsel. Fixed fees and encrypted rooms."
+                : "Completed consultations and notes will appear here."}
+            </p>
+          </div>
+          {activeTab === "UPCOMING" && (
+            <Link
+              href="/dashboard/advocates"
+              className="mt-2 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold transition-all shadow-xs"
+            >
+              <Sparkles size={14} />
+              <span>Browse 140+ Verified Advocates</span>
+            </Link>
+          )}
         </div>
       ) : (
-        <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+        <div className="flex flex-col gap-4">
           {currentList.map((booking) => {
-            const { dayNum, monthYear } = parseDateComponents(booking.date);
+            const { dayNum, monthYear, fullDate } = parseDateComponents(booking.date);
             const joinable = isSlotJoinable(booking.date, booking.time);
 
             return (
               <div
                 key={booking.id}
-                style={{
-                  background: "var(--bg-card)",
-                  border: "1px solid var(--border-subtle)",
-                  borderRadius: "var(--radius-xl)",
-                  padding: "20px",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "16px",
-                  transition: "border-color 0.2s ease",
-                }}
-                onMouseEnter={(e) => (e.currentTarget.style.borderColor = "var(--border-strong)")}
-                onMouseLeave={(e) => (e.currentTarget.style.borderColor = "var(--border-subtle)")}
+                className="p-5 sm:p-6 bg-white border border-slate-200/90 hover:border-indigo-300 rounded-2xl shadow-xs hover:shadow-md transition-all flex flex-col gap-5 group"
               >
-                {/* Main Row */}
-                <div style={{ display: "flex", alignItems: "flex-start", gap: "20px" }}>
+                {/* Main Card Content */}
+                <div className="flex flex-col sm:flex-row items-start gap-5">
                   
-                  {/* Left Side: Date Block */}
-                  <div style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    paddingRight: "20px",
-                    borderRight: "1px solid var(--border-subtle)",
-                    minWidth: "72px",
-                    flexShrink: 0,
-                  }}>
-                    <span style={{ fontSize: "32px", fontWeight: "700", color: "var(--text-primary)", lineHeight: "1" }}>
+                  {/* Left: Date Tile */}
+                  <div className="flex sm:flex-col items-center justify-center p-3 sm:py-4 rounded-xl bg-slate-50 border border-slate-200/90 min-w-[85px] w-full sm:w-auto text-center shrink-0">
+                    <span className="text-2xl sm:text-3xl font-black text-slate-900 leading-none">
                       {dayNum}
                     </span>
-                    <span style={{ fontSize: "12px", color: "var(--text-muted)", marginTop: "4px", textAlign: "center", whiteSpace: "nowrap" }}>
+                    <span className="text-xs font-bold text-slate-500 uppercase tracking-wide mt-1 ml-2 sm:ml-0 font-mono">
                       {monthYear}
                     </span>
                   </div>
 
-                  {/* Right Side: Main Details */}
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: "8px" }}>
+                  {/* Center: Details */}
+                  <div className="flex-1 min-w-0 space-y-2.5 w-full">
+                    
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                       <div>
-                        <h3 style={{ fontSize: "15px", fontWeight: "700", color: "var(--text-primary)" }}>
-                          {booking.advocate?.name || "Advocate Consultation"}
-                        </h3>
-                        <p style={{ fontSize: "12px", color: "var(--text-secondary)", marginTop: "2px" }}>
-                          {booking.advocate?.type || booking.advocate?.specialization || "Advocate"}
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <h3 className="text-base font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">
+                            {booking.advocate?.name || "Advocate Consultation"}
+                          </h3>
+                          <span title="Verified Bar Council Enrolled">
+                            <ShieldCheck size={16} className="text-emerald-600 shrink-0" />
+                          </span>
+                        </div>
+                        <p className="text-xs text-slate-500 mt-0.5">
+                          {booking.advocate?.city ? `${booking.advocate.city} · ` : ""}
+                          {booking.advocate?.experienceYears ? `${booking.advocate.experienceYears} yrs experience` : "Admitted Counsel"}
                         </p>
                       </div>
 
-                      {/* Status Badge */}
-                      <span style={{
-                        fontSize: "11px", fontWeight: "600",
-                        padding: "3px 10px", borderRadius: "var(--radius-full)",
-                        background: booking.status === "CONFIRMED" ? "var(--success-subtle)" : booking.status === "CANCELLED" ? "var(--danger-subtle)" : "var(--bg-tertiary)",
-                        border: `1px solid ${booking.status === "CONFIRMED" ? "rgba(16,185,129,0.3)" : booking.status === "CANCELLED" ? "rgba(239,68,68,0.3)" : "var(--border-subtle)"}`,
-                        color: booking.status === "CONFIRMED" ? "var(--success)" : booking.status === "CANCELLED" ? "var(--danger)" : "var(--text-secondary)",
-                      }}>
-                        {booking.status}
-                      </span>
+                      {/* Status Badges */}
+                      <div className="flex items-center gap-2 self-start sm:self-auto">
+                        <span className="px-2.5 py-1 rounded-full text-[11px] font-mono font-bold uppercase tracking-wider bg-indigo-50 border border-indigo-200 text-indigo-700">
+                          {booking.advocate?.specialization || booking.consultationType || "General Legal"}
+                        </span>
+                        
+                        <span
+                          className={`px-2.5 py-1 rounded-full text-[11px] font-mono font-bold uppercase tracking-wider border ${
+                            booking.status === "CONFIRMED"
+                              ? "bg-emerald-50 text-emerald-800 border-emerald-200"
+                              : booking.status === "CANCELLED"
+                              ? "bg-rose-50 text-rose-800 border-rose-200"
+                              : "bg-slate-100 text-slate-700 border-slate-200"
+                          }`}
+                        >
+                          {booking.status}
+                        </span>
+                      </div>
                     </div>
 
-                    <div style={{ display: "flex", alignItems: "center", gap: "16px", marginTop: "10px", flexWrap: "wrap" }}>
-                      <span style={{ fontSize: "11px", fontFamily: "var(--font-mono)", color: "var(--text-muted)" }}>
-                        Code: {booking.confirmationCode || booking.id.slice(-8).toUpperCase()}
+                    {/* Meta Row: Code, Time, Fee */}
+                    <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-slate-600 pt-1">
+                      <span className="font-mono text-slate-500 font-medium">
+                        Docket: <strong className="text-slate-800">{booking.confirmationCode || `LN-${booking.id.slice(-6).toUpperCase()}`}</strong>
                       </span>
-                      <span style={{ fontSize: "11px", color: "var(--text-secondary)", display: "flex", alignItems: "center", gap: "4px" }}>
-                        <Clock size={12} color="var(--text-muted)" /> {booking.time} IST · {booking.duration} mins
+                      <span className="text-slate-300">•</span>
+                      <span className="flex items-center gap-1.5 text-slate-700 font-medium">
+                        <Clock size={13} className="text-slate-400" />
+                        <span>{booking.time} IST · {booking.duration || 60} mins strategy call</span>
                       </span>
-                      <span style={{ fontSize: "11px", color: "var(--text-secondary)" }}>
-                        Fee: <strong style={{ color: "var(--text-primary)" }}>₹{booking.consultationFee}</strong>
+                      <span className="text-slate-300">•</span>
+                      <span className="text-slate-700 font-medium">
+                        Fee: <strong className="text-slate-900 font-bold">₹{booking.consultationFee || 999}</strong>
                       </span>
+                      {booking.paymentStatus === "PAID" && (
+                        <span className="text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                          Escrow Secured ✓
+                        </span>
+                      )}
                     </div>
 
+                    {/* User Matter Notes */}
                     {booking.userNotes && (
-                      <p style={{ fontSize: "12px", color: "var(--text-muted)", marginTop: "8px", background: "var(--bg-tertiary)", padding: "8px 12px", borderRadius: "var(--radius-md)" }}>
-                        {booking.userNotes}
-                      </p>
+                      <div className="p-3 rounded-xl bg-slate-50 border border-slate-100 text-xs text-slate-600 flex items-start gap-2 mt-2">
+                        <MessageSquare size={14} className="shrink-0 mt-0.5 text-indigo-500" />
+                        <div className="flex-1">
+                          <span className="font-bold text-slate-800">Matter Notes:</span> {booking.userNotes}
+                        </div>
+                      </div>
                     )}
 
+                    {/* Cancel Reason */}
                     {booking.cancelReason && (
-                      <p style={{ fontSize: "12px", color: "var(--danger)", marginTop: "8px" }}>
-                        Reason: {booking.cancelReason}
-                      </p>
+                      <div className="p-3 rounded-xl bg-rose-50 border border-rose-100 text-xs text-rose-700 flex items-start gap-2 mt-2">
+                        <AlertTriangle size={14} className="shrink-0 mt-0.5 text-rose-500" />
+                        <div>
+                          <span className="font-bold">Cancellation Reason:</span> {booking.cancelReason}
+                        </div>
+                      </div>
                     )}
+
                   </div>
+
                 </div>
 
-                {/* Bottom Row */}
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingTop: "12px", borderTop: "1px solid var(--border-subtle)", flexWrap: "wrap", gap: "10px" }}>
+                {/* ── CARD FOOTER ACTIONS ── */}
+                <div className="pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3">
                   
-                  {/* Left: Join or Time status or Pay Now */}
                   {activeTab === "UPCOMING" && (
                     <>
-                      <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
+                      <div className="flex flex-wrap items-center gap-2.5">
+                        
+                        {/* Payment Button if Pending */}
                         {booking.paymentStatus === "PENDING" && (
                           <PaymentButton
                             bookingId={booking.id}
                             amount={booking.consultationFee || 999}
                             advocateName={booking.advocate?.name || "Advocate"}
                             onSuccess={() => fetchBookings()}
-                            label={`Pay ₹${booking.consultationFee || 999}`}
+                            label={`Pay ₹${booking.consultationFee || 999} via Escrow`}
                           />
                         )}
 
+                        {/* Video Strategy Call Link */}
                         {booking.meetLink ? (
                           <a
                             href={booking.meetLink}
                             target="_blank"
                             rel="noopener noreferrer"
-                            style={{
-                              display: "inline-flex", alignItems: "center", gap: "6px",
-                              padding: "8px 16px", borderRadius: "var(--radius-md)",
-                              fontSize: "12px", fontWeight: "600",
-                              textDecoration: "none",
-                              background: joinable ? "var(--success)" : "var(--bg-tertiary)",
-                              color: joinable ? "white" : "var(--text-muted)",
-                              border: joinable ? "none" : "1px solid var(--border-subtle)",
-                              cursor: joinable ? "pointer" : "default",
-                            }}
+                            className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-xs ${
+                              joinable
+                                ? "bg-emerald-600 hover:bg-emerald-700 text-white shadow-emerald-600/20"
+                                : "bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200"
+                            }`}
                           >
-                            <Video size={14} />
-                            {joinable ? "Join Video Call" : `Starts at ${booking.time}`}
+                            <Video size={14} className={joinable ? "animate-pulse" : ""} />
+                            <span>{joinable ? "Enter Video Strategy Room" : `Starts at ${booking.time}`}</span>
                           </a>
                         ) : (
-                          <span style={{ fontSize: "12px", color: "var(--text-muted)" }}>Meet link generating...</span>
+                          <span className="text-xs font-medium text-slate-400 flex items-center gap-1.5">
+                            <Clock size={13} />
+                            <span>Secure video room generating...</span>
+                          </span>
                         )}
+
                       </div>
 
-                      {/* Right: Cancel button */}
+                      {/* Cancel Action */}
                       {cancellingId === booking.id ? (
-                        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                        <div className="flex items-center gap-2 w-full sm:w-auto">
                           <input
                             type="text"
-                            placeholder="Reason for cancelling..."
+                            placeholder="Reason for cancellation..."
                             value={cancelReasonInput}
                             onChange={(e) => setCancelReasonInput(e.target.value)}
-                            style={{ padding: "6px 10px", fontSize: "12px" }}
+                            className="px-3 py-1.5 text-xs rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:border-indigo-500 w-full sm:w-64"
                           />
                           <button
                             onClick={() => handleCancelBooking(booking.id)}
                             disabled={cancelLoading}
-                            style={{ background: "var(--danger)", color: "white", border: "none", borderRadius: "var(--radius-md)", padding: "6px 12px", fontSize: "12px", fontWeight: "600", cursor: "pointer" }}
+                            className="px-3 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition-all disabled:opacity-50 shrink-0"
                           >
                             {cancelLoading ? "Cancelling..." : "Confirm"}
                           </button>
                           <button
                             onClick={() => setCancellingId(null)}
-                            style={{ background: "none", border: "none", color: "var(--text-muted)", fontSize: "12px", cursor: "pointer" }}
+                            className="px-2.5 py-1.5 text-xs text-slate-500 hover:text-slate-800 transition-colors shrink-0"
                           >
                             Back
                           </button>
@@ -479,62 +530,77 @@ export default function BookingsPage() {
                       ) : (
                         <button
                           onClick={() => { setCancellingId(booking.id); setCancelReasonInput(""); }}
-                          className="btn-ghost"
-                          style={{ padding: "6px 14px", fontSize: "12px", color: "var(--text-muted)" }}
+                          className="text-xs text-slate-400 hover:text-rose-600 font-semibold transition-colors px-2 py-1"
                         >
-                          Cancel
+                          Cancel Appointment
                         </button>
                       )}
                     </>
                   )}
 
                   {activeTab === "PAST" && (
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "12px", color: "var(--text-muted)" }}>
-                        <span>Rate:</span>
-                        {[1, 2, 3, 4, 5].map((s) => (
-                          <button
-                            key={s}
-                            onClick={() => {
-                              setRatings(prev => ({ ...prev, [booking.id]: s }));
-                              setNotification({ type: "success", message: `Rated ${s} star${s > 1 ? "s" : ""}.` });
-                              setTimeout(() => setNotification(null), 3000);
-                            }}
-                            style={{ background: "none", border: "none", cursor: "pointer", padding: "2px" }}
-                          >
-                            <Star size={14} fill={(ratings[booking.id] || 0) >= s ? "var(--gold)" : "none"} color="var(--gold)" />
-                          </button>
-                        ))}
+                    <div className="flex items-center justify-between w-full">
+                      {/* Rate Consultation */}
+                      <div className="flex items-center gap-2 text-xs text-slate-600">
+                        <span className="font-semibold">Counsel Review:</span>
+                        <div className="flex items-center gap-1">
+                          {[1, 2, 3, 4, 5].map((s) => (
+                            <button
+                              key={s}
+                              onClick={() => {
+                                setRatings(prev => ({ ...prev, [booking.id]: s }));
+                                setNotification({ type: "success", message: `Submitted ${s}-star counsel rating.` });
+                                setTimeout(() => setNotification(null), 3000);
+                              }}
+                              className="p-1 hover:scale-110 transition-transform"
+                              title={`${s} Stars`}
+                            >
+                              <Star
+                                size={15}
+                                className={
+                                  (ratings[booking.id] || 0) >= s
+                                    ? "text-amber-500 fill-amber-500"
+                                    : "text-slate-300 hover:text-amber-400"
+                                }
+                              />
+                            </button>
+                          ))}
+                        </div>
                       </div>
 
                       <Link
                         href="/dashboard/advocates"
-                        className="btn-ghost"
-                        style={{ textDecoration: "none", padding: "6px 14px", fontSize: "12px", display: "flex", alignItems: "center", gap: "6px" }}
+                        className="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-600 hover:text-indigo-700 transition-colors"
                       >
-                        <RotateCcw size={12} /> Book Again
+                        <RotateCcw size={13} />
+                        <span>Book Follow-up Session</span>
                       </Link>
                     </div>
                   )}
 
                   {activeTab === "CANCELLED" && (
-                    <div style={{ width: "100%", textAlign: "right" }}>
+                    <div className="flex items-center justify-between w-full">
+                      <span className="text-xs text-slate-400">
+                        Funds processed via LexNova Escrow Protection Guarantee
+                      </span>
                       <Link
                         href="/dashboard/advocates"
-                        className="btn-ghost"
-                        style={{ textDecoration: "none", padding: "6px 14px", fontSize: "12px" }}
+                        className="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-600 hover:text-indigo-700 transition-colors"
                       >
-                        Book Another Lawyer
+                        <span>Book Another Advocate</span>
+                        <ArrowRight size={13} />
                       </Link>
                     </div>
                   )}
 
                 </div>
+
               </div>
             );
           })}
         </div>
       )}
+
     </div>
   );
 }

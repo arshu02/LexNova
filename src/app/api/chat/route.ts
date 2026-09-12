@@ -303,20 +303,40 @@ function analyzeAttachedDocuments(attachments?: ChatAttachment[]): string {
 export async function POST(req: Request) {
   try {
     // ── Resolve session or fallback for public intake access ───────────────
-    const { user: sessionUser } = await requireAuth();
-    let resolvedUserId = sessionUser?.id;
-
-    if (!resolvedUserId) {
-      const guest = await prisma.user.findFirst({ where: { role: "USER" } });
-      resolvedUserId = guest?.id || "guest_citizen";
-    }
+    let resolvedUserId: string | undefined;
+    try {
+      const { user: sessionUser } = await requireAuth();
+      resolvedUserId = sessionUser?.id;
+    } catch (_) {}
 
     const {
       message,
+      userId: bodyUserId,
       caseId: requestMatterId,
       party: requestParty,
       attachments,
     } = await req.json();
+
+    if (!resolvedUserId && bodyUserId) {
+      const userMatch = await prisma.user.findUnique({ where: { id: bodyUserId } });
+      if (userMatch) resolvedUserId = userMatch.id;
+    }
+
+    if (!resolvedUserId) {
+      const defaultUser = await prisma.user.findFirst({ where: { role: "USER" } }) || await prisma.user.findFirst();
+      if (defaultUser) {
+        resolvedUserId = defaultUser.id;
+      } else {
+        const createdGuest = await prisma.user.create({
+          data: {
+            email: "guest@lexnova.in",
+            name: "Guest Citizen",
+            role: "USER",
+          },
+        });
+        resolvedUserId = createdGuest.id;
+      }
+    }
 
     // Normalise party — default to PLAINTIFF for existing flows
     const party: Party =

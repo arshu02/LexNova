@@ -19,6 +19,7 @@ const NAV_MAIN = [
   { href: '/dashboard/advocates', icon: Users,           label: 'Find an Advocate' },
   { href: '/dashboard/bookings',  icon: Calendar,        label: 'Consultations' },
   { href: '/dashboard/team',      icon: Building2,       label: 'Team & API' },
+  { href: '/dashboard/settings',  icon: Settings,        label: 'Settings' },
   { href: '/dashboard/advocate',  icon: ShieldCheck,     label: 'Lawyer Console' },
 ];
 

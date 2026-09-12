@@ -92,7 +92,7 @@ const ADVOCATES_DATA = [
     verified: true,
     languages: ["English", "Hindi", "Punjabi"],
     matchTag: "Criminal",
-    photo: "/advocate-rajesh.jpg", // fallback photo
+    photo: "/advocate-sanjay.jpg",
     courts: "Delhi High Court, Special Cyber Crime Magistrates",
     qualification: "LLM Cyber Jurisprudence, Delhi University · Bar Enrolled (D/3120/2011)",
     availableToday: true,
@@ -113,7 +113,7 @@ const ADVOCATES_DATA = [
     verified: true,
     languages: ["English", "Bengali", "Hindi"],
     matchTag: "Corporate",
-    photo: "/advocate-priya.jpg", // fallback photo
+    photo: "/advocate-vikram.jpg",
     courts: "Calcutta High Court, NCLT Kolkata Bench",
     qualification: "LLB NUJS Kolkata · Bar Enrolled (WB/5912/2010)",
     availableToday: true,

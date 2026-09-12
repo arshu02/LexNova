@@ -782,7 +782,7 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen text-white flex flex-col overflow-x-hidden" style={{background: '#050508', selection: 'rgba(99,102,241,0.2)'}}>
+    <div className="min-h-screen text-white flex flex-col overflow-x-hidden selection:bg-indigo-500/20" style={{background: '#050508'}}>
       <Navbar />
 
       {/* ── HERO SECTION ── */}
@@ -1013,7 +1013,7 @@ export default function HomePage() {
       {/* ── KEY METRICS BAR ── */}
       <div style={{borderTop: '1px solid rgba(99,102,241,0.1)', borderBottom: '1px solid rgba(99,102,241,0.1)', background: 'rgba(10,11,18,0.6)'}}>
         <div className="max-w-7xl mx-auto px-6 sm:px-10">
-          <div className="grid grid-cols-2 md:grid-cols-4" style={{divideX: '1px solid rgba(99,102,241,0.1)'}}>
+          <div className="grid grid-cols-2 md:grid-cols-4">
             {[
               { val: '$840M+', label: 'Disputes Processed Worldwide' },
               { val: '4,200+', label: 'Verified Global Advocates' },
