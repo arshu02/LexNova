@@ -52,51 +52,50 @@ const faqJsonLd = {
 
 export default function SecurityDepositPage() {
   return (
-    <div className="min-h-screen flex flex-col selection:bg-indigo-500/20 selection:text-indigo-200" style={{ background: '#05060A', color: '#F0F2FF' }}>
+    <div className="min-h-screen flex flex-col selection:bg-indigo-500/20 selection:text-indigo-800 antialiased font-sans bg-[#F8FAFC] text-slate-900">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <Navbar />
 
       {/* Ambient background glow */}
       <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96" style={{ background: 'radial-gradient(ellipse at top, rgba(99,102,241,0.12) 0%, transparent 70%)', filter: 'blur(50px)' }} />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-[radial-gradient(ellipse_at_top,rgba(99,102,241,0.06)_0%,transparent_70%)]" />
       </div>
 
       {/* Hero */}
-      <section className="pt-36 pb-20 px-6 relative z-10">
+      <section className="pt-36 pb-20 px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="max-w-5xl mx-auto space-y-6">
-          <div className="inline-flex items-center gap-2 text-[12px] font-mono font-semibold uppercase px-4 py-1.5 rounded-full" style={{ background: 'rgba(99,102,241,0.08)', border: '1px solid rgba(99,102,241,0.25)', color: '#818CF8' }}>
-            <Scale size={13} style={{ color: '#C084FC' }} /> Security Deposit Recovery · Statutory Protection
+          <div className="inline-flex items-center gap-2 text-[12px] font-mono font-bold uppercase px-3.5 py-1.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200 shadow-2xs">
+            <Scale size={13} className="text-indigo-600" />
+            <span>Security Deposit Recovery · Statutory Protection</span>
           </div>
-          <h1 className="text-4xl sm:text-6xl font-bold text-white tracking-tight leading-tight max-w-3xl">
+          <h1 className="text-4xl sm:text-6xl font-black text-slate-900 tracking-tight leading-tight max-w-3xl">
             Landlord Refusing to Return Your <span className="text-gradient">Security Deposit?</span>
           </h1>
-          <p className="text-xl max-w-2xl leading-relaxed" style={{ color: '#8F96B3' }}>
+          <p className="text-xl max-w-2xl leading-relaxed text-slate-600 font-normal">
             Know your rights under statutory property law. Get an AI-drafted demand notice in minutes and connect with verified property counsel near you.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3 pt-2">
             <Link
               href="/dashboard/chat?init=My+landlord+is+refusing+to+return+my+security+deposit"
-              className="inline-flex items-center justify-center gap-2 text-white font-semibold px-8 py-3.5 rounded-full text-[14.5px] transition-all"
-              style={{ background: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)', boxShadow: '0 4px 20px rgba(99,102,241,0.4)' }}
+              className="inline-flex items-center justify-center gap-2 text-white font-bold px-8 py-3.5 rounded-full text-[14.5px] transition-all bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 shadow-md shadow-indigo-500/25 hover:-translate-y-0.5"
             >
               <span>Analyze My Case Free</span>
               <ArrowRight size={15} />
             </Link>
             <Link
               href="/advocates"
-              className="inline-flex items-center justify-center gap-2 font-medium px-7 py-3.5 rounded-full text-[14.5px] transition-all"
-              style={{ border: '1px solid rgba(99,102,241,0.25)', color: '#818CF8', background: 'rgba(99,102,241,0.05)' }}
+              className="inline-flex items-center justify-center gap-2 font-bold px-7 py-3.5 rounded-full text-[14.5px] transition-all bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 shadow-2xs"
             >
               Find Property Advocates
             </Link>
           </div>
 
           {/* Trust indicators */}
-          <div className="flex flex-wrap gap-6 pt-4 text-[13px]" style={{ color: '#8F96B3' }}>
+          <div className="flex flex-wrap gap-6 pt-4 text-[13px] text-slate-600 font-medium">
             {['Free analysis · No credit card', 'Transfer of Property Act cited', '2,400+ Verified advocates', '₹75,000 avg. recovery'].map(t => (
               <div key={t} className="flex items-center gap-2">
-                <CheckCircle2 size={15} className="shrink-0" style={{ color: '#10B981' }} />
+                <CheckCircle2 size={15} className="shrink-0 text-emerald-600" />
                 <span>{t}</span>
               </div>
             ))}
@@ -104,12 +103,12 @@ export default function SecurityDepositPage() {
         </div>
       </section>
 
-      {/* Steps */}
-      <section className="py-20 px-6 relative z-10" style={{ borderTop: '1px solid rgba(99,102,241,0.12)', background: 'rgba(10,11,18,0.7)' }}>
+      {/* Steps (Pasted on Clean White Canvas) */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8 relative z-10 bg-white border-y border-slate-200/80">
         <div className="max-w-5xl mx-auto space-y-12">
           <div className="text-center space-y-2">
-            <h2 className="text-3xl font-bold text-white">How to Recover Your Security Deposit in 3 Steps</h2>
-            <p className="text-[14px]" style={{ color: '#8F96B3' }}>Structured statutory procedure to maximize swift settlement</p>
+            <h2 className="text-3xl font-black text-slate-900">How to Recover Your Security Deposit in 3 Steps</h2>
+            <p className="text-[14px] text-slate-600">Structured statutory procedure to maximize swift settlement</p>
           </div>
 
           <div className="grid sm:grid-cols-3 gap-6">
@@ -120,13 +119,13 @@ export default function SecurityDepositPage() {
             ].map(item => {
               const Icon = item.icon;
               return (
-                <div key={item.step} className="rounded-3xl p-6 space-y-3" style={{ background: 'rgba(14,16,24,0.8)', border: '1px solid rgba(99,102,241,0.15)', boxShadow: '0 8px 30px rgba(0,0,0,0.4)' }}>
-                  <div className="text-[11px] font-mono font-bold tracking-widest uppercase" style={{ color: '#818CF8' }}>STEP {item.step}</div>
-                  <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'rgba(99,102,241,0.1)', border: '1px solid rgba(99,102,241,0.2)', color: '#818CF8' }}>
+                <div key={item.step} className="rounded-3xl p-6 space-y-3 bg-[#F8FAFC] border border-slate-200/90 shadow-2xs hover:shadow-md transition-all">
+                  <div className="text-[11px] font-mono font-bold tracking-widest uppercase text-indigo-700">STEP {item.step}</div>
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-indigo-50 border border-indigo-200 text-indigo-700">
                     <Icon size={20} />
                   </div>
-                  <h3 className="text-[17px] font-bold text-white">{item.title}</h3>
-                  <p className="text-[13.5px] leading-relaxed" style={{ color: '#8F96B3' }}>{item.desc}</p>
+                  <h3 className="text-[17px] font-bold text-slate-900">{item.title}</h3>
+                  <p className="text-[13.5px] leading-relaxed text-slate-600">{item.desc}</p>
                 </div>
               );
             })}
@@ -135,13 +134,13 @@ export default function SecurityDepositPage() {
       </section>
 
       {/* Limitation warning */}
-      <section className="py-16 px-6 relative z-10">
+      <section className="py-16 px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="max-w-3xl mx-auto">
-          <div className="rounded-3xl p-6 flex gap-4" style={{ background: 'rgba(245,158,11,0.06)', border: '1px solid rgba(245,158,11,0.25)' }}>
-            <AlertCircle size={22} className="shrink-0 mt-0.5" style={{ color: '#F59E0B' }} />
+          <div className="rounded-3xl p-6 flex gap-4 bg-amber-50/80 border border-amber-200 shadow-2xs">
+            <AlertCircle size={22} className="shrink-0 mt-0.5 text-amber-600" />
             <div>
-              <h3 className="text-[15px] font-bold text-white mb-1">Limitation Period Notice</h3>
-              <p className="text-[13.5px] leading-relaxed" style={{ color: '#A8AECF' }}>
+              <h3 className="text-[15px] font-bold text-amber-900 mb-1">Limitation Period Notice</h3>
+              <p className="text-[13.5px] leading-relaxed text-amber-800">
                 Under statutory limitation rules (Limitation Act 1963, Article 62), you have <strong>3 years</strong> from the date your deposit was due to be returned to institute recovery. Acting promptly preserves essential documentary evidence.
               </p>
             </div>
@@ -150,17 +149,16 @@ export default function SecurityDepositPage() {
       </section>
 
       {/* City targeting */}
-      <section className="py-16 px-6 relative z-10" style={{ borderTop: '1px solid rgba(99,102,241,0.12)', background: 'rgba(10,11,18,0.7)' }}>
+      <section className="py-16 px-4 sm:px-6 lg:px-8 relative z-10 bg-white border-y border-slate-200/80">
         <div className="max-w-5xl mx-auto text-center space-y-6">
-          <h2 className="text-2xl font-bold text-white">Available Across All Major Hubs</h2>
-          <p className="text-[14px]" style={{ color: '#8F96B3' }}>Verified property law advocates ready for video consultation</p>
+          <h2 className="text-2xl font-black text-slate-900">Available Across All Major Hubs</h2>
+          <p className="text-[14px] text-slate-600">Verified property law advocates ready for video consultation</p>
           <div className="flex flex-wrap justify-center gap-2.5">
             {CITIES.map(city => (
               <Link
                 key={city}
                 href={`/dashboard/chat?init=My+landlord+in+${city}+is+refusing+to+return+security+deposit`}
-                className="px-4 py-2 rounded-full text-[13px] font-medium transition-all"
-                style={{ background: 'rgba(14,16,24,0.8)', border: '1px solid rgba(99,102,241,0.15)', color: '#A8AECF' }}
+                className="px-4 py-2 rounded-full text-[13px] font-semibold transition-all bg-slate-50 border border-slate-200 text-slate-700 hover:text-indigo-600 hover:bg-slate-100 shadow-2xs"
               >
                 {city}
               </Link>
@@ -170,14 +168,14 @@ export default function SecurityDepositPage() {
       </section>
 
       {/* FAQ */}
-      <section className="py-20 px-6 relative z-10">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="max-w-3xl mx-auto space-y-8">
-          <h2 className="text-3xl font-bold text-white text-center">Frequently Asked Questions</h2>
+          <h2 className="text-3xl font-black text-slate-900 text-center">Frequently Asked Questions</h2>
           <div className="space-y-3">
             {FAQ_ITEMS.map((item, i) => (
-              <div key={i} className="rounded-2xl p-6 space-y-2" style={{ background: 'rgba(10,11,18,0.85)', border: '1px solid rgba(99,102,241,0.15)' }}>
-                <h3 className="text-[15px] font-bold text-white">{item.q}</h3>
-                <p className="text-[14px] leading-relaxed" style={{ color: '#8F96B3' }}>{item.a}</p>
+              <div key={i} className="rounded-2xl p-6 space-y-2 bg-white border border-slate-200/90 shadow-2xs">
+                <h3 className="text-[15px] font-bold text-slate-900">{item.q}</h3>
+                <p className="text-[14px] leading-relaxed text-slate-600">{item.a}</p>
               </div>
             ))}
           </div>
@@ -185,15 +183,14 @@ export default function SecurityDepositPage() {
       </section>
 
       {/* CTA */}
-      <section className="py-20 px-6 relative z-10" style={{ borderTop: '1px solid rgba(99,102,241,0.12)', background: 'rgba(10,11,18,0.7)' }}>
+      <section className="py-20 px-4 sm:px-6 lg:px-8 relative z-10 bg-white border-t border-slate-200/80">
         <div className="max-w-2xl mx-auto text-center space-y-4">
-          <h2 className="text-3xl sm:text-4xl font-bold text-white">Start Your Free Case Analysis</h2>
-          <p className="text-lg" style={{ color: '#8F96B3' }}>No registration required. Get instant statutory analysis in under 2 minutes.</p>
+          <h2 className="text-3xl sm:text-4xl font-black text-slate-900">Start Your Free Case Analysis</h2>
+          <p className="text-lg text-slate-600">No registration required. Get instant statutory analysis in under 2 minutes.</p>
           <div className="pt-2">
             <Link
               href="/dashboard/chat?init=My+landlord+is+refusing+to+return+my+security+deposit"
-              className="inline-flex items-center gap-2 text-white font-semibold px-8 py-3.5 rounded-full text-[15px] transition-all"
-              style={{ background: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)', boxShadow: '0 4px 20px rgba(99,102,241,0.4)' }}
+              className="inline-flex items-center gap-2 text-white font-bold px-8 py-3.5 rounded-full text-[15px] transition-all bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 shadow-md shadow-indigo-500/25 hover:-translate-y-0.5"
             >
               <span>Analyze My Deposit Case</span>
               <ArrowRight size={15} />

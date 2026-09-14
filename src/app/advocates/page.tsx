@@ -51,10 +51,10 @@ const ADVOCATES_DATA = [
     languages: ["English", "Hindi", "Marathi"],
     matchTag: "Labour",
     photo: "/advocate-rajesh.jpg",
-    courts: "Bombay High Court, Labour Tribunals, Supreme Court",
-    qualification: "LLM Labour Laws, Bombay University · Bar Enrolled (MAH/8832/2012)",
+    courts: "Bombay High Court, Central Labour Tribunal",
+    qualification: "LLM Labour Law, Mumbai University · Bar Enrolled (MAH/1982/2006)",
     availableToday: true,
-    bio: "Senior employment litigator representing executives in unpaid wages recovery, non-compete enforcement, severance disputes, and wrongful terminations."
+    bio: "Senior employment litigator representing executives in unpaid wages recovery, non-compete enforcement, severance defaults, and POSH committees."
   },
   {
     id: "adv_3",
@@ -113,18 +113,18 @@ const ADVOCATES_DATA = [
     verified: true,
     languages: ["English", "Bengali", "Hindi"],
     matchTag: "Corporate",
-    photo: "/advocate-vikram.jpg",
+    photo: "/advocate-rajesh.jpg", // fallback photo
     courts: "Calcutta High Court, NCLT Kolkata Bench",
-    qualification: "LLB NUJS Kolkata · Bar Enrolled (WB/5912/2010)",
-    availableToday: true,
-    bio: "Corporate counsel specializing in vendor contract breaches, Section 9 arbitration interim relief, MSME Samadhaan delayed payment recoveries, and insolvency petitions."
+    qualification: "LLM Corporate Law, WBNUJS Kolkata · Bar Enrolled (WB/810/2010)",
+    availableToday: false,
+    bio: "Advises seed-to-Series B founders on founder vesting agreements, vendor defaults, MSME statutory interest recoveries, and Section 9 IBC petitions."
   },
   {
     id: "adv_6",
-    name: "Advocate Fatima Khan",
-    role: "Family Law & Matrimonial Disputes",
+    name: "Advocate Meera Krishnan",
+    role: "Family Law & Matrimonial Settlements",
     specialization: "Family Law",
-    email: "fatima.khan@lexnova.in",
+    email: "meera.krishnan@lexnova.in",
     experience: 12,
     rating: 4.9,
     reviews: 410,
@@ -186,89 +186,81 @@ export default function AdvocatesPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col selection:bg-indigo-500/20 selection:text-indigo-200 antialiased font-sans" style={{ background: '#05060A', color: '#F0F2FF' }}>
+    <div className="min-h-screen flex flex-col selection:bg-indigo-500/20 selection:text-indigo-800 antialiased font-sans bg-[#F8FAFC] text-slate-900">
       <Navbar />
 
-      {/* Ambient background glow */}
+      {/* Subtle ambient light gradient */}
       <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96" style={{ background: 'radial-gradient(ellipse at top, rgba(99,102,241,0.12) 0%, transparent 70%)', filter: 'blur(50px)' }} />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-[radial-gradient(ellipse_at_top,rgba(99,102,241,0.06)_0%,transparent_70%)]" />
       </div>
 
-      <main className="max-w-7xl mx-auto px-6 pt-36 pb-28 space-y-10 flex-1 relative z-10 w-full">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-36 pb-28 space-y-8 flex-1 relative z-10 w-full">
         
-        {/* Header Title */}
+        {/* Header Title Section */}
         <div className="max-w-3xl space-y-3">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[12px] font-mono font-semibold" style={{ background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.25)', color: '#10B981' }}>
-            <ShieldCheck size={14} style={{ color: '#10B981' }} /> 2,400+ Verified Bar Council Advocates
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-[12px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-2xs">
+            <ShieldCheck size={14} className="text-emerald-600" />
+            <span>2,400+ Verified Bar Council Advocates</span>
           </div>
 
-          <h1 className="text-4xl sm:text-5xl font-bold text-white tracking-tight leading-[1.05]">
+          <h1 className="text-4xl sm:text-5xl font-black text-slate-900 tracking-tight leading-[1.05]">
             Find verified legal counsel across <span className="text-gradient">jurisdictions.</span>
           </h1>
-          <p className="text-lg sm:text-xl leading-relaxed max-w-2xl" style={{ color: '#8F96B3' }}>
+          <p className="text-lg sm:text-xl leading-relaxed text-slate-600 max-w-2xl font-normal">
             Every advocate on LexNova is Bar Council verified with transparent fixed-fee consultation rates and encrypted strategy sessions.
           </p>
         </div>
 
-        {/* Search & Filter Controls */}
-        <div className="rounded-3xl p-6 space-y-4" style={{ background: 'rgba(10,11,18,0.85)', border: '1px solid rgba(99,102,241,0.2)', boxShadow: '0 8px 32px rgba(0,0,0,0.5)' }}>
+        {/* Search & Filter Controls (Zepto/Blinkit Style White Card) */}
+        <div className="rounded-3xl p-5 sm:p-6 space-y-4 bg-white border border-slate-200/90 shadow-[0_4px_25px_rgba(15,23,42,0.05)]">
           
           {/* Top Search Bar & City Selector */}
           <div className="flex flex-col sm:flex-row items-center gap-3">
             <div className="relative flex-1 w-full">
-              <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2" style={{ color: '#6B72A0' }} />
+              <Search size={17} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
               <input
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search by advocate name, specialty, legal act, or keyword..."
-                className="w-full rounded-2xl pl-11 pr-4 py-2.5 text-[14px] text-white placeholder-slate-500 focus:outline-none transition-colors"
-                style={{ background: 'rgba(14,16,24,0.8)', border: '1px solid rgba(99,102,241,0.2)' }}
+                className="w-full rounded-2xl pl-11 pr-14 py-3 text-[14px] text-slate-900 placeholder-slate-400 bg-slate-50 border border-slate-200 focus:bg-white focus:border-indigo-600 focus:ring-4 focus:ring-indigo-500/10 focus:outline-none transition-all font-medium"
               />
               {search && (
                 <button
                   onClick={() => setSearch("")}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[12px] transition-colors hover:text-white"
-                  style={{ color: '#8F96B3' }}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-semibold text-slate-400 hover:text-slate-700 px-1.5 py-0.5 rounded bg-slate-200/60"
                 >
                   Clear
                 </button>
               )}
             </div>
 
-            <div className="relative w-full sm:w-56 shrink-0">
+            <div className="relative w-full sm:w-60 shrink-0">
               <select
                 value={selectedCity}
                 onChange={(e) => setSelectedCity(e.target.value)}
-                className="w-full rounded-2xl px-4 py-2.5 text-[14px] text-white focus:outline-none transition-colors cursor-pointer"
-                style={{ background: 'rgba(14,16,24,0.8)', border: '1px solid rgba(99,102,241,0.2)' }}
+                className="w-full rounded-2xl px-4 py-3 text-[14px] text-slate-800 font-semibold bg-slate-50 border border-slate-200 focus:bg-white focus:border-indigo-600 focus:outline-none transition-all cursor-pointer shadow-2xs"
               >
                 {CITIES.map((c) => (
-                  <option key={c} value={c} style={{ background: '#0A0B12', color: '#F0F2FF' }}>{c}</option>
+                  <option key={c} value={c} className="bg-white text-slate-900">{c}</option>
                 ))}
               </select>
             </div>
           </div>
 
           {/* Domain Category Filter Chips */}
-          <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
+          <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar pt-1">
             {CATEGORIES.map((cat) => {
               const active = selectedCategory === cat;
               return (
                 <button
                   key={cat}
                   onClick={() => setSelectedCategory(cat)}
-                  className="px-3.5 py-1.5 rounded-full text-[12.5px] font-medium transition-all whitespace-nowrap"
-                  style={active ? {
-                    background: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)',
-                    color: 'white',
-                    boxShadow: '0 2px 8px rgba(99,102,241,0.35)',
-                    border: '1px solid rgba(99,102,241,0.4)'
-                  } : {
-                    background: 'rgba(255,255,255,0.03)',
-                    color: '#8F96B3',
-                    border: '1px solid rgba(99,102,241,0.12)'
-                  }}
+                  className={`px-4 py-1.5 rounded-full text-[13px] font-semibold transition-all whitespace-nowrap ${
+                    active
+                      ? 'bg-indigo-600 text-white shadow-sm shadow-indigo-500/25 border border-indigo-600'
+                      : 'bg-slate-100 hover:bg-slate-200/70 text-slate-700 border border-slate-200/80 hover:text-slate-900'
+                  }`}
                 >
                   {cat}
                 </button>
@@ -278,90 +270,88 @@ export default function AdvocatesPage() {
 
         </div>
 
-        {/* Advocates Cards Grid */}
+        {/* Advocates Cards Grid (Pasted on Clean White Canvas) */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredAdvocates.map((adv) => (
             <motion.div
               key={adv.id}
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              className="rounded-3xl p-6 flex flex-col justify-between space-y-5 transition-all group"
-              style={{ background: 'rgba(10,11,18,0.75)', border: '1px solid rgba(99,102,241,0.15)', boxShadow: '0 8px 30px rgba(0,0,0,0.35)' }}
+              className="rounded-3xl p-6 flex flex-col justify-between space-y-5 bg-white border border-slate-200/90 shadow-[0_4px_20px_rgba(15,23,42,0.05)] hover:shadow-[0_16px_40px_rgba(15,23,42,0.09)] hover:border-indigo-300 transition-all group"
             >
               <div className="space-y-4">
                 
                 {/* Top Profile Row */}
                 <div className="flex items-start gap-4">
-                  <div className="relative w-14 h-14 rounded-2xl overflow-hidden shrink-0" style={{ border: '1px solid rgba(99,102,241,0.25)', background: 'rgba(14,16,24,0.8)' }}>
+                  <div className="relative w-14 h-14 rounded-2xl overflow-hidden shrink-0 border border-slate-200 bg-slate-100">
                     <Image src={adv.photo} alt={adv.name} fill sizes="56px" className="object-cover group-hover:scale-105 transition-transform duration-300" />
                     {adv.availableToday && (
-                      <div className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-emerald-500" style={{ border: '2px solid #05060A' }} title="Available Today" />
+                      <div className="absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full bg-emerald-500 border-2 border-white shadow-xs" title="Available Today" />
                     )}
                   </div>
 
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-1.5 flex-wrap">
-                      <h3 className="text-[16px] font-bold text-white leading-snug">{adv.name}</h3>
+                      <h3 className="text-[16px] font-bold text-slate-900 leading-snug group-hover:text-indigo-600 transition-colors">{adv.name}</h3>
                       <span title="Verified Bar Council Enrolled">
-                        <ShieldCheck size={15} style={{ color: '#10B981' }} className="shrink-0" />
+                        <ShieldCheck size={16} className="text-emerald-600 shrink-0" />
                       </span>
                     </div>
-                    <p className="text-[12px] font-mono leading-tight mt-0.5" style={{ color: '#818CF8' }}>{adv.role}</p>
+                    <p className="text-[12px] font-semibold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-md inline-block mt-0.5">{adv.role}</p>
                     
-                    <div className="flex items-center gap-2 mt-1.5 text-[12px]" style={{ color: '#8F96B3' }}>
+                    <div className="flex items-center gap-2 mt-1.5 text-[12px] text-slate-500 font-medium">
                       <div className="flex items-center gap-1">
-                        <Star size={12} className="text-amber-400 fill-amber-400" />
-                        <strong className="text-white font-semibold">{adv.rating}</strong>
-                        <span style={{ color: '#6B72A0' }}>({adv.reviews})</span>
+                        <Star size={13} className="text-amber-500 fill-amber-500" />
+                        <strong className="text-slate-800 font-bold">{adv.rating}</strong>
+                        <span className="text-slate-400 font-normal">({adv.reviews})</span>
                       </div>
                       <span>•</span>
-                      <span className="flex items-center gap-1">
-                        <MapPin size={11} style={{ color: '#6B72A0' }} /> {adv.city}
+                      <span className="flex items-center gap-1 text-slate-600">
+                        <MapPin size={12} className="text-slate-400" /> {adv.city}
                       </span>
                     </div>
                   </div>
                 </div>
 
                 {/* Bio Snippet */}
-                <p className="text-[13px] leading-relaxed line-clamp-2" style={{ color: '#8F96B3' }}>
+                <p className="text-[13px] leading-relaxed text-slate-600 line-clamp-2">
                   {adv.bio}
                 </p>
 
                 {/* Details Matrix */}
                 <div className="grid grid-cols-2 gap-2 pt-1 text-[12px]">
-                  <div className="rounded-xl p-2.5" style={{ background: 'rgba(14,16,24,0.7)', border: '1px solid rgba(99,102,241,0.1)' }}>
-                    <span className="uppercase font-mono font-bold text-[10px] block" style={{ color: '#6B72A0' }}>Experience</span>
-                    <strong className="font-semibold text-[13px] mt-0.5 block text-white">{adv.experience} Years</strong>
+                  <div className="rounded-xl p-2.5 bg-slate-50 border border-slate-200/70">
+                    <span className="uppercase font-bold text-[10px] text-slate-400 block tracking-wider">Experience</span>
+                    <strong className="font-extrabold text-[13px] text-slate-900 mt-0.5 block">{adv.experience} Years</strong>
                   </div>
 
-                  <div className="rounded-xl p-2.5" style={{ background: 'rgba(14,16,24,0.7)', border: '1px solid rgba(99,102,241,0.1)' }}>
-                    <span className="uppercase font-mono font-bold text-[10px] block" style={{ color: '#6B72A0' }}>Cases Handled</span>
-                    <strong className="font-semibold text-[13px] mt-0.5 block text-white">{adv.cases}+ Matters</strong>
+                  <div className="rounded-xl p-2.5 bg-slate-50 border border-slate-200/70">
+                    <span className="uppercase font-bold text-[10px] text-slate-400 block tracking-wider">Cases Handled</span>
+                    <strong className="font-extrabold text-[13px] text-slate-900 mt-0.5 block">{adv.cases}+ Matters</strong>
                   </div>
                 </div>
 
                 {/* Courts & Languages */}
-                <div className="text-[11.5px] space-y-0.5 font-mono" style={{ color: '#6B72A0' }}>
-                  <div><strong style={{ color: '#8F96B3' }}>Courts:</strong> {adv.courts}</div>
-                  <div><strong style={{ color: '#8F96B3' }}>Languages:</strong> {adv.languages.join(", ")}</div>
+                <div className="text-[11.5px] space-y-1 text-slate-500 border-t border-slate-100 pt-3">
+                  <div><strong className="text-slate-700 font-semibold">Courts:</strong> {adv.courts}</div>
+                  <div><strong className="text-slate-700 font-semibold">Languages:</strong> {adv.languages.join(", ")}</div>
                 </div>
 
               </div>
 
               {/* Bottom Fee & Action Row */}
-              <div className="pt-4 flex items-center justify-between gap-3" style={{ borderTop: '1px solid rgba(99,102,241,0.1)' }}>
+              <div className="pt-4 flex items-center justify-between gap-3 border-t border-slate-100">
                 <div>
-                  <span className="text-[10.5px] uppercase font-mono font-semibold block" style={{ color: '#6B72A0' }}>Consultation</span>
-                  <div className="text-[17px] font-bold font-mono leading-tight text-white">₹{adv.consultationFee}</div>
-                  <span className="text-[10.5px]" style={{ color: '#6B72A0' }}>60-min video</span>
+                  <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider block">Consultation</span>
+                  <div className="text-[18px] font-black text-slate-900 leading-tight">₹{adv.consultationFee}</div>
+                  <span className="text-[10.5px] font-medium text-slate-500">60-min strategy session</span>
                 </div>
 
                 <button
                   onClick={() => handleBook(adv)}
-                  className="text-white text-[13px] font-medium px-4 py-2 rounded-full flex items-center gap-1.5 transition-all"
-                  style={{ background: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)', boxShadow: '0 2px 10px rgba(99,102,241,0.3)' }}
+                  className="text-white text-[13px] font-bold px-4 py-2.5 rounded-full flex items-center gap-1.5 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 shadow-md shadow-indigo-500/25 hover:shadow-indigo-500/35 hover:-translate-y-0.5 transition-all"
                 >
-                  <Video size={13} />
+                  <Video size={14} />
                   <span>Book Consult</span>
                 </button>
               </div>
@@ -371,14 +361,13 @@ export default function AdvocatesPage() {
         </div>
 
         {filteredAdvocates.length === 0 && (
-          <div className="text-center py-20 rounded-3xl space-y-3" style={{ background: 'rgba(10,11,18,0.7)', border: '1px solid rgba(99,102,241,0.15)' }}>
-            <Scale size={36} className="mx-auto" style={{ color: '#6B72A0' }} />
-            <h3 className="text-[18px] font-bold text-white">No advocates matched your search criteria</h3>
-            <p className="text-[14px]" style={{ color: '#8F96B3' }}>Try clearing your search term or switching the city and domain filter.</p>
+          <div className="text-center py-20 rounded-3xl space-y-3 bg-white border border-slate-200 shadow-sm">
+            <Scale size={36} className="mx-auto text-slate-400" />
+            <h3 className="text-[18px] font-bold text-slate-900">No advocates matched your search criteria</h3>
+            <p className="text-[14px] text-slate-500">Try clearing your search term or switching the city and domain filter.</p>
             <button
               onClick={() => { setSearch(""); setSelectedCategory("All Domains"); setSelectedCity("All Cities"); }}
-              className="text-[13px] px-5 py-2 mt-2 rounded-full transition-colors"
-              style={{ background: 'rgba(99,102,241,0.1)', border: '1px solid rgba(99,102,241,0.2)', color: '#818CF8' }}
+              className="text-[13px] font-semibold px-5 py-2 mt-2 rounded-full bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 transition-colors"
             >
               Reset Filters
             </button>

@@ -80,56 +80,51 @@ function LoginForm() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center px-4 py-12 relative overflow-hidden" style={{ background: '#05060A', color: '#F0F2FF' }}>
+    <div className="min-h-screen flex flex-col justify-center items-center px-4 py-12 relative overflow-hidden bg-[#F8FAFC] text-slate-900 font-sans">
       {/* Ambient background glow */}
       <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-96 h-96 rounded-full" style={{ background: 'radial-gradient(circle, rgba(99,102,241,0.12) 0%, transparent 70%)', filter: 'blur(60px)' }} />
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-96 h-96 rounded-full bg-[radial-gradient(circle,rgba(99,102,241,0.06)_0%,transparent_70%)]" />
       </div>
 
       {/* Brand Header */}
       <div className="text-center mb-8 relative z-10">
         <Link href="/" className="inline-flex items-center gap-3 mb-2 group">
-          <div className="w-9 h-9 rounded-xl flex items-center justify-center font-bold text-white text-[15px] shadow-lg shadow-indigo-500/20" style={{ background: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)' }}>
-            LN
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-white text-[15px] shadow-md shadow-indigo-500/20 bg-gradient-to-tr from-indigo-600 via-indigo-700 to-violet-600">
+            <Scale size={20} className="text-white" />
           </div>
-          <span className="font-mono text-[22px] font-extrabold tracking-[0.16em] text-white group-hover:text-indigo-400 transition-colors">
-            LEXNOV\A
+          <span className="font-sans text-[22px] font-black tracking-tight text-slate-900 group-hover:text-indigo-600 transition-colors">
+            LEXNOVA
+          </span>
+          <span className="text-[10px] font-extrabold uppercase px-1.5 py-0.5 rounded bg-indigo-50 text-indigo-700 border border-indigo-200">
+            AI OS
           </span>
         </Link>
-        <p className="text-[13.5px]" style={{ color: '#8F96B3' }}>
+        <p className="text-[13.5px] text-slate-600 font-medium">
           Global Autonomous Legal Operating System
         </p>
       </div>
 
       {/* Role Selector */}
-      <div className="w-full max-w-[420px] mb-4 p-1 rounded-2xl flex relative z-10" style={{ background: 'rgba(14,16,24,0.8)', border: '1px solid rgba(99,102,241,0.15)' }}>
+      <div className="w-full max-w-[420px] mb-4 p-1 rounded-2xl flex relative z-10 bg-white border border-slate-200 shadow-xs">
         <button
           type="button"
           onClick={() => setRole('USER')}
-          className="flex-1 py-2.5 rounded-xl text-[13px] font-medium flex items-center justify-center gap-2 transition-all"
-          style={role === 'USER' ? {
-            background: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)',
-            color: 'white',
-            boxShadow: '0 2px 8px rgba(99,102,241,0.35)',
-            border: '1px solid rgba(99,102,241,0.4)'
-          } : {
-            color: '#8F96B3'
-          }}
+          className={`flex-1 py-2.5 rounded-xl text-[13px] font-bold flex items-center justify-center gap-2 transition-all ${
+            role === 'USER'
+              ? 'bg-indigo-600 text-white shadow-xs'
+              : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+          }`}
         >
           <User size={15} /> Citizen &amp; Business
         </button>
         <button
           type="button"
           onClick={() => setRole('ADVOCATE')}
-          className="flex-1 py-2.5 rounded-xl text-[13px] font-medium flex items-center justify-center gap-2 transition-all"
-          style={role === 'ADVOCATE' ? {
-            background: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)',
-            color: 'white',
-            boxShadow: '0 2px 8px rgba(99,102,241,0.35)',
-            border: '1px solid rgba(99,102,241,0.4)'
-          } : {
-            color: '#8F96B3'
-          }}
+          className={`flex-1 py-2.5 rounded-xl text-[13px] font-bold flex items-center justify-center gap-2 transition-all ${
+            role === 'ADVOCATE'
+              ? 'bg-indigo-600 text-white shadow-xs'
+              : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+          }`}
         >
           <ShieldCheck size={15} /> Legal Advocate
         </button>
@@ -139,22 +134,21 @@ function LoginForm() {
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-[420px] rounded-3xl p-8 space-y-6 relative z-10"
-        style={{ background: 'rgba(10,11,18,0.85)', border: '1px solid rgba(99,102,241,0.2)', boxShadow: '0 12px 40px rgba(0,0,0,0.6)' }}
+        className="w-full max-w-[420px] rounded-3xl p-8 space-y-6 relative z-10 bg-white border border-slate-200/90 shadow-[0_8px_30px_rgba(15,23,42,0.06)]"
       >
-        <div className="flex items-center justify-between pb-2" style={{ borderBottom: '1px solid rgba(99,102,241,0.1)' }}>
-          <span className="text-[11px] font-mono font-bold tracking-[0.1em] uppercase" style={{ color: '#818CF8' }}>
+        <div className="flex items-center justify-between pb-2 border-b border-slate-150">
+          <span className="text-[11px] font-mono font-bold tracking-[0.1em] uppercase text-indigo-700">
             Authentication
           </span>
-          <span className="text-[11px] font-mono font-medium px-2.5 py-0.5 rounded-full" style={{ background: 'rgba(99,102,241,0.1)', border: '1px solid rgba(99,102,241,0.2)', color: '#A8AECF' }}>
+          <span className="text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700">
             {role === 'USER' ? 'Client Portal' : 'Advocate Console'}
           </span>
         </div>
 
         {/* Success Alert */}
         {successMessage && (
-          <div className="p-3.5 rounded-xl text-[13px] flex items-center gap-2.5" style={{ background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.25)', color: '#10B981' }}>
-            <CheckCircle2 size={16} className="shrink-0" />
+          <div className="p-3.5 rounded-xl text-[13px] flex items-center gap-2.5 bg-emerald-50 text-emerald-700 border border-emerald-200">
+            <CheckCircle2 size={16} className="shrink-0 text-emerald-600" />
             <span>{successMessage}</span>
           </div>
         )}
@@ -166,10 +160,9 @@ function LoginForm() {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className="p-3.5 rounded-xl text-[13px] flex items-center gap-2.5"
-              style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.25)', color: '#F87171' }}
+              className="p-3.5 rounded-xl text-[13px] flex items-center gap-2.5 bg-rose-50 text-rose-700 border border-rose-200"
             >
-              <AlertCircle size={16} className="shrink-0" />
+              <AlertCircle size={16} className="shrink-0 text-rose-600" />
               <span>{error}</span>
             </motion.div>
           )}
@@ -177,42 +170,40 @@ function LoginForm() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="text-[12.5px] font-medium block mb-1.5" style={{ color: '#A8AECF' }}>
+            <label className="text-[12.5px] font-semibold block mb-1.5 text-slate-700">
               Account Email
             </label>
             <div className="relative">
-              <Mail size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2" style={{ color: '#6B72A0' }} />
+              <Mail size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
               <input
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="name@company.com"
-                className="w-full rounded-xl pl-10 pr-3.5 py-2.5 text-[14px] text-white placeholder-slate-500 focus:outline-none transition-colors"
-                style={{ background: 'rgba(14,16,24,0.8)', border: '1px solid rgba(99,102,241,0.2)' }}
+                className="w-full rounded-xl pl-10 pr-3.5 py-2.5 text-[14px] text-slate-900 placeholder-slate-400 bg-slate-50 border border-slate-200 focus:bg-white focus:border-indigo-600 focus:outline-none transition-all font-medium"
               />
             </div>
           </div>
 
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <label className="text-[12.5px] font-medium" style={{ color: '#A8AECF' }}>
+              <label className="text-[12.5px] font-semibold text-slate-700">
                 Password
               </label>
-              <Link href="/auth/forgot-password" className="text-[11.5px] hover:underline font-medium" style={{ color: '#818CF8' }}>
+              <Link href="/auth/forgot-password" className="text-[11.5px] hover:underline font-bold text-indigo-600">
                 Forgot?
               </Link>
             </div>
             <div className="relative">
-              <Lock size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2" style={{ color: '#6B72A0' }} />
+              <Lock size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
               <input
                 type="password"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full rounded-xl pl-10 pr-3.5 py-2.5 text-[14px] text-white placeholder-slate-500 focus:outline-none transition-colors"
-                style={{ background: 'rgba(14,16,24,0.8)', border: '1px solid rgba(99,102,241,0.2)' }}
+                className="w-full rounded-xl pl-10 pr-3.5 py-2.5 text-[14px] text-slate-900 placeholder-slate-400 bg-slate-50 border border-slate-200 focus:bg-white focus:border-indigo-600 focus:outline-none transition-all font-medium"
               />
             </div>
           </div>
@@ -220,8 +211,7 @@ function LoginForm() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full text-white text-[14px] font-medium py-3 rounded-xl flex items-center justify-center gap-2 transition-all mt-2"
-            style={{ background: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)', boxShadow: '0 4px 16px rgba(99,102,241,0.35)' }}
+            className="w-full text-white text-[14px] font-bold py-3 rounded-xl flex items-center justify-center gap-2 transition-all mt-2 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 shadow-md shadow-indigo-500/25 hover:-translate-y-0.5"
           >
             {loading ? (
               <Loader2 size={16} className="animate-spin text-white" />
@@ -237,17 +227,16 @@ function LoginForm() {
         {/* Google OAuth */}
         <div className="space-y-3 pt-2">
           <div className="flex items-center gap-3">
-            <div className="flex-1 h-px" style={{ background: 'rgba(99,102,241,0.15)' }} />
-            <span className="text-[11px] uppercase tracking-wider font-mono" style={{ color: '#6B72A0' }}>Or continue with</span>
-            <div className="flex-1 h-px" style={{ background: 'rgba(99,102,241,0.15)' }} />
+            <div className="flex-1 h-px bg-slate-200" />
+            <span className="text-[11px] uppercase tracking-wider font-mono text-slate-400 font-semibold">Or continue with</span>
+            <div className="flex-1 h-px bg-slate-200" />
           </div>
 
           <button
             type="button"
             onClick={handleGoogleSignIn}
             disabled={loading}
-            className="w-full flex items-center justify-center gap-3 py-2.5 rounded-xl text-white text-[13.5px] font-medium transition-colors hover:bg-white/[0.04]"
-            style={{ background: 'rgba(14,16,24,0.8)', border: '1px solid rgba(99,102,241,0.2)' }}
+            className="w-full flex items-center justify-center gap-3 py-2.5 rounded-xl text-slate-700 text-[13.5px] font-bold transition-all bg-white border border-slate-200 hover:bg-slate-50 shadow-2xs"
           >
             <svg className="w-4 h-4" viewBox="0 0 24 24">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -260,9 +249,9 @@ function LoginForm() {
         </div>
 
         {/* Footer Link */}
-        <div className="text-center text-[13px] pt-1" style={{ color: '#8F96B3' }}>
+        <div className="text-center text-[13px] pt-1 text-slate-600">
           Don&apos;t have an account?{' '}
-          <Link href="/auth/signup" className="hover:underline font-semibold" style={{ color: '#818CF8' }}>
+          <Link href="/auth/signup" className="hover:underline font-bold text-indigo-600">
             Sign up
           </Link>
         </div>
@@ -274,7 +263,7 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen" style={{ background: '#05060A' }} />}>
+    <Suspense fallback={<div className="min-h-screen bg-[#F8FAFC]" />}>
       <LoginForm />
     </Suspense>
   );

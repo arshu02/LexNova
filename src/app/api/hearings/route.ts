@@ -188,13 +188,16 @@ export async function PATCH(req: Request) {
     const caller = await prisma.user.findUnique({
       where: { email: session.user.email },
     });
+    if (!caller) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
 
     const matter = await prisma.matter.findFirst({
       where: {
         id: hearing.caseId,
         OR: [
-          { userId: caller?.id },
-          { advocate: { userId: caller?.id } },
+          { userId: caller.id },
+          { advocate: { userId: caller.id } },
         ],
       },
       select: { id: true },

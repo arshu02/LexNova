@@ -79,10 +79,11 @@ export default function AuthCallbackPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#080810] flex flex-col items-center justify-center text-white">
-      <div className="flex flex-col items-center gap-4">
-        <Loader2 className="w-8 h-8 text-amber-400 animate-spin" />
-        <p className="text-sm font-semibold text-slate-300">{status}</p>
+    <div className="min-h-screen bg-[#F8FAFC] flex flex-col items-center justify-center text-slate-900">
+      <div className="flex flex-col items-center gap-4 p-8 rounded-3xl bg-white border border-slate-200/90 shadow-xl max-w-sm w-full text-center">
+        <Loader2 className="w-9 h-9 text-indigo-600 animate-spin" />
+        <p className="text-sm font-bold text-slate-700">{status}</p>
+        <p className="text-xs text-slate-400 font-medium">Securing session with LexNova 256-bit encryption...</p>
       </div>
     </div>
   );

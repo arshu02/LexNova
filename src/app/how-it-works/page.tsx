@@ -102,31 +102,32 @@ const ARCHITECTURE_LAYERS = [
 
 export default function HowItWorksPage() {
   return (
-    <div className="min-h-screen flex flex-col selection:bg-indigo-500/20 selection:text-indigo-200 font-sans antialiased" style={{ background: '#05060A', color: '#F0F2FF' }}>
+    <div className="min-h-screen flex flex-col selection:bg-indigo-500/20 selection:text-indigo-800 antialiased font-sans bg-[#F8FAFC] text-slate-900">
       <Navbar />
 
       {/* Ambient background glow */}
       <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96" style={{ background: 'radial-gradient(ellipse at top, rgba(99,102,241,0.12) 0%, transparent 70%)', filter: 'blur(50px)' }} />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-[radial-gradient(ellipse_at_top,rgba(99,102,241,0.06)_0%,transparent_70%)]" />
       </div>
 
-      <main className="max-w-7xl mx-auto px-6 pt-36 pb-28 space-y-20 relative z-10 w-full">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-36 pb-28 space-y-16 relative z-10 w-full">
         
         {/* Header Hero */}
         <div className="max-w-3xl space-y-4">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[12px] font-mono font-semibold" style={{ background: 'rgba(99,102,241,0.08)', border: '1px solid rgba(99,102,241,0.25)', color: '#818CF8' }}>
-            <Cpu size={14} /> Technical Architecture &amp; Workflow
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-[12px] font-mono font-bold bg-indigo-50 text-indigo-700 border border-indigo-200 shadow-2xs">
+            <Cpu size={14} className="text-indigo-600" />
+            <span>Technical Architecture &amp; Workflow</span>
           </div>
           
-          <h1 className="text-4xl sm:text-5xl lg:text-[56px] font-bold text-white tracking-tight leading-[1.05]">
+          <h1 className="text-4xl sm:text-5xl lg:text-[56px] font-black text-slate-900 tracking-tight leading-[1.05]">
             How LexNova powers <span className="text-gradient">autonomous legal resolution.</span>
           </h1>
-          <p className="text-xl sm:text-2xl leading-relaxed max-w-2xl" style={{ color: '#8F96B3' }}>
+          <p className="text-xl sm:text-2xl leading-relaxed text-slate-600 max-w-2xl font-normal">
             From plain-language dispute intake to statutory analysis, court document generation, and Bar-verified advocate collaboration — fully automated.
           </p>
         </div>
 
-        {/* 3 Full-Bleed Technical Architecture Cards */}
+        {/* 3 Full-Bleed Technical Architecture Cards (Pasted on Clean White Canvas) */}
         <div className="space-y-10">
           {ARCHITECTURE_LAYERS.map((layer) => {
             return (
@@ -136,37 +137,36 @@ export default function HowItWorksPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-40px" }}
                 transition={{ duration: 0.4 }}
-                className="p-8 sm:p-12 rounded-3xl grid lg:grid-cols-12 gap-10 items-center"
-                style={{ background: 'rgba(10,11,18,0.85)', border: '1px solid rgba(99,102,241,0.2)', boxShadow: '0 12px 40px rgba(0,0,0,0.5)' }}
+                className="p-8 sm:p-12 rounded-3xl grid lg:grid-cols-12 gap-10 items-center bg-white border border-slate-200/90 shadow-[0_4px_25px_rgba(15,23,42,0.05)] hover:shadow-[0_16px_40px_rgba(15,23,42,0.08)] transition-all"
               >
                 {/* Left Description Side (7 cols) */}
                 <div className="lg:col-span-7 space-y-5">
                   <div className="flex items-center gap-3 flex-wrap">
-                    <span className="text-[13px] font-mono font-bold px-3 py-1 rounded-full text-white" style={{ background: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)' }}>
+                    <span className="text-[13px] font-mono font-bold px-3 py-1 rounded-full text-white bg-gradient-to-r from-indigo-600 to-violet-600 shadow-xs">
                       Step {layer.step}
                     </span>
-                    <span className="text-[12.5px] font-mono font-medium tracking-wide" style={{ color: '#818CF8' }}>
+                    <span className="text-[12.5px] font-mono font-bold tracking-wide text-indigo-700 bg-indigo-50 px-2.5 py-0.5 rounded-md border border-indigo-200">
                       {layer.badge}
                     </span>
                   </div>
 
                   <div>
-                    <h2 className="text-[26px] sm:text-[32px] font-bold text-white tracking-tight leading-tight">
+                    <h2 className="text-[26px] sm:text-[32px] font-black text-slate-900 tracking-tight leading-tight">
                       {layer.title}
                     </h2>
-                    <p className="text-[14px] font-medium mt-1" style={{ color: '#C084FC' }}>
+                    <p className="text-[14px] font-semibold mt-1 text-purple-700">
                       {layer.subtitle}
                     </p>
                   </div>
 
-                  <p className="text-[15px] leading-relaxed" style={{ color: '#8F96B3' }}>
+                  <p className="text-[15px] leading-relaxed text-slate-600">
                     {layer.desc}
                   </p>
 
                   <div className="space-y-2.5 pt-2">
                     {layer.bullets.map((bullet, bIdx) => (
-                      <div key={bIdx} className="flex items-center gap-2.5 text-[14px]" style={{ color: '#F0F2FF' }}>
-                        <CheckCircle2 size={16} className="shrink-0" style={{ color: '#10B981' }} />
+                      <div key={bIdx} className="flex items-center gap-2.5 text-[14px] text-slate-800 font-medium">
+                        <CheckCircle2 size={16} className="shrink-0 text-emerald-600" />
                         <span>{bullet}</span>
                       </div>
                     ))}
@@ -174,25 +174,25 @@ export default function HowItWorksPage() {
                 </div>
 
                 {/* Right Code/JSON Architecture Terminal (5 cols) */}
-                <div className="lg:col-span-5 rounded-2xl p-6 font-mono text-[12.5px] space-y-3" style={{ background: 'rgba(5,6,10,0.9)', border: '1px solid rgba(99,102,241,0.25)', boxShadow: '0 8px 30px rgba(0,0,0,0.6)' }}>
-                  <div className="flex items-center justify-between pb-3" style={{ borderBottom: '1px solid rgba(99,102,241,0.15)' }}>
+                <div className="lg:col-span-5 rounded-2xl p-6 font-mono text-[12.5px] space-y-3 bg-slate-900 border border-slate-800 shadow-xl text-slate-200">
+                  <div className="flex items-center justify-between pb-3 border-b border-slate-800">
                     <div className="flex items-center gap-2">
-                      <span className="w-2.5 h-2.5 rounded-full bg-red-400" />
-                      <span className="w-2.5 h-2.5 rounded-full bg-amber-400" />
-                      <span className="w-2.5 h-2.5 rounded-full bg-emerald-400" />
+                      <span className="w-2.5 h-2.5 rounded-full bg-red-500" />
+                      <span className="w-2.5 h-2.5 rounded-full bg-amber-500" />
+                      <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
                     </div>
-                    <span className="text-[10.5px] uppercase font-bold tracking-wider" style={{ color: '#818CF8' }}>
+                    <span className="text-[10.5px] uppercase font-bold tracking-wider text-indigo-400">
                       {layer.codeSnippet.header}
                     </span>
                   </div>
 
-                  <pre className="whitespace-pre-wrap leading-relaxed overflow-x-auto" style={{ color: '#A8AECF' }}>
+                  <pre className="whitespace-pre-wrap leading-relaxed overflow-x-auto text-indigo-200 text-[12px]">
                     {layer.codeSnippet.code}
                   </pre>
 
-                  <div className="pt-2 flex items-center justify-between text-[11px]" style={{ borderTop: '1px solid rgba(99,102,241,0.15)', color: '#6B72A0' }}>
+                  <div className="pt-2 flex items-center justify-between text-[11px] border-t border-slate-800 text-slate-400">
                     <span>STATUS: VALIDATED</span>
-                    <span className="flex items-center gap-1.5" style={{ color: '#10B981' }}>
+                    <span className="flex items-center gap-1.5 text-emerald-400 font-bold">
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> ONLINE
                     </span>
                   </div>
@@ -206,10 +206,10 @@ export default function HowItWorksPage() {
         {/* 4 Pillars Grid (Trust, Encryption, Compliance, Verification) */}
         <div className="pt-8 space-y-8">
           <div className="text-center max-w-2xl mx-auto space-y-2">
-            <h2 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">
+            <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
               Enterprise Grade Security &amp; Compliance
             </h2>
-            <p className="text-lg" style={{ color: '#8F96B3' }}>
+            <p className="text-lg text-slate-600">
               Built with bank-level encryption and strict adherence to Bar Council regulations.
             </p>
           </div>
@@ -223,12 +223,12 @@ export default function HowItWorksPage() {
             ].map((p, i) => {
               const Icon = p.icon;
               return (
-                <div key={i} className="rounded-2xl p-6 space-y-3" style={{ background: 'rgba(10,11,18,0.7)', border: '1px solid rgba(99,102,241,0.15)' }}>
-                  <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'rgba(99,102,241,0.1)', border: '1px solid rgba(99,102,241,0.2)', color: '#818CF8' }}>
+                <div key={i} className="rounded-2xl p-6 space-y-3 bg-white border border-slate-200/90 shadow-xs hover:shadow-md transition-all">
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-indigo-50 border border-indigo-200 text-indigo-700">
                     <Icon size={18} />
                   </div>
-                  <h3 className="text-[16px] font-bold text-white">{p.title}</h3>
-                  <p className="text-[13px] leading-relaxed" style={{ color: '#8F96B3' }}>{p.desc}</p>
+                  <h3 className="text-[16px] font-bold text-slate-900">{p.title}</h3>
+                  <p className="text-[13px] leading-relaxed text-slate-600">{p.desc}</p>
                 </div>
               );
             })}
@@ -236,29 +236,28 @@ export default function HowItWorksPage() {
         </div>
 
         {/* Bottom CTA Banner */}
-        <div className="p-10 sm:p-14 rounded-3xl text-center space-y-6" style={{ background: 'rgba(10,11,18,0.85)', border: '1px solid rgba(99,102,241,0.2)', boxShadow: '0 12px 40px rgba(99,102,241,0.1)' }}>
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-[12px] font-mono" style={{ background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.25)', color: '#10B981' }}>
-            <Sparkles size={13} style={{ color: '#10B981' }} /> Free to start · No payment method needed
+        <div className="p-10 sm:p-14 rounded-3xl text-center space-y-6 bg-white border border-slate-200/90 shadow-[0_4px_30px_rgba(15,23,42,0.06)]">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-[12px] font-mono font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+            <Sparkles size={13} className="text-emerald-600" />
+            <span>Free to start · No payment method needed</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">
+          <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
             Ready to resolve your dispute?
           </h2>
-          <p className="text-lg max-w-lg mx-auto leading-relaxed" style={{ color: '#8F96B3' }}>
+          <p className="text-lg max-w-lg mx-auto leading-relaxed text-slate-600">
             Start a free AI intake today. Get immediate statutory clarity and connect with top Bar Council advocates.
           </p>
           <div className="pt-2 flex flex-wrap items-center justify-center gap-4">
             <Link
               href="/dashboard/chat"
-              className="px-7 py-3.5 rounded-full text-white text-[14px] font-medium transition-all flex items-center gap-2"
-              style={{ background: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)', boxShadow: '0 4px 20px rgba(99,102,241,0.4)' }}
+              className="px-7 py-3.5 rounded-full text-white text-[14px] font-bold transition-all flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 shadow-md shadow-indigo-500/25 hover:-translate-y-0.5"
             >
               <span>Start Free Case Intake</span>
               <ArrowRight size={14} />
             </Link>
             <Link
               href="/pricing"
-              className="px-6 py-3.5 rounded-full text-[14px] font-medium transition-colors"
-              style={{ border: '1px solid rgba(99,102,241,0.2)', color: '#818CF8', background: 'rgba(99,102,241,0.05)' }}
+              className="px-6 py-3.5 rounded-full text-[14px] font-bold transition-colors bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200"
             >
               View Pricing Plans
             </Link>

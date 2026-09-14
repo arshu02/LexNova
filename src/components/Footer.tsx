@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Twitter, Linkedin, Github, Mail, CheckCircle2, Globe, Shield, ArrowRight } from 'lucide-react';
+import { Twitter, Linkedin, Github, Mail, CheckCircle2, Globe, Shield, ArrowRight, Scale } from 'lucide-react';
 
 const FOOTER_LINKS = {
   Product: [
@@ -22,7 +22,7 @@ const FOOTER_LINKS = {
   ],
   Company: [
     { label: 'About LexNova', href: '/' },
-    { label: 'Developer Portal', href: '/developer' },
+    { label: 'Developer Portal', href: '/pricing' },
     { label: 'Press & Media', href: '/' },
     { label: 'Engineering Blog', href: '/' },
     { label: 'Contact Counsel Desk', href: 'mailto:legal@lexnova.in' },
@@ -49,54 +49,49 @@ export function Footer() {
   };
 
   return (
-    <footer className="relative overflow-hidden" style={{ background: '#05060A', borderTop: '1px solid rgba(99,102,241,0.12)' }}>
-      {/* Background ambient lighting */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-px" style={{ background: 'linear-gradient(90deg, transparent 0%, rgba(99,102,241,0.4) 50%, transparent 100%)' }} />
-        <div className="absolute bottom-0 left-1/4 w-96 h-96 rounded-full" style={{ background: 'radial-gradient(circle, rgba(99,102,241,0.03) 0%, transparent 70%)', filter: 'blur(60px)' }} />
-      </div>
-
-      <div className="max-w-7xl mx-auto px-6 sm:px-10 pt-16 pb-12 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-12 mb-16">
+    <footer className="relative overflow-hidden bg-white border-t border-slate-200/90 text-slate-800">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-12 relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-10 mb-16">
           {/* Brand block */}
-          <div className="lg:col-span-2 space-y-5">
-            <Link href="/" className="inline-flex items-center gap-3 group">
-              <div className="w-9 h-9 rounded-xl flex items-center justify-center font-bold text-white text-[15px] shadow-lg shadow-indigo-500/20" style={{ background: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)' }}>
-                LN
+          <div className="lg:col-span-2 space-y-4">
+            <Link href="/" className="inline-flex items-center gap-2.5 group">
+              <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-700 to-violet-600 flex items-center justify-center text-white shadow-md shadow-indigo-500/20">
+                <Scale size={18} className="text-white" />
               </div>
-              <span className="font-mono text-[20px] font-extrabold tracking-[0.16em] text-white group-hover:text-indigo-400 transition-colors">
-                LEXNOV\A
+              <span className="font-sans text-[20px] font-black tracking-tight text-slate-900 group-hover:text-indigo-600 transition-colors">
+                LEXNOVA
+              </span>
+              <span className="text-[9.5px] font-extrabold uppercase px-1.5 py-0.5 rounded bg-indigo-50 text-indigo-700 border border-indigo-200/80">
+                AI OS
               </span>
             </Link>
 
-            <p className="text-[13.5px] leading-relaxed max-w-sm" style={{ color: '#8F96B3' }}>
+            <p className="text-[13.5px] leading-relaxed text-slate-600 max-w-sm">
               The Global AI Legal Operating System. Autonomous multi-jurisdictional intelligence across the US, UK, EU, India, and APAC with verified court citations, limitation countdowns, and licensed counsel.
             </p>
 
             {/* Newsletter */}
             <div className="space-y-2.5 pt-2">
-              <p className="text-[11px] font-semibold uppercase tracking-widest font-mono" style={{ color: '#818CF8' }}>
+              <p className="text-[11px] font-bold uppercase tracking-widest font-mono text-indigo-700">
                 Global Legal Briefing & Regulatory Updates
               </p>
               {subscribed ? (
-                <div className="flex items-center gap-2 text-[13px] font-medium py-2 px-3.5 rounded-xl" style={{ background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.25)', color: '#10B981' }}>
-                  <CheckCircle2 size={16} /> Subscribed to LexNova Global Briefing!
+                <div className="flex items-center gap-2 text-[13px] font-semibold py-2 px-3.5 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-200">
+                  <CheckCircle2 size={16} className="text-emerald-600" /> Subscribed to LexNova Global Briefing!
                 </div>
               ) : (
-                <form className="flex gap-2" onSubmit={handleSubscribe}>
+                <form className="flex gap-2 max-w-sm" onSubmit={handleSubscribe}>
                   <input
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="counsel@firm.com"
                     required
-                    className="flex-1 rounded-xl px-3.5 py-2.5 text-[13px] text-white placeholder-slate-500 focus:outline-none transition-all min-w-0"
-                    style={{ background: 'rgba(14,16,24,0.8)', border: '1px solid rgba(99,102,241,0.2)' }}
+                    className="flex-1 rounded-xl px-3.5 py-2.5 text-[13px] text-slate-900 placeholder-slate-400 bg-slate-50 border border-slate-200 focus:bg-white focus:border-indigo-600 focus:ring-2 focus:ring-indigo-500/10 focus:outline-none transition-all min-w-0 font-medium"
                   />
                   <button
                     type="submit"
-                    className="text-white text-[12.5px] font-semibold px-4 py-2.5 rounded-xl transition-all whitespace-nowrap flex-shrink-0 flex items-center gap-1.5"
-                    style={{ background: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)', boxShadow: '0 2px 10px rgba(99,102,241,0.3)' }}
+                    className="text-white text-[12.5px] font-bold px-4 py-2.5 rounded-xl transition-all whitespace-nowrap flex-shrink-0 flex items-center gap-1.5 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 shadow-sm"
                   >
                     <span>Subscribe</span>
                     <ArrowRight size={13} />
@@ -106,7 +101,7 @@ export function Footer() {
             </div>
 
             {/* Social links */}
-            <div className="flex items-center gap-3 pt-2">
+            <div className="flex items-center gap-2.5 pt-1">
               {[
                 { icon: Twitter, href: 'https://twitter.com', label: 'Twitter' },
                 { icon: Linkedin, href: 'https://linkedin.com', label: 'LinkedIn' },
@@ -119,8 +114,7 @@ export function Footer() {
                   target="_blank"
                   rel="noreferrer"
                   aria-label={item.label}
-                  className="w-8 h-8 rounded-lg flex items-center justify-center transition-all hover:scale-110"
-                  style={{ background: 'rgba(14,16,24,0.6)', border: '1px solid rgba(99,102,241,0.15)', color: '#8F96B3' }}
+                  className="w-8 h-8 rounded-lg flex items-center justify-center transition-all bg-slate-100 hover:bg-indigo-50 text-slate-500 hover:text-indigo-600 border border-slate-200/80 hover:border-indigo-200"
                 >
                   <item.icon size={14} />
                 </a>
@@ -130,19 +124,16 @@ export function Footer() {
 
           {/* Link columns */}
           {Object.entries(FOOTER_LINKS).map(([section, links]) => (
-            <div key={section} className="space-y-4">
-              <h4 className="text-[12px] font-bold uppercase tracking-[0.1em] font-mono" style={{ color: '#F0F2FF' }}>
+            <div key={section} className="space-y-3.5">
+              <h4 className="text-[12px] font-extrabold uppercase tracking-wider font-mono text-slate-900">
                 {section}
               </h4>
-              <ul className="space-y-2.5">
+              <ul className="space-y-2">
                 {links.map((link) => (
                   <li key={link.label}>
                     <Link
                       href={link.href}
-                      className="text-[13px] transition-colors block hover:translate-x-0.5 transform duration-150"
-                      style={{ color: '#8F96B3' }}
-                      onMouseEnter={(e) => (e.currentTarget.style.color = '#FFFFFF')}
-                      onMouseLeave={(e) => (e.currentTarget.style.color = '#8F96B3')}
+                      className="text-[13px] text-slate-600 hover:text-indigo-600 font-medium transition-colors block hover:translate-x-0.5 transform duration-150"
                     >
                       {link.label}
                     </Link>
@@ -154,15 +145,15 @@ export function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="py-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-[12px] font-mono" style={{ borderTop: '1px solid rgba(99,102,241,0.1)', color: '#6B72A0' }}>
+        <div className="pt-6 border-t border-slate-150 flex flex-col sm:flex-row items-center justify-between gap-4 text-[12px] font-mono text-slate-500">
           <p>© 2026 LexNova Global Technologies Inc. All rights reserved.</p>
           <div className="flex flex-wrap items-center gap-6">
-            <span className="flex items-center gap-1.5">
-              <Shield size={13} style={{ color: '#818CF8' }} />
+            <span className="flex items-center gap-1.5 text-slate-700 font-semibold">
+              <Shield size={13} className="text-indigo-600" />
               256-Bit TLS &amp; Escrow Guaranteed
             </span>
-            <span className="flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="flex items-center gap-1.5 text-slate-700 font-semibold">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
               US · UK · EU · SG · IN Active
             </span>
           </div>
