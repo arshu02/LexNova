@@ -54,12 +54,15 @@ export const chatMessageSchema = z.object({
 
 export const createBookingSchema = z.object({
   advocateId: z.string().min(1),
-  matterId: z.string().optional(),
+  matterId: z.string().optional().nullable(),
   date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Invalid date format (YYYY-MM-DD)"),
   time: z.string().regex(/^\d{1,2}:\d{2}\s?(AM|PM)$/i, "Invalid time format"),
   duration: z.number().int().min(30).max(180).default(60),
   consultationType: z.enum(["VIDEO", "PHONE", "IN_PERSON"]).default("VIDEO"),
-  userNotes: z.string().max(1000).optional(),
+  userNotes: z.string().max(1000).optional().nullable(),
+  userName: z.string().max(100).optional().nullable(),
+  userEmail: z.string().email("Invalid email address").optional().or(z.literal("")).nullable(),
+  userId: z.string().optional().nullable(),
 });
 
 export const updateBookingSchema = z.object({

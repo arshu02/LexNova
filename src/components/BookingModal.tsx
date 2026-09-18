@@ -90,6 +90,16 @@ export default function BookingModal({
   const [booking, setBooking] = useState<any>(null);
   const [copied, setCopied] = useState(false);
 
+  // Synchronize session values when available
+  React.useEffect(() => {
+    if (session?.user?.name && !clientName) {
+      setClientName(session.user.name);
+    }
+    if (session?.user?.email && !clientEmail) {
+      setClientEmail(session.user.email);
+    }
+  }, [session, clientName, clientEmail]);
+
   const advocate = propAdvocate || propLawyer;
 
   if (!isOpen || !advocate) return null;
@@ -104,8 +114,9 @@ export default function BookingModal({
       return;
     }
 
-    if (!session?.user && (!clientEmail || !clientEmail.includes('@'))) {
-      setError('Please enter a valid email address to receive your confirmation.');
+    const emailToUse = (clientEmail || session?.user?.email || '').trim();
+    if (!session?.user && (!emailToUse || !emailToUse.includes('@'))) {
+      setError('Please enter a valid email address to receive your consultation link and calendar invite.');
       return;
     }
 
@@ -119,7 +130,7 @@ export default function BookingModal({
         body: JSON.stringify({
           userId: effectiveUserId,
           userName: clientName || session?.user?.name || 'Client',
-          userEmail: clientEmail || session?.user?.email || 'client@lexnova.in',
+          userEmail: emailToUse,
           advocateId: String(advocate.id),
           advocateName: advocate.name,
           advocateEmail: advocate.email,
@@ -135,7 +146,7 @@ export default function BookingModal({
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.error || 'Booking failed. Please try again.');
+        setError(data.message || data.error || 'Booking failed. Please try again.');
         return;
       }
 
@@ -203,33 +214,59 @@ export default function BookingModal({
         {step === 'form' && (
           <div className="p-6 space-y-5">
 
-            {/* Unauthenticated Client Info Collection */}
-            {!session?.user && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 p-4 rounded-2xl bg-white/[0.02] border border-white/[0.06]">
-                <div className="space-y-1.5">
-                  <label className="text-[11px] font-mono font-bold text-slate-400 uppercase tracking-wider block">
-                    Your Full Name
-                  </label>
-                  <input
-                    type="text"
-                    value={clientName}
-                    onChange={(e) => setClientName(e.target.value)}
-                    placeholder="e.g. Alex Morgan"
-                    className="w-full px-3 py-2 rounded-xl bg-[#04060B] border border-white/[0.1] text-xs text-white placeholder-slate-600 focus:outline-none focus:border-blue-500/70"
-                  />
+            {/* Authenticated or Guest Client Info Display */}
+            {session?.user ? (
+              <div className="flex items-center justify-between p-3.5 rounded-2xl bg-blue-500/10 border border-blue-500/20 text-xs">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-7 h-7 rounded-lg bg-blue-600/30 flex items-center justify-center text-blue-300 font-bold">
+                    {session.user.name?.[0] || session.user.email?.[0] || 'U'}
+                  </div>
+                  <div>
+                    <span className="text-white font-semibold block">{session.user.name || 'Client'}</span>
+                    <span className="text-[11px] text-slate-400 font-mono">{session.user.email}</span>
+                  </div>
                 </div>
-                <div className="space-y-1.5">
-                  <label className="text-[11px] font-mono font-bold text-slate-400 uppercase tracking-wider block">
-                    Your Email *
-                  </label>
-                  <input
-                    type="email"
-                    value={clientEmail}
-                    onChange={(e) => setClientEmail(e.target.value)}
-                    placeholder="alex@company.com"
-                    required
-                    className="w-full px-3 py-2 rounded-xl bg-[#04060B] border border-white/[0.1] text-xs text-white placeholder-slate-600 focus:outline-none focus:border-blue-500/70"
-                  />
+                <span className="text-[10px] font-mono font-bold text-emerald-400 bg-emerald-500/15 border border-emerald-500/30 px-2 py-0.5 rounded-full flex items-center gap-1">
+                  <ShieldCheck size={11} /> Verified Account
+                </span>
+              </div>
+            ) : (
+              <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/[0.06] space-y-3">
+                <div className="flex items-center justify-between text-[11px]">
+                  <span className="font-mono font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+                    <User size={12} className="text-blue-400" />
+                    <span>Client Details (For Video Invite)</span>
+                  </span>
+                  <a href="/auth/login" className="text-blue-400 hover:underline font-semibold">
+                    Sign in with account →
+                  </a>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-mono text-slate-400 uppercase tracking-wider block">
+                      Your Full Name
+                    </label>
+                    <input
+                      type="text"
+                      value={clientName}
+                      onChange={(e) => setClientName(e.target.value)}
+                      placeholder="e.g. Alex Morgan"
+                      className="w-full px-3 py-2 rounded-xl bg-[#04060B] border border-white/[0.1] text-xs text-white placeholder-slate-600 focus:outline-none focus:border-blue-500/70"
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-mono text-slate-400 uppercase tracking-wider block">
+                      Your Email *
+                    </label>
+                    <input
+                      type="email"
+                      value={clientEmail}
+                      onChange={(e) => setClientEmail(e.target.value)}
+                      placeholder="alex@company.com"
+                      required
+                      className="w-full px-3 py-2 rounded-xl bg-[#04060B] border border-white/[0.1] text-xs text-white placeholder-slate-600 focus:outline-none focus:border-blue-500/70"
+                    />
+                  </div>
                 </div>
               </div>
             )}
@@ -347,9 +384,16 @@ export default function BookingModal({
 
             {/* Error Message */}
             {error && (
-              <div className="flex items-center gap-2 p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs font-medium">
-                <AlertCircle size={15} className="shrink-0" />
-                <span>{error}</span>
+              <div className="flex items-start gap-2.5 p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs font-medium">
+                <AlertCircle size={15} className="shrink-0 mt-0.5 text-rose-400" />
+                <div className="flex-1 space-y-1">
+                  <p>{error}</p>
+                  {error.toLowerCase().includes('sign in') && (
+                    <a href="/auth/login" className="inline-block text-blue-400 hover:text-blue-300 font-bold underline text-[11px]">
+                      Sign in to your account →
+                    </a>
+                  )}
+                </div>
               </div>
             )}
 

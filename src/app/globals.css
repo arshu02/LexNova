@@ -438,3 +438,79 @@ body {
   border-color: rgba(99, 102, 241, 0.4);
   box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
 }
+
+/* ── Professional Legal Background Animations ──────────────── */
+@keyframes legalFloat {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  33%       { transform: translateY(-12px) rotate(1.5deg); }
+  66%       { transform: translateY(-6px) rotate(-1deg); }
+}
+
+@keyframes legalFloatSlow {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50%       { transform: translateY(-18px) rotate(2deg); }
+}
+
+@keyframes legalPulseGlow {
+  0%, 100% { opacity: 0.05; filter: blur(0.5px); }
+  50%       { opacity: 0.09; filter: blur(0px); }
+}
+
+@keyframes gavelFloat {
+  0%, 100% { transform: rotate(-25deg) translateY(0px); }
+  50%       { transform: rotate(-22deg) translateY(-10px); }
+}
+
+@keyframes scalesFloat {
+  0%, 100% { transform: translateX(0) translateY(0); }
+  40%       { transform: translateX(6px) translateY(-8px); }
+  80%       { transform: translateX(-4px) translateY(-4px); }
+}
+
+@keyframes tieFloat {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50%       { transform: translateX(-50%) translateY(-14px); }
+}
+
+@keyframes shimmerSection {
+  0%    { opacity: 0.3; }
+  50%   { opacity: 0.15; }
+  100%  { opacity: 0.3; }
+}
+
+@keyframes orbPulse {
+  0%, 100% { transform: scale(1); opacity: 0.3; }
+  50%       { transform: scale(1.6); opacity: 0.5; }
+}
+
+.legal-scales-bg {
+  animation: scalesFloat 9s ease-in-out infinite;
+}
+
+.legal-gavel-bg {
+  animation: gavelFloat 7s ease-in-out infinite;
+}
+
+.legal-tie-bg {
+  animation: tieFloat 11s ease-in-out infinite;
+}
+
+.legal-book-bg {
+  animation: legalFloat 8s ease-in-out infinite 1s;
+}
+
+.legal-quill-bg {
+  animation: legalFloat 10s ease-in-out infinite 2s;
+}
+
+.legal-columns-bg {
+  animation: legalFloatSlow 13s ease-in-out infinite;
+}
+
+.legal-icon-pulse {
+  animation: legalPulseGlow 6s ease-in-out infinite;
+}
+
+.orb-pulse {
+  animation: orbPulse 3s ease-in-out infinite;
+}

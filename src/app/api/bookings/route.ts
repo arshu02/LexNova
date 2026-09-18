@@ -78,8 +78,16 @@ export async function GET(req: NextRequest) {
 // Validates advocate existence, matter ownership, and prevents double-booking
 // via a DB-level unique constraint + transaction.
 export async function POST(req: NextRequest) {
-  const { user, errorResponse } = await requireAuth();
-  if (errorResponse) return errorResponse;
+  // Try to resolve authenticated session user (optional for guest bookings)
+  let authUser: any = null;
+  try {
+    const authResult = await requireAuth();
+    if (!authResult.errorResponse && authResult.user) {
+      authUser = authResult.user;
+    }
+  } catch (_) {
+    // Unauthenticated guest request
+  }
 
   try {
     const body = await req.json();
@@ -98,32 +106,94 @@ export async function POST(req: NextRequest) {
       throw err;
     }
 
-    // ── 1. Resolve advocate — must exist in DB, no fallbacks ──────────────
-    const advocate = await prisma.advocate.findUnique({
+    // ── 1. Resolve booking user (from session or guest email) ─────────────
+    let bookingUser = authUser;
+    if (!bookingUser) {
+      const email = (data.userEmail || body.userEmail || '').trim().toLowerCase();
+      if (!email || !email.includes('@')) {
+        return NextResponse.json(
+          {
+            error: 'Authentication Required',
+            message: 'Please sign in or provide a valid email address to receive your consultation link.',
+          },
+          { status: 401 }
+        );
+      }
+
+      const userName = (data.userName || body.userName || email.split('@')[0]).trim();
+
+      // Find existing user or create guest user record
+      let dbUser = await prisma.user.findUnique({
+        where: { email },
+      });
+
+      if (!dbUser) {
+        dbUser = await prisma.user.create({
+          data: {
+            email,
+            name: userName || 'Client',
+            role: 'USER',
+            isActive: true,
+          },
+        });
+      }
+
+      bookingUser = dbUser;
+    }
+
+    // ── 2. Resolve advocate — must exist in DB ─────────────────────────────
+    // Try lookup by UUID first; if that fails (e.g. frontend uses demo ID like
+    // 'adv_1'), fall back to email-based lookup using a known demo-ID → email map.
+    const DEMO_ID_EMAIL_MAP: Record<string, string> = {
+      adv_1: 'priya.mehta@lexnova.in',
+      adv_2: 'rajesh.sharma@lexnova.in',
+      adv_3: 'ananya.iyer@lexnova.in',
+      adv_4: 'sanjay.gupta@lexnova.in',
+      adv_5: 'meera.krishnan@lexnova.in',
+      adv_6: 'vikram.singh@lexnova.in',
+    };
+
+    let advocate = await prisma.advocate.findUnique({
       where: { id: data.advocateId },
     });
 
+    // Fallback: resolve by email if demo ID was passed
+    if (!advocate) {
+      const fallbackEmail = DEMO_ID_EMAIL_MAP[data.advocateId];
+      if (fallbackEmail) {
+        advocate = await prisma.advocate.findFirst({
+          where: { email: fallbackEmail },
+        });
+      }
+    }
+
     if (!advocate) {
       return NextResponse.json(
-        { error: 'Advocate not found', message: `No advocate with id '${data.advocateId}' exists.` },
+        { error: 'Advocate not found', message: `No advocate with id '${data.advocateId}' exists. Please try again or contact support.` },
         { status: 422 }
       );
     }
 
-    // ── 2. Verify matter ownership if matterId supplied ───────────────────
+    // ── 3. Resilient matter linkage ───────────────────────────────────────
+    let resolvedMatterId: string | null = null;
     if (data.matterId) {
-      const authorized = await canAccessMatter(user.id, user.role, data.matterId);
-      if (!authorized) {
-        return NextResponse.json(
-          { error: 'Matter access denied', message: 'You are not authorized to book for this matter.' },
-          { status: 403 }
-        );
+      const matterExists = await prisma.matter.findUnique({
+        where: { id: data.matterId },
+        select: { id: true, userId: true },
+      });
+      if (matterExists) {
+        if (authUser) {
+          const authorized = await canAccessMatter(authUser.id, authUser.role, data.matterId);
+          if (authorized) {
+            resolvedMatterId = data.matterId;
+          }
+        } else {
+          resolvedMatterId = data.matterId;
+        }
       }
     }
 
-    // ── 3. Create booking inside a transaction (eliminates race condition) ─
-    // The DB-level unique constraint on (advocateId, date, time) is the
-    // authoritative guard. The pre-check below is an early fast-fail UX path.
+    // ── 4. Prevent double-booking (fast pre-check) ────────────────────────
     const existing = await prisma.booking.findFirst({
       where: {
         advocateId: advocate.id,
@@ -166,9 +236,9 @@ export async function POST(req: NextRequest) {
 
         return tx.booking.create({
           data: {
-            userId:           user.id,
+            userId:           bookingUser.id,
             advocateId:       advocate.id,
-            matterId:         data.matterId ?? null,
+            matterId:         resolvedMatterId,
             date:             data.date,
             time:             data.time,
             duration:         data.duration,
@@ -198,10 +268,10 @@ export async function POST(req: NextRequest) {
       throw txErr;
     }
 
-    // ── 4. Audit log ──────────────────────────────────────────────────────
+    // ── 5. Audit log ──────────────────────────────────────────────────────
     await logAuditEvent({
       action:       'CONSULTATION_BOOKED',
-      userId:       user.id,
+      userId:       bookingUser.id,
       resourceId:   booking.id,
       resourceType: 'BOOKING',
       metadata: {
@@ -212,12 +282,12 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    // ── 5. Send confirmation emails (fire-and-forget) ─────────────────────
+    // ── 6. Send confirmation emails (fire-and-forget) ─────────────────────
     const emailData = {
       bookingId:             booking.id,
       confirmationCode,
-      userName:              user.name || user.email,
-      userEmail:             user.email,
+      userName:              bookingUser.name || data.userName || bookingUser.email,
+      userEmail:             bookingUser.email,
       lawyerName:            advocate.name,
       lawyerEmail:           advocate.email || '',
       lawyerSpecialization:  advocate.specialization || 'Legal Consultant',
