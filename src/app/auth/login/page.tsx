@@ -95,8 +95,9 @@ function LoginForm() {
           <span className="font-sans text-[22px] font-black tracking-tight text-slate-900 group-hover:text-indigo-600 transition-colors">
             LEXNOVA
           </span>
-          <span className="text-[10px] font-extrabold uppercase px-1.5 py-0.5 rounded bg-indigo-50 text-indigo-700 border border-indigo-200">
-            AI OS
+          <span className="inline-flex items-center gap-1 text-[9.5px] font-black uppercase px-2 py-0.5 rounded-full bg-gradient-to-r from-indigo-50/90 via-violet-50/90 to-purple-50/90 text-indigo-700 border border-indigo-200/90 shadow-2xs tracking-widest font-mono">
+            <Sparkles size={10} className="text-indigo-600 fill-indigo-500/20" />
+            <span>JURIS</span>
           </span>
         </Link>
         <p className="text-[13.5px] text-slate-600 font-medium">

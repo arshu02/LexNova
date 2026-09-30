@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useSession } from 'next-auth/react';
+import { useSearchParams } from 'next/navigation';
 import {
   FileText, Download, Copy, Check, Zap, ChevronRight,
   AlertCircle, Scale, ArrowRight, Sparkles, Edit3, Printer,
@@ -329,8 +330,11 @@ IN WITNESS WHEREOF, the parties hereto have executed this Agreement.
 For Disclosing Party: ___________________        For Receiving Party: ___________________`
 };
 
-export default function DocumentStudioPage() {
+function DocumentStudioContent() {
   const { data: session } = useSession();
+  const searchParams = useSearchParams();
+  const templateParam = searchParams?.get("template");
+
   const [selectedId, setSelectedId] = useState<string>("legal-notice-tenant");
   const [fields, setFields] = useState<Record<string, string>>({
     tenantName: "Arjun Mehta",
@@ -340,6 +344,21 @@ export default function DocumentStudioPage() {
     vacatingDate: "15 June 2025",
     noticePeriodDays: "15",
   });
+
+  useEffect(() => {
+    if (templateParam) {
+      const match = DOCUMENT_TYPES.find((d) => d.id === templateParam);
+      if (match) {
+        setSelectedId(match.id);
+        setAiDraft(null);
+        const initialFields: Record<string, string> = {};
+        match.fields.forEach((f) => {
+          initialFields[f.id] = f.defaultValue;
+        });
+        setFields(initialFields);
+      }
+    }
+  }, [templateParam]);
   
   const [previewMode, setPreviewMode] = useState<"letterhead" | "clean">("letterhead");
   const [aiDraft, setAiDraft] = useState<string | null>(null);
@@ -786,5 +805,13 @@ export default function DocumentStudioPage() {
       )}
 
     </div>
+  );
+}
+
+export default function DocumentStudioPage() {
+  return (
+    <Suspense fallback={<div className="p-8 text-center text-slate-400">Loading Document Studio...</div>}>
+      <DocumentStudioContent />
+    </Suspense>
   );
 }

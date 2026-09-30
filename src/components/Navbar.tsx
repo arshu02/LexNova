@@ -16,7 +16,7 @@ const TRENDING_SEARCHES = [
   { label: 'Security Deposit Refund', category: 'Property', href: '/security-deposit-recovery', icon: Building2 },
   { label: 'Unpaid Salary & Notice to Employer', category: 'Employment', href: '/advocates', icon: Briefcase },
   { label: 'Advocate Priya Mehta (NLSIU)', category: 'Advocates', href: '/advocates', icon: Award },
-  { label: 'Section 138 Cheque Bounce Notice', category: 'Commercial', href: '/dashboard/chat', icon: FileText },
+  { label: 'Section 138 Cheque Bounce Notice', category: 'Commercial', href: '/dashboard/documents?template=cheque-bounce-138', icon: FileText },
   { label: 'RERA Builder Possession Delay', category: 'Real Estate', href: '/advocates', icon: Building2 },
   { label: 'Defective Product Consumer Claim', category: 'Consumer', href: '/advocates', icon: Scale },
 ];
@@ -36,7 +36,7 @@ const MEGA_MENU_CATEGORIES = [
     badge: 'CORE ENGINE',
     items: [
       { name: 'AI Case Intake & Triage', desc: 'Auto-extract facts, governing acts & damage claims', href: '/dashboard/chat', icon: Zap, tag: 'Instant' },
-      { name: 'Statutory Limitation Clock', desc: 'Precision limitation period countdown & deadlines', href: '/how-it-works', icon: Clock, tag: 'Live' },
+      { name: 'Legal Document Studio', desc: 'Draft statutory legal notices & demand letters', href: '/dashboard/documents', icon: FileText, tag: 'Studio' },
       { name: 'Contract & Clause Risk Scanner', desc: 'Scan NDAs, lease deeds & commercial agreements', href: '/dashboard/chat', icon: FileText, tag: 'New' },
     ]
   },
@@ -53,7 +53,7 @@ const MEGA_MENU_CATEGORIES = [
     title: 'Court-Ready Automation',
     badge: 'STATUTORY COMPLIANT',
     items: [
-      { name: '15-Day Statutory Legal Notice', desc: 'Generate court-admissible notices with tracked proof', href: '/dashboard/chat', icon: FileText, tag: 'Court PDF' },
+      { name: '15-Day Statutory Legal Notice', desc: 'Generate court-admissible notices with tracked proof', href: '/dashboard/documents', icon: FileText, tag: 'Court PDF' },
       { name: 'Pre-Action Protocol Letters', desc: 'India BNS, Delaware UCC §2-708, UK CPR Claims', href: '/how-it-works', icon: Globe, tag: '52 States' },
       { name: 'Transparent Transparent Pricing', desc: 'Compare Citizen, Professional Counsel & Enterprise', href: '/pricing', icon: Scale, tag: 'Free Tier' },
     ]
@@ -158,8 +158,9 @@ export function Navbar() {
                 <span className="font-black tracking-tight text-[21px] text-slate-900 leading-none select-none font-sans">
                   LEXNOVA
                 </span>
-                <span className="text-[10px] font-extrabold uppercase px-1.5 py-0.5 rounded bg-indigo-50 text-indigo-700 border border-indigo-200/80 tracking-wider">
-                  AI OS
+                <span className="inline-flex items-center gap-1 text-[9.5px] font-black uppercase px-2 py-0.5 rounded-full bg-gradient-to-r from-indigo-50/90 via-violet-50/90 to-purple-50/90 text-indigo-700 border border-indigo-200/90 shadow-[0_1px_3px_rgba(99,102,241,0.08)] tracking-widest font-mono">
+                  <Sparkles size={10} className="text-indigo-600 fill-indigo-500/20" />
+                  <span>JURIS</span>
                 </span>
               </div>
               <span className="text-[10px] font-semibold text-slate-500 tracking-wider hidden sm:block">
@@ -524,17 +525,10 @@ export function Navbar() {
           </Link>
 
           <Link
-            href="/dashboard/chat"
+            href="/dashboard/documents"
             className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-slate-700 hover:text-indigo-600 hover:bg-slate-100 font-medium transition-colors whitespace-nowrap"
           >
             <span>📄 Legal Notice Drafter</span>
-          </Link>
-
-          <Link
-            href="/how-it-works"
-            className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-slate-700 hover:text-indigo-600 hover:bg-slate-100 font-medium transition-colors whitespace-nowrap"
-          >
-            <span>⏱️ Limitation Calculator</span>
           </Link>
 
           <Link
@@ -661,11 +655,22 @@ export function Navbar() {
             {/* Quick links list */}
             <div className="space-y-1 pt-2 border-t border-slate-100 text-sm font-semibold text-slate-700">
               <Link
+                href="/dashboard/documents"
+                onClick={() => setMobileOpen(false)}
+                className="flex items-center justify-between py-2 px-2 hover:bg-slate-50 rounded-lg text-indigo-700 font-bold"
+              >
+                <span className="flex items-center gap-2">
+                  <FileText size={15} className="text-indigo-600" />
+                  <span>Legal Notice Drafter (Doc Studio)</span>
+                </span>
+                <ArrowRight size={14} className="text-indigo-500" />
+              </Link>
+              <Link
                 href="/how-it-works"
                 onClick={() => setMobileOpen(false)}
                 className="flex items-center justify-between py-2 px-2 hover:bg-slate-50 rounded-lg"
               >
-                <span>Statutory Limitation & Architecture</span>
+                <span>Platform Architecture & How it works</span>
                 <ArrowRight size={14} className="text-slate-400" />
               </Link>
               <Link

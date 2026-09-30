@@ -208,15 +208,6 @@ export default function GlobalCommandPalette() {
         href: "/dashboard/documents",
         badge: "AI DRAFT",
       },
-      {
-        id: "tool-limitation",
-        title: "Statutory Limitation Period Calculator",
-        subtitle: "Calculate limitation countdown under Limitation Act 1963",
-        category: "Case Tools",
-        icon: Calendar,
-        href: "/dashboard/matters",
-        badge: "COMPLIANCE",
-      },
     ],
     []
   );
